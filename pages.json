@@ -3,7 +3,7 @@
 		{
 		  "path": "pages/Loading/index",
 		  "style": {
-		    "navigationBarTitleText": "yshop商城"
+		    "navigationBarTitleText": "心水达商城"
 		  }
 		},
 		{
@@ -39,7 +39,7 @@
 		{
 		  "path": "pages/home/index",
 		  "style": {
-		    "navigationBarTitleText": "yshop商城",
+		    "navigationBarTitleText": "心水达商城",
 		    "navigationBarTextStyle": "white",
 		    // "enablePullDownRefresh": true,
 		    "navigationStyle": "custom"
@@ -73,6 +73,12 @@
 		  "path": "pages/shop/GoodsList/index",
 		  "style": {
 		    "navigationBarTitleText": "商品列表"
+		  }
+		},
+		{
+		  "path": "pages/shop/preSaleGoodsList/index",
+		  "style": {
+		    "navigationBarTitleText": "预售商品"
 		  }
 		},
 		{

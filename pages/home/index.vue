@@ -21,11 +21,11 @@
       <uni-notice-bar v-if="item.type == 'noticeBar'" scrollable="true" @click="goRoll(item.componentContent.roll[0])" single="true" :speed="10" showIcon="true" :text="item.componentContent.roll[0].info"></uni-notice-bar>
       <view class="content_box home_content_box" v-if="item.type == 'menu' && item.componentContent.menus">
         <!-- 菜单 -->
-        <Menu :list="item.componentContent.menus"></Menu>
+        <Menu :list="menus"></Menu>
       </view>
       <!-- 滚动新闻 -->
       <!-- 广告 -->
-      <Adv v-if="item.type == 'adv' && item.componentContent.detail" :detail="item.componentContent.detail" />
+     <!-- <Adv v-if="item.type == 'adv' && item.componentContent.detail" :detail="item.componentContent.detail" /> -->
       <!-- 热门榜单 -->
       <HotCommodity v-if="item.type == 'hotCommodity'" :detail="likeInfo"></HotCommodity>
       <!-- 超值拼团 -->
@@ -114,7 +114,6 @@ export default {
       info: {
         fastList: [],
         bastBanner: [],
-
         bastList: [],
       },
       likeInfo: [],
@@ -202,11 +201,13 @@ export default {
       .then(res => {})
       .catch(error => {
         this.homeData = JSON.parse(error.data.json)
+		console.log(this.homeData)
       })
     getHomeData().then(res => {
       that.logoUrl = res.data.logoUrl
       res.data.banner.map(item => (item.bgcolor = item.color || ''))
       that.$set(that, 'info', res.data.info)
+      that.$set(that, 'menus', res.data.menus)
       that.$set(that, 'firstList', res.data.firstList)
       that.$set(that, 'bastList', res.data.bastList)
       that.$set(that, 'likeInfo', res.data.likeInfo)
@@ -325,6 +326,7 @@ export default {
       })
     },
     getbgcolor(e) {
+		console.log(e)
       this.bgcolor = e
     },
   },

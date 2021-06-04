@@ -483,6 +483,10 @@ export const handleLoginStatus = (location, complete, fail, success) => {
 	{
 		path: '/pages/shop/GoodsList/index',
 		name: '全部商品'
+	},
+	{
+		path: '/pages/shop/preSaleGoodsList/index',
+		name: '预售商品'
 	}
 	]
 
