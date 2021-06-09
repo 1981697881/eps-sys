@@ -35,6 +35,14 @@
           <view class="item plus" :class="cartNum >= attr.productSelect.stock ? 'on' : ''" @click="CartNumAdd">+</view>
         </view>
       </view>
+	  <view class="cart">
+        <view class="title">配送计划</view>
+        <view class="carnum acea-row row-left">
+          <view class="item reduce" :class="cartNum <= 1 ? 'on' : ''" @click="CartNumDes">-</view>
+          <view class="item num">{{ cartNum }}</view>
+          <view class="item plus" :class="cartNum >= attr.productSelect.stock ? 'on' : ''" @click="CartNumAdd">+</view>
+        </view>
+      </view>
     </view>
     <view class="mask" @touchmove.prevent :hidden="attr.cartAttr === false" @click="closeAttr"></view>
   </view>

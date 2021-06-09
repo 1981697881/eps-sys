@@ -487,7 +487,7 @@ export const handleLoginStatus = (location, complete, fail, success) => {
 	{
 		path: '/pages/shop/preSaleGoodsList/index',
 		name: '预售商品'
-	}
+	},
 	]
 
 	// 是否可以访问

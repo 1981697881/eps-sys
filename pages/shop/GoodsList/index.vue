@@ -139,7 +139,7 @@ export default {
     return {
       hostProduct: [],
       productList: [],
-      Switch: true,
+      Switch: false,
       where: {
         page: 1,
         limit: 8,

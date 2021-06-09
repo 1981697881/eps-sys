@@ -1,7 +1,7 @@
 <template>
   <view class="lottie-bg">
     <view id="lottie">
-      <image src="@/static/images/live-logo.gif" rel="preload" mode="widthFix" style="width: 100%;" />
+      <!-- <image src="@/static/images/live-logo.gif" rel="preload" mode="widthFix" style="width: 100%;" /> -->
     </view>
   </view>
 </template>

@@ -4,7 +4,7 @@
       <view class="head_box" v-if="item.type == 'header'" :style="{ background: bgcolor }" :class="{ active: bgcolor }">
         <cu-custom :isBack="true" :bgColor="bgcolor">
           <block slot="backText">
-            <text class="nav-title shopro-selector-rect">{{ item.componentContent.title }}</text>
+            <text class="nav-title shopro-selector-rect">心水达</text><!-- {{ item.componentContent.title }} -->
           </block>
         </cu-custom>
       </view>
@@ -18,7 +18,7 @@
         </view>
       </view>
       <Banner v-if="item.type == 'banner'" :detail="item.componentContent.bannerData" @getbgcolor="getbgcolor"></Banner>
-      <uni-notice-bar v-if="item.type == 'noticeBar'" scrollable="true" @click="goRoll(item.componentContent.roll[0])" single="true" :speed="10" showIcon="true" :text="item.componentContent.roll[0].info"></uni-notice-bar>
+      <!-- <uni-notice-bar v-if="item.type == 'noticeBar'" scrollable="true" @click="goRoll(item.componentContent.roll[0])" single="true" :speed="10" showIcon="true" :text="item.componentContent.roll[0].info"></uni-notice-bar> -->
       <view class="content_box home_content_box" v-if="item.type == 'menu' && item.componentContent.menus">
         <!-- 菜单 -->
         <Menu :list="menus"></Menu>
@@ -28,7 +28,7 @@
      <!-- <Adv v-if="item.type == 'adv' && item.componentContent.detail" :detail="item.componentContent.detail" /> -->
       <!-- 热门榜单 -->
       <HotCommodity v-if="item.type == 'hotCommodity'" :detail="likeInfo"></HotCommodity>
-      <!-- 超值拼团 -->
+      <!-- 超值拼团 -->	
       <Groupon v-if="item.type == 'groupon'" :detail="combinationList" />
       <!-- 首发新品->秒杀 -->
       <FirstNewProduct v-if="item.type == 'firstNewProduct'" :detail="firstList"></FirstNewProduct>

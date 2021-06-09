@@ -131,7 +131,7 @@ export default {
 					// 获取用户信息后跳转
 					vm.$store.dispatch('addNickname', res.userInfo.nickName);
 					uni.navigateTo({
-						url: '/pages/register/register?pageFlag=index'
+						url: '/pages/delivery/register/register?pageFlag=index'
 					});
 				},
 				fail: () => {
