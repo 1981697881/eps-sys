@@ -201,12 +201,11 @@ export default {
       .then(res => {})
       .catch(error => {
         this.homeData = JSON.parse(error.data.json)
-		console.log(this.homeData)
       })
     getHomeData().then(res => {
       that.logoUrl = res.data.logoUrl
       res.data.banner.map(item => (item.bgcolor = item.color || ''))
-      that.$set(that, 'info', res.data.info)
+	  that.$set(that, 'info', res.data.info)
       that.$set(that, 'menus', res.data.menus)
       that.$set(that, 'firstList', res.data.firstList)
       that.$set(that, 'bastList', res.data.bastList)
@@ -326,7 +325,6 @@ export default {
       })
     },
     getbgcolor(e) {
-		console.log(e)
       this.bgcolor = e
     },
   },

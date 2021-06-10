@@ -140,6 +140,7 @@ export default {
       hostProduct: [],
       productList: [],
       Switch: false,
+	  type: 1,
       where: {
         page: 1,
         limit: 8,
@@ -196,12 +197,14 @@ export default {
   },
   mounted: function() {
     const { s = '', id = 0, title = '', isIntegral = false } = this.$yroute.query
-
     this.where.keyword = s
     this.where.isIntegral = isIntegral == 'true' ? 1 : 0
     this.isIntegral = isIntegral
     this.updateTitle()
     this.getProductList()
+  },
+  onLoad(option) {
+	  this.type = option.type
   },
   onReachBottom() {
     this.recommendLoading = true
@@ -236,6 +239,7 @@ export default {
         path: '/pages/shop/GoodsCon/index',
         query: {
           id: item.id,
+		  type: this.type,
           isIntegral: this.isIntegral,
         },
       })

@@ -260,7 +260,7 @@ export default {
 	justify-content: center;
 	font-size: 28rpx;
 	color: #282828;
-
+	background-color: #FFF;
 	.head-img {
 		width: 750rpx;
 		height: 460rpx;

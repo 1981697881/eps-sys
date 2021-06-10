@@ -173,7 +173,7 @@
       <!-- 优惠券 -->
       <CouponPop v-on:changeFun="changeFun" :coupon="coupon"></CouponPop>
       <!-- 商品规格弹窗 -->
-      <ProductWindow :isIntegral="isIntegral" v-on:changeFun="changeFun" :attr="attr" :cartNum="cart_num"></ProductWindow>
+      <ProductWindow :type="type" :isIntegral="isIntegral" v-on:changeFun="changeFun" :attr="attr" :cartNum="cart_num"></ProductWindow>
       <!-- 分享海报 -->
       <StorePoster v-on:setPosterImageStatus="setPosterImageStatus" :posterImageStatus="posterImageStatus" :posterData="posterData" :goodId="id"></StorePoster>
       <!-- 分享弹窗 -->
@@ -254,6 +254,7 @@ export default {
       isOpen: false, //是否打开属性组件
       productValue: [],
       id: 0,
+	  type: 1,
       storeInfo: {},
       couponList: [],
       attrTxt: '请选择',
@@ -302,6 +303,7 @@ export default {
     } else {
       this.id = this._route.query.id
     }
+	this.type = this._route.query.type
     this.isIntegral = url.isIntegral == 'true'
     this.productCon()
     this.setOpenShare()

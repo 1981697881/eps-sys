@@ -43,8 +43,8 @@
 				let bgcolor = item.color;
 				// 颜色不存在
 				if (!bgcolor) {
-					that.$set(item, 'bgcolor', '#c40414');
-					that.$emit('getbgcolor', '#c40414');
+					that.$set(item, 'bgcolor', '#EEB422');
+					that.$emit('getbgcolor', '#EEB422');
 				} else {
 					that.$set(item, 'bgcolor', bgcolor);
 					that.$emit('getbgcolor', bgcolor);

@@ -45,12 +45,12 @@
       <view class="tui-list__goods">
         <view class="tui-goods__left">
           <block v-for="(item, index) in seckillList" :key="index">
-            <t-goods-item v-if="index % 2 == 0" :item="item" :isList="false" @goDetail="goDetail"></t-goods-item>
+            <t-goods-item :timeList="timeList" :active="active" v-if="index % 2 == 0" :item="item" :isList="false" @goDetail="goDetail"></t-goods-item>
           </block>
         </view>
         <view class="tui-goods__right">
           <block v-for="(item, index) in seckillList" :key="index">
-            <t-goods-item v-if="index % 2 !== 0" :item="item" :isList="false" @goDetail="goDetail"></t-goods-item>
+            <t-goods-item :timeList="timeList" :active="active" v-if="index % 2 !== 0" :item="item" :isList="false" @goDetail="goDetail"></t-goods-item>
           </block>
         </view>
       </view>
@@ -111,7 +111,7 @@ export default {
         that.$set(that, 'headerImg', res.data.lovely)
         that.$set(that, 'timeList', res.data.seckillTime)
         that.$set(that, 'active', res.data.seckillTimeIndex)
-
+		console.log(that.timeList)
         let title = []
         title = res.data.seckillTime.map((item, index) => {
           return {

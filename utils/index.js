@@ -481,12 +481,15 @@ export const handleLoginStatus = (location, complete, fail, success) => {
 		name: '授权页面'
 	},
 	{
-		path: '/pages/shop/GoodsList/index',
+		path: '/pages/shop/GoodsList/index?type=1',
 		name: '全部商品'
 	},
 	{
-		path: '/pages/shop/preSaleGoodsList/index',
+		path: '/pages/shop/GoodsList/index?type=2',
 		name: '预售商品'
+	},{
+		path: '/pages/shop/GoodsList/index?type=3',
+		name: '极速达'
 	},
 	]
 

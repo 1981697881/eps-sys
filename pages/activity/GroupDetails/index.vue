@@ -2,7 +2,6 @@
   <view :class="[posterImageStatus ? 'noscroll product-con' : 'product-con']" v-show="domStatus">
     <!-- 商品轮播 -->
     <product-con-swiper :imgUrls="imgUrls"></product-con-swiper>
-
     <view class="tui-pro-detail">
       <view class="tui-product-title tui-border-radius">
         <view class="tui-price__box">
@@ -17,10 +16,10 @@
             </view>
             <view class="tui-sold tui-white__gray">
               <view class="tui-price-tag">{{ storeInfo.people }}人团</view>
-              <text>已拼{{ storeInfo.sales }}{{ storeInfo.unitNam }}</text>
+              <text>已拼{{ storeInfo.sales }}{{ storeInfo.unitName }}</text>
             </view>
           </view>
-          <view class="tui-right__box">库存{{ storeInfo.stock }}{{ storeInfo.unitNam }}</view>
+          <view class="tui-right__box">库存{{ storeInfo.stock }}{{ storeInfo.unitName }}</view>
         </view>
         <view class="tui-pro-titbox">
           <view class="tui-pro-title">{{ storeInfo.title }}</view>

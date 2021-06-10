@@ -227,7 +227,6 @@ export default {
     },
     mountedStart: function() {
       var that = this
-      console.log(this)
       let id = that.$yroute.query.id
       this.seckillStatus = that.$yroute.query.status
       that.datatime = parseInt(that.$yroute.query.time)
