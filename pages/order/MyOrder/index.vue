@@ -199,9 +199,14 @@ export default {
 	methods: {
 		//倒计时
 		countDownFun(time) {
-			let startTime = new Date(); //当前时间
-			let end = new Date(time); //结束时间
-			let result = parseInt((end - startTime)+ 7200 / 1000); //计算出豪秒
+			let startTime = new Date().getTime(); //当前时间
+			let end = new Date(time.replace(/\-/g, "/")).getTime(); //结束时间	
+			let result = parseInt((end - startTime) / 1000); //计算出豪秒
+			uni.showToast({
+			  title: result,
+			  icon: 'none',
+			})
+			result = result + 7200
 			let d = parseInt(result / (24 * 60 * 60)); //用总共的秒数除以1天的秒数
 			let h = parseInt((result / (60 * 60)) % 24); //精确小时，用去余
 			let m = parseInt((result / 60) % 60); //剩余分钟就是用1小时等于60分钟进行趣余
@@ -232,16 +237,20 @@ export default {
 			let that = this;
 			let item = that.orderList[i]
 			that.orderList[i].countDownFn = setInterval(() => {
-				//  console.log(that.countDownFun(item.endTime))
+				
 				if (that.countDownFun(item.createTime) == '订单已超时') {
-					 item.timeText = '订单已超时';
+					item.timeText = '订单已超时';
 					that.$set(that.orderList[i], 'timeText', '订单已超时');
-					clearInterval(that.orderList[i].countDownFn); //清除定时器
-				} else {
+					 //清除定时器
+					clearInterval(that.orderList[i].countDownFn)
+					that.$set(that.orderList[i], 'countDownFn', clearInterval(that.orderList[i].countDownFn));
+					that.$set(that.orderList[i], 'countDownFn', '');
+					that.$forceUpdate()
+				} else {	
 					item.timeText = that.countDownFun(item.createTime);
 					that.$set(that.orderList[i], 'timeText', that.countDownFun(item.createTime));
+					that.$forceUpdate()
 				}
-				that.$forceUpdate()
 			}, 1000);
 		},
 		goLogistics(order) {

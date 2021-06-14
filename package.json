@@ -15,8 +15,8 @@
     "dayjs": "^1.8.22",
     "jweixin-module": "^1.6.0",
     "miniapp-color-thief": "^1.0.5",
-    "vue-ydui": "^1.2.6",
     "vconsole": "^3.3.4",
+    "vue-ydui": "^1.2.6",
     "wechat-jssdk": "^5.0.4"
   },
   "devDependencies": {
