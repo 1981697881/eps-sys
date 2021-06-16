@@ -488,7 +488,7 @@ export const handleLoginStatus = (location, complete, fail, success) => {
 		path: '/pages/shop/GoodsList/index?type=2',
 		name: '预售商品'
 	},{
-		path: '/pages/shop/GoodsList/index?type=3',
+		path: '/pages/shop/JSD/menu',
 		name: '极速达'
 	},
 	]

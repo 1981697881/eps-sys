@@ -98,6 +98,11 @@
 			"style": {
 				"navigationBarTitleText": "商品收藏"
 			}
+		},{
+			"path": "pages/shop/JSD/menu",
+			"style": {
+				"navigationBarTitleText": "极速达"
+			}
 		},
 		{
 			"path": "pages/shop/GoodsFoot/index",
@@ -286,60 +291,7 @@
 			}
 		},
 
-		{
-			"path": "pages/activity/Poster/index",
-			"style": {
-				"navigationBarTitleText": "推广海报"
-			}
-		},
-		{
-			"path": "pages/activity/DargainDetails/index",
-			"style": {
-				"navigationBarTitleText": "帮砍价"
-			}
-		},
-		{
-			"path": "pages/activity/GoodsBargain/index",
-			"style": {
-				"navigationBarTitleText": "砍价列表"
-			}
-		},
-		{
-			"path": "pages/activity/BargainRecord/index",
-			"style": {
-				"navigationBarTitleText": "砍价记录"
-			}
-		},
-		{
-			"path": "pages/activity/GoodsGroup/index",
-			"style": {
-				"navigationBarTitleText": "团购商品列表"
-			}
-		},
-		{
-			"path": "pages/activity/GroupDetails/index",
-			"style": {
-				"navigationBarTitleText": "团购商品详情"
-			}
-		},
-		{
-			"path": "pages/activity/GroupRule/index",
-			"style": {
-				"navigationBarTitleText": "团购规则"
-			}
-		},
-		{
-			"path": "pages/activity/GoodsSeckill/index",
-			"style": {
-				"navigationBarTitleText": "秒杀"
-			}
-		},
-		{
-			"path": "pages/activity/SeckillDetails/index",
-			"style": {
-				"navigationBarTitleText": "秒杀详情"
-			}
-		},
+		
 		{
 			"path": "pages/map/index",
 			"style": {
@@ -518,6 +470,64 @@
 				"path": "Statistics/index",
 				"style": {
 					"navigationBarTitleText": "商家统计数据"
+				}
+			}
+		]
+	},{
+		"root": "pages/activity",
+		"pages": [
+			{
+				"path": "Poster/index",
+				"style": {
+					"navigationBarTitleText": "推广海报"
+				}
+			},
+			{
+				"path": "DargainDetails/index",
+				"style": {
+					"navigationBarTitleText": "帮砍价"
+				}
+			},
+			{
+				"path": "GoodsBargain/index",
+				"style": {
+					"navigationBarTitleText": "砍价列表"
+				}
+			},
+			{
+				"path": "BargainRecord/index",
+				"style": {
+					"navigationBarTitleText": "砍价记录"
+				}
+			},
+			{
+				"path": "GoodsGroup/index",
+				"style": {
+					"navigationBarTitleText": "团购商品列表"
+				}
+			},
+			{
+				"path": "GroupDetails/index",
+				"style": {
+					"navigationBarTitleText": "团购商品详情"
+				}
+			},
+			{
+				"path": "GroupRule/index",
+				"style": {
+					"navigationBarTitleText": "团购规则"
+				}
+			},
+			{
+				"path": "GoodsSeckill/index",
+				"style": {
+					"navigationBarTitleText": "秒杀"
+				}
+			},
+			{
+				"path": "SeckillDetails/index",
+				"style": {
+					"navigationBarTitleText": "秒杀详情"
 				}
 			}
 		]
