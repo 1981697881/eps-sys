@@ -72,7 +72,7 @@ export default {
 			vm.member = member;
 			if (jump) {
 				uni.navigateTo({
-					url: '/pages/' + jump + '/' + jump + '?pageFlag=index'
+					url: '/pages/delivery/' + jump + '/' + jump + '?pageFlag=index'
 				});
 			}
 		} else {
@@ -108,7 +108,7 @@ export default {
 								// 自动登陆完后判断是否有跳转请求
 								if (jump) {
 									uni.navigateTo({
-										url: '/pages/' + jump + '/' + jump + '?pageFlag=index'
+										url: '/pages/delivery/' + jump + '/' + jump + '?pageFlag=index'
 									});
 								}
 							}
@@ -144,7 +144,7 @@ export default {
 			let member = vm.$store.getters.getMember;
 			if (member) {
 				uni.navigateTo({
-					url: '/pages/my-coupon/my-coupon?pageFlag=index'
+					url: '/pages/delivery/my-coupon/my-coupon?pageFlag=index'
 				});
 				return;
 			} else {
@@ -181,7 +181,7 @@ export default {
 			let member = vm.$store.getters.getMember;
 			if (member) {
 				uni.navigateTo({
-					url: '/pages/my-delivery/my-delivery?pageFlag=index'
+					url: '/pages/delivery/my-delivery/my-delivery?pageFlag=index'
 				});
 				return;
 			} else {
@@ -201,7 +201,7 @@ export default {
 			let member = vm.$store.getters.getMember;
 			if (member) {
 				uni.navigateTo({
-					url: '/pages/send-delivery/send-delivery?pageFlag=index'
+					url: '/pages/delivery/send-delivery/send-delivery?pageFlag=index'
 				});
 				return;
 			} else {
@@ -221,7 +221,7 @@ export default {
 			let member = vm.$store.getters.getMember;
 			if (member) {
 				uni.navigateTo({
-					url: '/pages/user-info/user-info?pageFlag=index'
+					url: '/pages/delivery/user-info/user-info?pageFlag=index'
 				});
 			} else {
 				uni.showModal({
@@ -237,7 +237,7 @@ export default {
 			let member = vm.$store.getters.getMember;
 			if (member) {
 				uni.navigateTo({
-					url: '/pages/my-courier/my-courier?pageFlag=index'
+					url: '/pages/delivery/my-courier/my-courier?pageFlag=index'
 				});
 			} else {
 				uni.showModal({

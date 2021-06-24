@@ -183,7 +183,7 @@
 			goToRefuseRecord() {
 				let vm = this;
 				uni.navigateTo({
-					url: "/pages/refuse-record/refuse-record"
+					url: "/pages/delivery/refuse-record/refuse-record"
 				})
 			},
 			loadList() {
@@ -207,7 +207,7 @@
 			},
 			goToCourierDetail(item) {
 				uni.navigateTo({
-					url: "/pages/courier-detail/courier-detail?code=" + item.code
+					url: "/pages/delivery/courier-detail/courier-detail?code=" + item.code
 				})
 			},
 			setMyCourierButtonTopMargin() {

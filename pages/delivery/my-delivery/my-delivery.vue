@@ -153,7 +153,7 @@
 			},
 			goToDeliveryDetail(item) {
 				uni.navigateTo({
-					url: "/pages/delivery-detail/delivery-detail?code=" + item.code
+					url: "/pages/delivery/delivery-detail/delivery-detail?code=" + item.code
 				})
 			},
 			setBgHeight() {

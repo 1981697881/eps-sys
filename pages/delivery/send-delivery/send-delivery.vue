@@ -495,21 +495,21 @@
 				let vm = this;
 				vm.$store.dispatch('addReceivingForm', vm.form);
 				uni.navigateTo({
-					url: "/pages/my-coupon/my-coupon?pageFlag=sendDelivery"
+					url: "/pages/delivery/my-coupon/my-coupon?pageFlag=sendDelivery"
 				});
 			},
 			goToItemInfo() {
 				let vm = this;
 				vm.$store.dispatch('addReceivingForm', vm.form);
 				uni.navigateTo({
-					url: "/pages/item-info/item-info"
+					url: "/pages/delivery/item-info/item-info"
 				});
 			},
 			goToAddressInfo(type) {
 				let vm = this;
 				vm.$store.dispatch('addReceivingForm', vm.form);
 				uni.navigateTo({
-					url: "/pages/address-info/address-info?type=" + type
+					url: "/pages/delivery/address-info/address-info?type=" + type
 				});
 			}
 		},

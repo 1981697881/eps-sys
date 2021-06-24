@@ -167,7 +167,11 @@
 		{
 			"path": "pages/user/address/AddAddress/index",
 			"style": {
-				"navigationBarTitleText": "新增收货地址"
+				"navigationBarTitleText": "新增收货地址",
+				"usingComponents": {
+					"van-popup": "/wxcomponents/vant/popup/index",
+					"van-picker": "/wxcomponents/vant/picker/index"
+				}
 			}
 		},
 		{

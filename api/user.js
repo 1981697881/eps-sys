@@ -392,7 +392,7 @@ export function getLogout() {
  * 小程序绑定手机号
  * */
 export function bindingPhone(data) {
-  return request.post('/binding', data)
+	return request.post('/weixin/wxapp/binding', data)
 }
 
 // TUDO
@@ -400,7 +400,7 @@ export function bindingPhone(data) {
  * 绑定手机号
  * */
 export function wxappBindingPhone(data) {
-  return request.post('wxapp/binding', data)
+  return request.post('/weixin/binding', data)
 }
 
 /*

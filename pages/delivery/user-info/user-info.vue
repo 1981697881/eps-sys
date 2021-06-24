@@ -429,7 +429,7 @@
 				// 储存
 				vm.$store.dispatch('addUserInfoForm', obj);
 				uni.navigateTo({
-					url: "/pages/no-delivery-time/no-delivery-time?pageFlag=user-info"
+					url: "/pages/delivery/no-delivery-time/no-delivery-time?pageFlag=user-info"
 				})
 			},
 			showSelectBuilding() {

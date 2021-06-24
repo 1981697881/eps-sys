@@ -46,7 +46,6 @@
 					<view class="flex-item"><input v-model="form.houseNumber" class="uni-input form-item-input" placeholder-style="color:#999999"
 						 name="input" placeholder="如: A2" /></view>
 				</view>
-				
 				<!-- <view class="form-item-border"></view> -->
 				
 		<!-- 		<view class="uni-flex  uni-row form-item">
@@ -99,17 +98,14 @@
 				</view>
 			</form>
 		</view>
-		
 		<view class="content-bg">
 			<button :style="{marginTop: buttonTopMargin,marginBottom: '147rpx',marginLeft: '24rpx',marginRight: '24rpx'}" class="register-button"
 			 type="warn" @click="formSubmit">注册</button>
 		</view>
-
 		<van-popup :close-on-click-overlay="true" position="bottom" :show="showBuilding" @close="closeBuilding">
 			<van-picker column-class="picker-column" toolbar-class="picker-toolbar" :show-toolbar="true" :columns="columns"
 			 @cancel="onCancel" @confirm="onConfirm" @change="onChange" :item-height="40" />
 		</van-popup>
-
 		<van-popup :close-on-click-overlay="true" position="bottom" :show="showDeliveryMethod" @close="closeDeliveryMethod">
 			<van-picker column-class="picker-column" toolbar-class="picker-toolbar" :show-toolbar="true" :columns="deliveryMethodColumns"
 			 @cancel="onCancelDeliveryMethod" @confirm="onConfirmDeliveryMethod" :item-height="40" />
@@ -191,8 +187,6 @@
 		},
 		created() {
 			let vm = this;
-
-
 		},
 		onLoad(option) {
 			console.log('register onLoad');
@@ -466,7 +460,7 @@
 				// 储存
 				vm.$store.dispatch('addRegisterForm', obj);
 				uni.navigateTo({
-					url: "/pages/no-delivery-time/no-delivery-time?pageFlag=register"
+					url: "/pages/delivery/no-delivery-time/no-delivery-time?pageFlag=register"
 				})
 			},
 			showSelectBuilding() {
@@ -597,7 +591,6 @@
 						buildingCode = vm.selectBuildings[i].code
 					}
 				}
-
 				let obj = {
 					openId: userInfo.openid,
 					unionId: userInfo.unionid,
@@ -611,7 +604,6 @@
 					weekdaysNoDeliveryTimeCodes: weekdaysNoDeliveryTimeCodes,
 					holidayNoDeliveryTimeCodes: holidayNoDeliveryTimeCodes
 				}
-
 				uni.request({
 					url: vm.$api.member.register,
 					data: obj,
