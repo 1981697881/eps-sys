@@ -503,6 +503,11 @@
 				"style": {
 					"navigationBarTitleText": "砍价记录"
 				}
+			},{
+				"path": "fullReduction/list",
+				"style": {
+					"navigationBarTitleText": "满减专区"
+				}
 			},
 			{
 				"path": "GoodsGroup/index",

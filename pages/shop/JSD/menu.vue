@@ -3,7 +3,7 @@
 		<view class="main" v-if="goods.length">
 			<view class="nav">
 				<view class="coupon">
-					<text class="title">"霸气mini卡"超级购券活动，赶紧去购买</text>
+					<text class="title">两小时内配送上门，赶紧去购买</text>
 					<view class="iconfont iconarrow-right"></view>
 				</view>
 			</view>
@@ -19,12 +19,14 @@
 				</scroll-view>
 				<!-- goods list begin -->
 				<scroll-view class="goods" scroll-with-animation scroll-y :scroll-top="cateScrollTop" @scroll="handleGoodsScroll">
-					<view class="wrapper">
-						<swiper class="ads" id="ads" autoplay :interval="3000" indicator-dots>
+					<view class="wrapper">	
+						<view id="ads">
+						</view>
+						<!-- <swiper class="ads" id="ads" autoplay :interval="3000" indicator-dots>
 							<swiper-item v-for="(item, index) in ads" :key='index'>
 								<image :src="item.image"></image>
 							</swiper-item>
-						</swiper>
+						</swiper> -->
 						<view class="list">
 							<!-- category begin -->
 							<view class="category" v-for="(item, index) in goods" :key="index" :id="`cate-${item.id}`">
@@ -212,11 +214,8 @@ export default {
 		return {
 			goods: [], //所有商品
 			ads: [
-				{image: 'https://img-shop.qmimg.cn/s23107/2020/04/27/4ebdb582a5185358c4.jpg?imageView2/2/w/600/h/600'},
-				{image: 'https://images.qmai.cn/s23107/2020/05/08/c25de6ef72d2890630.png?imageView2/2/w/600/h/600'},
-				{image: 'https://img-shop.qmimg.cn/s23107/2020/04/10/add546c1b1561f880d.jpg?imageView2/2/w/600/h/600'},
-				{image: 'https://images.qmai.cn/s23107/2020/04/30/b3af19e0de8ed42f61.jpg?imageView2/2/w/600/h/600'},
-				{image: 'https://img-shop.qmimg.cn/s23107/2020/04/17/8aeb78516d63864420.jpg?imageView2/2/w/600/h/600'}
+				{image: ''},
+				{image: ''},
 			],
 			loading: true,
 			currentCateId: 6905,//默认分类

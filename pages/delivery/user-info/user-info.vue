@@ -178,7 +178,7 @@
 			let vm = this;
 			vm.loadBuilding();
 			vm.setMargin();
-
+			
 			if (option && option.pageFlag && option.pageFlag === 'index') {
 				vm.loadUserInfo();
 			} else {

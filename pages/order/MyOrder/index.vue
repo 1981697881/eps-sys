@@ -40,7 +40,7 @@
 						<span class="sign cart-color acea-row row-center-wrapper" v-if="order.storeId > 0">门店</span>
 						{{ order.createTime }}
 					</view>
-					<view class="font-color-red">{{ order.timeText }} {{ getStatus(order) }}</view>
+					<view class="font-color-red">{{ order._status._type==1 || order._status._type == 2? order.timeText :''}} {{ getStatus(order) }}</view>
 				</view>
 				<view @click="goOrderDetails(order)">
 					<view class="item-info acea-row row-between row-top" v-for="(cart, cartInfoIndex) in order.cartInfo" :key="cartInfoIndex">
@@ -233,25 +233,26 @@ export default {
 		},
 		// 定时器
 		// 页面多个倒计时 归零时清除
-		countDown(i) {
+		countDown(orderList) {
 			let that = this;
-			let item = that.orderList[i]
-			that.orderList[i].countDownFn = setInterval(() => {
-				
-				if (that.countDownFun(item.createTime) == '订单已超时') {
-					item.timeText = '订单已超时';
-					that.$set(that.orderList[i], 'timeText', '订单已超时');
-					 //清除定时器
-					clearInterval(that.orderList[i].countDownFn)
-					that.$set(that.orderList[i], 'countDownFn', clearInterval(that.orderList[i].countDownFn));
-					that.$set(that.orderList[i], 'countDownFn', '');
-					that.$forceUpdate()
-				} else {	
-					item.timeText = that.countDownFun(item.createTime);
-					that.$set(that.orderList[i], 'timeText', that.countDownFun(item.createTime));
-					that.$forceUpdate()
-				}
-			}, 1000);
+			orderList.forEach((item,index)=>{
+				clearInterval(item.countDownFn);
+				item.countDownFn = setInterval(() => {
+					if (that.countDownFun(item.createTime) == '订单已超时') {
+						clearInterval(item.countDownFn)
+						item.timeText = '订单已超时';
+						that.$set(item, 'timeText', '订单已超时');
+						 //清除定时器
+						that.$set(item, 'countDownFn', clearInterval(item.countDownFn));
+						that.$set(item, 'countDownFn', '');
+						that.$forceUpdate()
+					} else {	
+						item.timeText = that.countDownFun(item.createTime);
+						that.$set(item, 'timeText', that.countDownFun(item.createTime));
+						that.$forceUpdate()
+					}
+				}, 1000);
+			})
 		},
 		goLogistics(order) {
 			this.$yrouter.push({
@@ -290,6 +291,7 @@ export default {
 			this.changeType(this.type);
 		},
 		changeType(type) {
+			let that = this
 			this.type = type;
 			this.orderList = [];
 			this.page = 1;
@@ -307,18 +309,12 @@ export default {
 				limit,
 				type
 			}).then(res => {
-				this.orderList = this.orderList.concat(res.data);
-				this.page++;
-				that.orderList.forEach((item,index)=>{
-					clearInterval(item.countDownFn);
-				})
+				that.orderList = [...res.data	];
+				that.page++;
 				//这里应该写在请求接口拿到数据后，这里我使用模拟数据
-				that.orderList.forEach((item,index)=>{
-					item.timeText = '';
-					that.countDown(index,item);
-				})
-				this.loaded = res.data.length < this.limit;
-				this.loading = false;
+				that.countDown(that.orderList);
+				that.loaded = res.data.length < that.limit;
+				that.loading = false;
 			});
 		},
 		getStatus(order) {

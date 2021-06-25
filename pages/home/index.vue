@@ -26,7 +26,8 @@
       <!-- 滚动新闻 -->
       <!-- 广告 -->
      <!-- <Adv v-if="item.type == 'adv' && item.componentContent.detail" :detail="item.componentContent.detail" /> -->
-      <!-- 热门榜单 -->
+	  <item-container v-if="item.type == 'fullReduction'" :num='itemcontainer3.noswipernum4' :banner='itemcontainer3.banner' :list='itemcontainer3.data1'></item-container>
+	  <!-- 热门榜单 -->
       <HotCommodity v-if="item.type == 'hotCommodity'" :detail="likeInfo"></HotCommodity>
       <!-- 超值拼团 -->	
       <Groupon v-if="item.type == 'groupon'" :detail="combinationList" />
@@ -34,7 +35,8 @@
       <FirstNewProduct v-if="item.type == 'firstNewProduct'" :detail="firstList"></FirstNewProduct>
       <!-- 精品推荐 -->
       <ProductsRecommended v-if="item.type == 'productsRecommended'" :detail="bastList"></ProductsRecommended>
-      <!-- 促销单品 -->
+      
+	  <!-- 促销单品 -->
       <PromoteProduct v-if="item.type == 'promoteProduct'" :detail="benefit"></PromoteProduct>
       <!-- 直播 -->
       <!-- #ifdef MP-WEIXIN -->
@@ -65,9 +67,10 @@ import ProductsRecommended from './components/ProductsRecommended'
 import { getHomeData, getShare, getCanvas } from '@/api/public'
 import cookie from '@/utils/store/cookie'
 import { isWeixin, handleUrlParam } from '@/utils/index'
-
+import itemContainer from '@/components/item-container.vue'
+import listMall from '@/components/list-mall.vue'
 import { openShareAll } from '@/libs/wechat'
-
+import mockData from '@/api/index.js'
 const HAS_COUPON_WINDOW = 'has_coupon_window'
 
 export default {
@@ -75,22 +78,25 @@ export default {
   components: {
     // swiper,
     // swiperSlide,
-    UniNoticeBar,
+  /*  UniNoticeBar, */
     GoodList,
     PromotionGood,
     CouponWindow,
     Menu,
-    Adv,
+    /* Adv, */
     Groupon,
     Banner,
     HotCommodity,
     FirstNewProduct,
     ProductsRecommended,
+	itemContainer,
+	listMall,
    /* Live, */
   },
   props: {},
   data: function() {
     return {
+	  itemcontainer3:{},
       homeData: [],
       CustomBar: this.CustomBar,
       StatusBar: this.StatusBar,
@@ -197,10 +203,19 @@ export default {
     // uni.showLoading({
     //   title: "加载中",
     // });
+	this.itemcontainer3=mockData.itemcontainer3;
     getCanvas()
       .then(res => {})
       .catch(error => {
         this.homeData = JSON.parse(error.data.json)
+		this.homeData.splice(6, 0,{
+			index:8,
+			type:'fullReduction',
+		});
+		this.homeData.forEach((item,index)=>{
+			item.index = index
+		})
+	  console.log(this.homeData)
       })
     getHomeData().then(res => {
       that.logoUrl = res.data.logoUrl

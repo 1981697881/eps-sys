@@ -15,7 +15,7 @@
 						<!-- <button class="get-phone-number-btn" v-if="!userAddress.mobileNumber" open-type="getPhoneNumber" @getphonenumber="getPhoneNumber">绑定微信手机号</button> -->
 						<input
 							type="number"
-							v-model="userAddress.mobileNumber"
+							v-model="userAddress.phone"
 							class="uni-input form-item-input"
 							placeholder-style="color:#999999"
 							name="input"
@@ -210,7 +210,7 @@ export default {
 			userAddress: {
 				isDefault: 0,
 				realName: '',
-				mobileNumber: '',
+				phone: '',
 				buildingCode: '',
 				houseNumber: '',
 				wxMaMsgSubscribe: false
@@ -223,12 +223,11 @@ export default {
 	computed: mapGetters(['userInfo', 'isLogin']),
 	mounted: function() {
 		let vm = this;
-		console.log(vm.userInfo)
-		vm.userAddress.mobileNumber = vm.userInfo.phone;
-		/* let id = this.$yroute.query.id;
+		vm.userAddress.phone = vm.userInfo.phone;
+		let id = this.$yroute.query.id;
 		this.id = id;
-		this.getUserAddress();
-		this.getCityList(); */
+		 this.getUserAddress();
+		/*this.getCityList(); */
 	},
 	/* watch: {
 		addressText(nextModel2) {
@@ -241,7 +240,8 @@ export default {
 		let noDeliveryTime = vm.$store.getters.getNoDeliveryTime;
 		vm.showNoDeliveryTime(noDeliveryTime);
 		// 获取值
-		let form = vm.$store.getters.getRegisterForm;
+		/* let form = vm.$store.getters.getRegisterForm;
+		console.log(form)
 		if (form) {
 			vm.form = vm.$store.getters.getRegisterForm;
 			vm.selectBuildings = vm.form.selectBuildings;
@@ -249,13 +249,31 @@ export default {
 			vm.deliveryMethodColumns = vm.form.deliveryMethodColumns;
 			vm.columns = vm.form.columns;
 			vm.loadBuildingName();
-		} else {
+		} else { */
 			vm.loadBuilding();
-		}
+		//}
 		/* vm.setMargin(); */
 	},
 	methods: {
 		//心水达地址管理---start
+		goToNoDeliveryTime() {
+			let vm = this;
+			let obj = {
+				realName: vm.form.realName,
+				mobileNumber: vm.form.phone,
+				houseNumber: vm.form.houseNumber,
+				selectBuildings: vm.selectBuildings,
+				wxMaMsgSubscribe: vm.form.wxMaMsgSubscribe,
+				deliveryMethodColumns: vm.deliveryMethodColumns,
+				selectDeliveryMethodValue: vm.selectDeliveryMethodValue,
+				columns: vm.columns
+			}
+			// 储存
+			vm.$store.dispatch('addRegisterForm', obj);
+			uni.navigateTo({
+				url: "/pages/delivery/no-delivery-time/no-delivery-time?pageFlag=register"
+			})
+		},
 		getPhoneNumber(e) {
 			let vm = this;
 			uni.showLoading({
@@ -279,7 +297,7 @@ export default {
 						uni.hideLoading();
 						if (res.data.status === 200) {
 							let phoneNoInfo = res.data.data.phoneNoInfo;
-							vm.form.mobileNumber = phoneNoInfo.phoneNumber;
+							vm.form.phone = phoneNoInfo.phoneNumber;
 							vm.$store.dispatch('addPhoneNoInfo', phoneNoInfo);
 						} else {
 							uni.showModal({
@@ -404,6 +422,14 @@ export default {
 			} = event.detail;
 			vm.selectBuildings = value;
 			vm.loadBuildingName();
+			vm.showBuilding = false;
+		},
+		closeDeliveryMethod() {
+			let vm = this;
+			vm.showDeliveryMethod = false;
+		},
+		closeBuilding() {
+			let vm = this;
 			vm.showBuilding = false;
 		},
 		onCancel() {
@@ -590,10 +616,12 @@ export default {
 			let that = this;
 			getAddress(that.id).then(res => {
 				that.userAddress = res.data;
-				that.addressText = res.data.province + ' ' + res.data.city + ' ' + res.data.district;
+				that.userAddress.houseNumber = res.data.detail.substr(res.data.detail.length-2,2);
+				that.selectBuildings = res.data.member.selectBuildings;
+				/* that.addressText = res.data.province + ' ' + res.data.city + ' ' + res.data.district;
 				that.address.province = res.data.province;
 				that.address.city = res.data.city;
-				that.address.district = res.data.district;
+				that.address.district = res.data.district; */
 			});
 		},
 		getAddress() {},
@@ -606,7 +634,7 @@ export default {
 				}
 			}
 			let name = this.userAddress.realName,
-				phone = this.userAddress.mobileNumber,
+				phone = this.userAddress.phone,
 				addressText = this.selectBuildingName,
 				detail = this.userAddress.houseNumber,
 				isDefault = this.userAddress.isDefault;
@@ -627,8 +655,8 @@ export default {
 						real_name: name,
 						phone: phone,
 						buildingCode: buildingCode,
-						address: addressText,
-						detail: detail,
+						address: {},
+						detail: addressText+''+detail,
 						is_default: isDefault ? true : false,
 						post_code: ''
 					};
