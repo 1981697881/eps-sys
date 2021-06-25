@@ -19,12 +19,14 @@
 </template>
 
 <script>
-	const mainPagePath = ['pages/tabbar/index'];
+	import moreGoodList from '@/api/good.json';
 	const whiteList = ['#FFF', '#FFFFFF', '#ffffff', '#fff', '#f8f8f8', '#F8F8F8', 'white', 'rgb(255,255,255)',
 		'rgba(255,255,255,1)'
 	];
+	import MescrollMixin from "@/components/mescroll-uni/mescroll-mixins.js";
 	let loading = false;
 	export default {
+		mixins: [MescrollMixin],
 		components: {},
 		data() {
 			return {
@@ -85,13 +87,7 @@
 			if (option.tpl) {
 				this.tplId = option.tpl;
 			}
-			let currentPages = getCurrentPages();
-			let pageLen = currentPages.length;
-			if (pageLen == 1 && !mainPagePath.includes(currentPages[0].route)) {
-				this.getTpl();
-			} else {
-				this.initData();
-			}
+			this.getTpl();
 		},
 		computed: {
 			goods() {
@@ -113,10 +109,14 @@
 		methods: {
 			getTpl() {
 				let sentData = {};
-				sentData.tpl = this.tplId;
+				let res = moreGoodList.data
+				this.tpl = res.tpl;
+				this.setStyle(res.tpl);
+				/* sentData.tpl = this.tplId;
 				sentData.page = 1;
 				sentData.min_id = 1;
 				sentData.first = 1;
+				
 				this.$http.get('api/default/list', {
 					params: sentData
 				}).then((res) => {
@@ -125,22 +125,9 @@
 				}).catch((error) => {
 					this.setStyle(error.data.tpl);
 					this.$config.toast(error.message, 2000);
-				});
+				}); */
 			},
-			initData() {
-				uni.getStorage({
-					key: "tplPageSetting",
-					success: (res)=> {
-						let tplList = res.data;
-						tplList.forEach((item) => {
-							if (parseInt(item.id) === parseInt(this.tplId)) {
-								this.tpl = item;
-								this.setStyle(item);
-							}
-						});
-					}
-				})
-			},
+			
 			setStyle(item) {
 				uni.setNavigationBarTitle({
 					title: item.title
@@ -224,13 +211,14 @@
 					id: tabItem.id,
 					min_id: tabItem.minId
 				}
-				this.$http.get('api/default/list', {
+				/* this.$http.get('api/default/list', {
 					params: data
-				}).then(res => {
+				}).then(res => { */
 					loading = false;
 					if (page.num == 1) {
 						tabItem.goods = [];
 					}
+					let res =  moreGoodList.data
 					let goodsList = res.list;
 					tabItem.goods = tabItem.goods.concat(res.list);
 					setTimeout(() => {
@@ -250,10 +238,10 @@
 							if (this.isShowSticky) this.mescroll.scrollTo(this.navTop, 0)
 						}
 					}, 500);
-				}).catch((error) => {
+				/* }).catch((error) => {
 					loading = false;
 					this.mescroll.endErr();
-				});
+				}); */
 			},
 			setNavTop() {
 				if (this.tpl.navbar == 1) return;

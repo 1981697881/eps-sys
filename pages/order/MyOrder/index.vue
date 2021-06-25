@@ -99,10 +99,12 @@
 				<view class="bottom acea-row row-right row-middle">
 					<template v-if="order._status._type == 0">
 						<view class="bnt cancelBnt" @click="cancelOrder(order)">取消订单</view>
+						<view class="bnt bg-blue" @tap="getPlan">配送计划</view>
 						<view class="bnt bg-color-red" @click="goOrderDetails(order)">立即付款</view>
 					</template>
 					<template v-if="order._status._type == 1 || order._status._type == 9">
 						<view class="bnt bg-color-red" @click="goOrderDetails(order)">查看详情</view>
+						<view class="bnt bg-blue" @tap="getPlan">配送计划</view>
 					</template>
 					<template v-if="order._status._type == 2">
 						<view class="bnt default" @click="goLogistics(order)">查看物流</view>
@@ -131,6 +133,8 @@
 		</view>
 		<Loading :loaded="loaded" :loading="loading"></Loading>
 		<Payment v-model="pay" :types="payType" @checked="toPay" :balance="userInfo.nowMoney"></Payment>
+		<!-- 商品规格弹窗 -->
+		<PlanWindow  v-on:changeFun="changeFun" :attr="attr" ></PlanWindow>
 	</view>
 </template>
 <script>
@@ -141,7 +145,7 @@ import Payment from '@/components/Payment';
 import DataFormat from '@/components/DataFormat';
 import { mapGetters } from 'vuex';
 import { isWeixin, dataFormat } from '@/utils';
-
+import PlanWindow from '@/components/PlanWindow'
 const STATUS = ['待付款', '待发货', '待收货', '待评价', '已完成', '', '', '', '', '待付款'];
 
 const NAME = 'MyOrder';
@@ -159,6 +163,11 @@ export default {
 			loaded: false,
 			loading: false,
 			orderList: [],
+			attr: {
+			  cartAttr: false,
+			  productAttr: [],
+			  productSelect: {},
+			},
 			pay: false,
 			payType: ['yue', 'weixin'],
 			from: this.$deviceType
@@ -167,6 +176,7 @@ export default {
 	components: {
 		Loading,
 		Payment,
+		PlanWindow,
 		DataFormat
 	},
 	computed: mapGetters(['userInfo']),
@@ -197,6 +207,12 @@ export default {
 		this.loading = false;
 	},
 	methods: {
+		changeFun: function(opt) {
+		 
+		},
+		getPlan(){
+			this.attr.cartAttr = true 
+		},
 		//倒计时
 		countDownFun(time) {
 			let startTime = new Date().getTime(); //当前时间

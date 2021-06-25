@@ -1,0 +1,99 @@
+{
+	"code": 200,
+	"message": "ok",
+	"data": {
+		"min_id": 1,
+		"api": "ali",
+		"list": [{
+			"itemid": 599269056085,
+			"title": "嘻哈纯棉纯色情侣短袖打底衫T恤白色男女体恤纯黑半袖衣服上衣",
+			"intro": "",
+			"price": 17,
+			"sales": "70.6万",
+			"image": "http://img.alicdn.com/bao/uploaded/i1/132691477/O1CN01uFj7651MmVXObEOla_!!0-item_pic.jpg_310x310.jpg",
+			"adv": ["//img.alicdn.com/bao/uploaded/i1/132691477/O1CN01uFj7651MmVXObEOla_!!0-item_pic.jpg", "//img.alicdn.com/i2/132691477/O1CN01wtPcWt1MmVXObDzor_!!132691477.jpg", "//img.alicdn.com/i3/132691477/O1CN01KUV31c1MmVbKoTi3B_!!132691477-0-lubanu-s.jpg", "//img.alicdn.com/i4/132691477/O1CN01YbAg4d1MmVbKQ5yrw_!!132691477-0-lubanu-s.jpg", "//img.alicdn.com/i1/132691477/O1CN01rdnLte1MmVbNOPgZz_!!132691477-0-lubanu-s.jpg"],
+			"to_page": "/pages/shop/GoodsCon/index",
+			"coupon_id": null,
+			"coupon_quan": 5,
+			"coupon_price": 12,
+			"coupon_start_time": 1622995200,
+			"coupon_end_time": 1625068799,
+			"coupon_surplus": 310000,
+			"price_name": "满199-100",
+			"shop_type": 0,
+			"shop_name": "小尼力",
+			"video": "",
+			"is_ju": false,
+			"dingjin": 0,
+			"yushou_info": "",
+			"tmall_play_activity_info": "",
+			"money": 0,
+			"tags": [{
+				"name": "T恤",
+				"color": "gradual-orange"
+			}],
+			"tip": [],
+			"api": "ali"
+		},  {
+			"itemid": 615776387399,
+			"title": "老虎积雪草修护面膜补水保湿紧致控油收缩毛孔男女士官方正品",
+			"intro": "进口原料 老虎积雪草面膜",
+			"price": 89.9,
+			"sales": "3.2万",
+			"image": "http://img.alicdn.com/bao/uploaded/i2/2207686621837/O1CN01KOhW7N1PROG7InM6S_!!0-item_pic.jpg_310x310.jpg",
+			"adv": ["//img.alicdn.com/bao/uploaded/i2/2207686621837/O1CN01KOhW7N1PROG7InM6S_!!0-item_pic.jpg", "//img.alicdn.com/i2/2207686621837/O1CN01UqNl4Q1PROAVIgBU2_!!2207686621837.jpg", "//img.alicdn.com/i1/2207686621837/O1CN01DdllJ41PROCmztEME_!!2207686621837.jpg", "//img.alicdn.com/i4/2207686621837/O1CN01MD7KAB1PROAqH3K57_!!2207686621837.jpg", "//img.alicdn.com/i1/2207686621837/O1CN01Po75KO1PROBs2AQdq_!!2207686621837.jpg"],
+			"to_page": "/pages/shop/GoodsCon/index",
+			"coupon_id": null,
+			"coupon_quan": 80,
+			"coupon_price": 9.9,
+			"coupon_start_time": 1624377600,
+			"coupon_end_time": 1624723199,
+			"coupon_surplus": 94000,
+			"price_name": "满199-100",
+			"shop_type": 1,
+			"shop_name": "wsmm旗舰店",
+			"video": "",
+			"is_ju": false,
+			"dingjin": 0,
+			"yushou_info": "",
+			"tmall_play_activity_info": "",
+			"money": 0,
+			"tags": [{
+				"name": "面膜",
+				"color": "gradual-red"
+			}],
+			"tip": [],
+			"api": "ali"
+		}],
+		"tpl": {
+			"id": "9",
+			"store_id": "1",
+			"name": "省钱福利",
+			"title": "满减专区",
+			"image": "https://ossgw.alicdn.com/alp/1572733826567-750-275.png",
+			"intro": null,
+			"navbar": "0",
+			"nav_color": "#f3206d",
+			"bg_color": "#f3206d",
+			"text_color": "#ffffff",
+			"angle": "45",
+			"api": "TbkDgOptimusMaterialRequest",
+			"api_id": "0",
+			"api_sort": "0",
+			"grid": "1",
+			"immersive": "0",
+			"mode": "3",
+			"tabs": [{
+				"id": 31362,
+				"title": "满199-100"
+			}, {
+				"id": 27162,
+				"title": "满199-50"
+			}],
+			"tab_width": "375",
+			"status": "1",
+			"created_at": "1595834842",
+			"updated_at": "1600093878"
+		}
+	}
+}

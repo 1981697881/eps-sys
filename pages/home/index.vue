@@ -205,7 +205,8 @@ export default {
     // });
 	this.itemcontainer3=mockData.itemcontainer3;
     getCanvas()
-      .then(res => {})
+      .then(res => {
+	  })
       .catch(error => {
         this.homeData = JSON.parse(error.data.json)
 		this.homeData.splice(6, 0,{
@@ -215,25 +216,26 @@ export default {
 		this.homeData.forEach((item,index)=>{
 			item.index = index
 		})
-	  console.log(this.homeData)
-      })
-    getHomeData().then(res => {
-      that.logoUrl = res.data.logoUrl
-      res.data.banner.map(item => (item.bgcolor = item.color || ''))
-	  that.$set(that, 'info', res.data.info)
-      that.$set(that, 'menus', res.data.menus)
-      that.$set(that, 'firstList', res.data.firstList)
-      that.$set(that, 'bastList', res.data.bastList)
-      that.$set(that, 'likeInfo', res.data.likeInfo)
-      that.$set(that, 'live', res.data.liveList)
-      that.$set(that, 'lovely', res.data.lovely)
-      that.$set(that, 'benefit', res.data.benefit)
-      that.$set(that, 'couponList', res.data.couponList)
-      that.$set(that, 'combinationList', res.data.combinationList)
-      uni.hideLoading()
-      that.setOpenShare()
-      // that.doColorThief()
+		getHomeData().then(res => {
+		  that.logoUrl = res.data.logoUrl
+		  res.data.banner.map(item => (item.bgcolor = item.color || ''))
+		  that.$set(that, 'info', res.data.info)
+		  that.$set(that, 'menus', res.data.menus)
+		  that.$set(that, 'firstList', res.data.firstList)
+		  that.$set(that, 'bastList', res.data.bastList)
+		  that.$set(that, 'likeInfo', res.data.likeInfo)
+		  that.$set(that, 'live', res.data.liveList)
+		  that.$set(that, 'lovely', res.data.lovely)
+		  that.$set(that, 'benefit', res.data.benefit)
+		  that.$set(that, 'couponList', res.data.couponList)
+		  that.$set(that, 'combinationList', res.data.combinationList)
+		  that.$forceUpdate()
+		  uni.hideLoading()
+		  that.setOpenShare()
+		  // that.doColorThief()
+		})
     })
+   
   },
   methods: {
     ...mapActions(['getLocation']),

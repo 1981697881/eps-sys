@@ -14,6 +14,10 @@ import cuCustom from '@/components/colorui/components/cu-custom.vue'
 import { parseRoute, _router, parseQuery } from '@/utils'
 import { VUE_APP_RESOURCES_URL, VUE_APP_API_URL } from '@/config'
 Vue.component('cu-custom', cuCustom)
+import MescrollBody from "@/components/mescroll-uni/mescroll-body.vue"
+import MescrollUni from "@/components/mescroll-uni/mescroll-uni.vue"
+Vue.component('mescroll-body', MescrollBody)
+Vue.component('mescroll-uni', MescrollUni)
 Vue.config.devtools = process.env.NODE_ENV !== 'production'
 Vue.prototype.$validator = function(rule) {
   return new schema(rule)

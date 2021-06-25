@@ -55,14 +55,14 @@ const itemcontainer3 = {
 	}, {
 		uri: '/static/index/noswiper/4/3.png',
 		title: 'Tempur',
-		subtitle: '航天局认证',
+		subtitle: 'ISO认证',
 	}, {
 		uri: '/static/index/noswiper/4/4.png',
 		title: 'Yolanna',
-		subtitle: '天丝夏凉特惠',
+		subtitle: '夏凉特惠',
 	}],
 	banner: {
-		title: '最高折上8折·再满199减100',
+		title: '最高满199减100',
 		subtitle: '仅限前两小时 立即抢购',
 		link: '7.13暑假总动员'
 	},

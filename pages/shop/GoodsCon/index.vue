@@ -9,9 +9,10 @@
           <view class="money font-color-red" v-if="!isIntegral">
             <text>￥</text>
             <text class="num">{{ attr.productSelect.price || storeInfo.price }}</text>
-            <text class="vip-money" v-if="storeInfo.vipPrice && storeInfo.vipPrice > 0">￥{{ attr.productSelect.vipPrice || storeInfo.vipPrice }}</text>
-            <image :src="`${$VUE_APP_RESOURCES_URL}/images/vip.png`" class="image" v-if="storeInfo.vipPrice && storeInfo.vipPrice > 0" />
-          </view>
+            <!-- <text class="vip-money" v-if="storeInfo.vipPrice && storeInfo.vipPrice > 0">￥{{ attr.productSelect.vipPrice || storeInfo.vipPrice }}</text>
+            <image :src="`${$VUE_APP_RESOURCES_URL}/images/vip.png`" class="image" v-if="storeInfo.vipPrice && storeInfo.vipPrice > 0" /> -->
+			 <text class="np-price-first" v-if="type=='3'">满 199-100</text>
+		  </view>
           <view class="money font-color-red" v-if="isIntegral">
             <text class="num">{{ attr.productSelect.integral || storeInfo.integral }}积分</text>
           </view>
@@ -769,6 +770,25 @@ export default {
 </script>
 
 <style scoped lang="less">
+	.np-price-first {
+		margin-left: 10rpx;
+		background-color: #1cbbb4;
+		color: #FFFFFF;
+		font-size: 22rpx;
+		font-weight: 600;
+		padding: 0 8rpx;
+		height: 30rpx;
+		line-height: 30rpx;
+		border-radius: 6rpx;
+		margin-right: 5rpx;
+		vertical-align: middle;
+		position: relative;
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		box-sizing: border-box;
+		margin-top: -6.09rpx;
+	}
 .geoPage {
   position: fixed;
   width: 100%;

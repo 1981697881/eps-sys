@@ -20,18 +20,17 @@
 						<text v-for="(item,index) in item.tags" :key="index" class="np-goods-tag" :class="item.color ? 'bg-' + item.color : 'bg-red'">{{item.name}}</text>
 						<text class="pd-left">{{item.title}}</text>
 					</view>
-					
 					<view class="np-goods-coupon-price">
 						<text>{{item.coupon_price}}</text>
 						<text class="np-price-first" v-if="item.price_name">{{item.price_name}}</text>
 					</view>
-					<view class="np-goods-money-box">
+					<!-- <view class="np-goods-money-box">
 						<view class="np-money-item" v-if="item.coupon_quan">
 							<text class="np-money-item-left">券</text>
 							<text class="np-money-item-right">{{item.coupon_quan}}元</text>
 						</view>
 						<text class="np-goods-sales">{{item.sales + '人付款'}}</text>
-					</view>
+					</view> -->
 				</view>
 				<!-- #ifdef H5 -->
 				<view class="np-goods-bottom bg-gradual-orange-1" v-if="item.money > 0">
@@ -74,13 +73,13 @@
 						<text>{{item.coupon_price}}</text>
 						<text class="np-price-first" v-if="item.price_name">{{item.price_name}}</text>
 					</view>
-					<view class="np-goods-money-box">
+					<!-- <view class="np-goods-money-box">
 						<view class="np-money-item" v-if="item.coupon_quan">
 							<text class="np-money-item-left">券</text>
 							<text class="np-money-item-right">{{item.coupon_quan}}元</text>
 						</view>
 						<text class="np-goods-sales">{{item.sales + '人付款'}}</text>
-					</view>
+					</view> -->
 				</view>
 				<!-- #ifdef H5 -->
 				<view class="np-goods-bottom bg-gradual-orange-1" v-if="item.money > 0">
@@ -122,14 +121,24 @@
 		},
 		methods: {
 			navTo(index) {
+				let that = this
 				let item = this.goodsList[index];
+				console.log(item)
 				uni.setStorage({
 					key: 'ITEM',
 					data: JSON.stringify(item),
 					success: () => {
-						uni.navigateTo({
+						this.$yrouter.push({
+						  path: item.to_page,
+						  query: {
+							  id: 6,
+							  isIntegral: false,
+							  type: "3"
+						  },
+						})
+						/* uni.navigateTo({
 							url: item.to_page
-						});
+						}); */
 					}
 				});
 			}

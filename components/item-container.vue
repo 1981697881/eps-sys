@@ -51,8 +51,19 @@
 			}
 		},
 		methods:{
+			showAllProducts(){
+				this.$yrouter.push({
+				  path: '/pages/activity/fullReduction/list',
+				  query: {
+				  },
+				})
+			},
 			detail(){
-				this.$jump('/pages/goods/detail/detail')
+				this.$yrouter.push({
+				  path: '/pages/activity/fullReduction/list',
+				  query: {
+				  },
+				})
 			}
 		}
 	}
