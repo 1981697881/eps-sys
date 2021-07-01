@@ -45,42 +45,20 @@
 				"navigationStyle": "custom"
 			}
 		},
+
 		{
-			"path": "pages/shop/GoodSearch/index",
-			"style": {
-				"navigationBarTitleText": "搜索商品"
-			}
-		},
-		{
-			"path": "pages/shop/GoodsClass/index",
+			"path": "pages/home/GoodsClass/index",
 			"style": {
 				"navigationBarTitleText": "商品分类"
 			}
 		},
 		{
-			"path": "pages/shop/ShoppingCart/index",
+			"path": "pages/home/ShoppingCart/index",
 			"style": {
 				"navigationBarTitleText": "购物车"
 			}
 		},
-		{
-			"path": "pages/shop/StoreList/index",
-			"style": {
-				"navigationBarTitleText": "商家列表"
-			}
-		},
-		{
-			"path": "pages/shop/GoodsList/index",
-			"style": {
-				"navigationBarTitleText": "商品列表"
-			}
-		},
-		{
-			"path": "pages/shop/preSaleGoodsList/index",
-			"style": {
-				"navigationBarTitleText": "预售商品"
-			}
-		},
+
 		{
 			"path": "pages/NotDefined/index",
 			"style": {
@@ -93,71 +71,7 @@
 				"navigationBarTitleText": "我的"
 			}
 		},
-		{
-			"path": "pages/shop/GoodsCollection/index",
-			"style": {
-				"navigationBarTitleText": "商品收藏"
-			}
-		},{
-			"path": "pages/shop/JSD/menu",
-			"style": {
-				"navigationBarTitleText": "极速达"
-			}
-		},
-		{
-			"path": "pages/shop/GoodsFoot/index",
-			"style": {
-				"navigationBarTitleText": "我的足迹"
-			}
-		},
-		{
-			"path": "pages/shop/news/NewsDetail/index",
-			"style": {
-				"navigationBarTitleText": "新闻详情"
-			}
-		},
-		{
-			"path": "pages/shop/news/NewsList/index",
-			"style": {
-				"navigationBarTitleText": "新闻列表"
-			}
-		},
-		{
-			"path": "pages/shop/EvaluateList/index",
-			"style": {
-				"navigationBarTitleText": "评价列表"
-			}
-		},
-		{
-			"path": "pages/shop/GoodsEvaluate/index",
-			"style": {
-				"navigationBarTitleText": "商品评价"
-			}
-		},
-		{
-			"path": "pages/shop/GoodsPromotion/index",
-			"style": {
-				"navigationBarTitleText": "促销商品"
-			}
-		},
-		{
-			"path": "pages/shop/HotNewGoods/index",
-			"style": {
-				"navigationBarTitleText": "热门商品"
-			}
-		},
-		{
-			"path": "pages/shop/GoodsCon/index",
-			"style": {
-				"navigationBarTitleText": "商品详情"
-			}
-		},
-		{
-			"path": "pages/shop/IntegralGoodsCon/index",
-			"style": {
-				"navigationBarTitleText": "积分商品详情"
-			}
-		},
+
 		{
 			"path": "pages/user/BindingPhone/index",
 			"style": {
@@ -295,23 +209,115 @@
 			}
 		},
 
-		
+
 		{
 			"path": "pages/map/index",
 			"style": {
 				"navigationBarTitleText": "地图"
 			}
-		},
-		{
-			"path": "pages/shop/Live/LiveList/index",
-			"style": {
-				"navigationBarTitleText": "直播列表"
-			}
 		}
+
 	],
 	// 分包加载
 	// 不要接受编辑器的组件放置分包建议。因为那些不是在单个分包内使用的,也不知道为啥老报错。
 	"subPackages": [{
+		"root": "pages/shop",
+		"pages": [{
+				"path": "GoodsCollection/index",
+				"style": {
+					"navigationBarTitleText": "商品收藏"
+				}
+			}, {
+				"path": "JSD/menu",
+				"style": {
+					"navigationBarTitleText": "极速达"
+				}
+			},
+			{
+				"path": "GoodsFoot/index",
+				"style": {
+					"navigationBarTitleText": "我的足迹"
+				}
+			},
+			{
+				"path": "news/NewsDetail/index",
+				"style": {
+					"navigationBarTitleText": "新闻详情"
+				}
+			},
+			{
+				"path": "news/NewsList/index",
+				"style": {
+					"navigationBarTitleText": "新闻列表"
+				}
+			},
+			{
+				"path": "EvaluateList/index",
+				"style": {
+					"navigationBarTitleText": "评价列表"
+				}
+			},
+			{
+				"path": "GoodsEvaluate/index",
+				"style": {
+					"navigationBarTitleText": "商品评价"
+				}
+			},
+			{
+				"path": "GoodsPromotion/index",
+				"style": {
+					"navigationBarTitleText": "促销商品"
+				}
+			},
+			{
+				"path": "HotNewGoods/index",
+				"style": {
+					"navigationBarTitleText": "热门商品"
+				}
+			},
+			{
+				"path": "GoodsCon/index",
+				"style": {
+					"navigationBarTitleText": "商品详情"
+				}
+			},
+			{
+				"path": "IntegralGoodsCon/index",
+				"style": {
+					"navigationBarTitleText": "积分商品详情"
+				}
+			},
+			{
+				"path": "Live/LiveList/index",
+				"style": {
+					"navigationBarTitleText": "直播列表"
+				}
+			}, {
+				"path": "GoodSearch/index",
+				"style": {
+					"navigationBarTitleText": "搜索商品"
+				}
+			},
+			{
+				"path": "StoreList/index",
+				"style": {
+					"navigationBarTitleText": "商家列表"
+				}
+			},
+			{
+				"path": "GoodsList/index",
+				"style": {
+					"navigationBarTitleText": "商品列表"
+				}
+			},
+			{
+				"path": "preSaleGoodsList/index",
+				"style": {
+					"navigationBarTitleText": "预售商品"
+				}
+			}
+		]
+	}, {
 		"root": "pages/order",
 		"pages": [{
 				"path": "MyOrder/index",
@@ -477,10 +483,9 @@
 				}
 			}
 		]
-	},{
+	}, {
 		"root": "pages/activity",
-		"pages": [
-			{
+		"pages": [{
 				"path": "Poster/index",
 				"style": {
 					"navigationBarTitleText": "推广海报"
@@ -503,7 +508,7 @@
 				"style": {
 					"navigationBarTitleText": "砍价记录"
 				}
-			},{
+			}, {
 				"path": "fullReduction/list",
 				"style": {
 					"navigationBarTitleText": "满减专区"
@@ -570,13 +575,13 @@
 				"text": "首页"
 			},
 			{
-				"pagePath": "pages/shop/GoodsClass/index",
+				"pagePath": "pages/home/GoodsClass/index",
 				"iconPath": "static/icon-class.png",
 				"selectedIconPath": "static/icon-class-hot.png",
 				"text": "分类"
 			},
 			{
-				"pagePath": "pages/shop/ShoppingCart/index",
+				"pagePath": "pages/home/ShoppingCart/index",
 				"iconPath": "static/icon-cart.png",
 				"selectedIconPath": "static/icon-cart-hot.png",
 				"text": "购物车"

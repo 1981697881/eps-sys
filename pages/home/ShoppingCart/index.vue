@@ -2,9 +2,9 @@
   <view class="shoppingCart">
     <view v-if="$store.getters.token || userInfo.uid">
       <view class="labelNav acea-row row-around row-middle">
-        <view class="item"> <text class="iconfont icon-xuanzhong"></text>100%正品保证 </view>
-        <view class="item"> <text class="iconfont icon-xuanzhong"></text>所有商品精挑细选 </view>
-        <view class="item"> <text class="iconfont icon-xuanzhong"></text>售后无忧 </view>
+        <view class="item"><text class="iconfont icon-xuanzhong"></text>100%正品保证 </view>
+        <view class="item"><text class="iconfont icon-xuanzhong"></text>所有商品精挑细选 </view>
+        <view class="item"><text class="iconfont icon-xuanzhong"></text>售后无忧 </view>
       </view>
       <view class="nav acea-row row-between-wrapper">
         <view>

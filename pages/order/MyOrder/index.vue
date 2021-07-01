@@ -99,12 +99,12 @@
 				<view class="bottom acea-row row-right row-middle">
 					<template v-if="order._status._type == 0">
 						<view class="bnt cancelBnt" @click="cancelOrder(order)">取消订单</view>
-						<view class="bnt bg-blue" @tap="getPlan">配送计划</view>
+						<view class="bnt" style="background-color: #00B2EE;" @tap="getPlan">配送计划</view>
 						<view class="bnt bg-color-red" @click="goOrderDetails(order)">立即付款</view>
 					</template>
 					<template v-if="order._status._type == 1 || order._status._type == 9">
 						<view class="bnt bg-color-red" @click="goOrderDetails(order)">查看详情</view>
-						<view class="bnt bg-blue" @tap="getPlan">配送计划</view>
+						<view class="bnt" style="background-color: #00B2EE;" @tap="getPlan">配送计划</view>
 					</template>
 					<template v-if="order._status._type == 2">
 						<view class="bnt default" @click="goLogistics(order)">查看物流</view>
@@ -208,7 +208,14 @@ export default {
 	},
 	methods: {
 		changeFun: function(opt) {
-		 
+		 if (typeof opt !== 'object') opt = {}
+		 let action = opt.action || ''
+		 let value = opt.value === undefined ? '' : opt.value
+		 this[action] && this[action](value)
+		},
+		changeattr: function(msg) {
+		  // 修改了规格
+		  this.attr.cartAttr = msg
 		},
 		getPlan(){
 			this.attr.cartAttr = true 

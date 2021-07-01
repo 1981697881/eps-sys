@@ -342,7 +342,7 @@ export default {
       this.$yrouter.switchTab('/pages/home/index')
     },
     goShoppingCart() {
-      this.$yrouter.switchTab('/pages/shop/ShoppingCart/index')
+      this.$yrouter.switchTab('/pages/home/ShoppingCart/index')
     },
     goCustomerList() {
       this.$yrouter.push({

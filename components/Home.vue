@@ -27,7 +27,7 @@ export default {
 			this.$yrouter.switchTab('/pages/home/index');
 		},
 		shoppingCartGo() {
-			this.$yrouter.switchTab('/pages/shop/ShoppingCart/index');
+			this.$yrouter.switchTab('/pages/home/ShoppingCart/index');
 		},
 		touchmove(event) {
 			// event.preventDefault();

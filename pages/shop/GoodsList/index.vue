@@ -303,7 +303,7 @@ export default {
       switch (index) {
         case 0:
           return that.$yrouter.push({
-            path: '/pages/shop/GoodsClass/index',
+            path: '/pages/home/GoodsClass/index',
           })
         case 1:
           if (that.price === 0) that.price = 1

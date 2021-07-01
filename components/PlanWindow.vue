@@ -18,9 +18,12 @@
 				<view class="item">
 					<view class="title">起送时间</view>
 					<view class="listn acea-row row-middle">
-						<view class="itemn">
-							2020-01-01 00:00:00
-						</view>
+							<!-- <view class="picker">
+								{{date}}
+							</view> -->
+						<picker mode="date" :value="date" start="2015-09-01" end="2020-09-01" @change="DateChange" class="itemn">
+							{{date}}
+						</picker>
 					</view>
 				</view>
 			</view>
@@ -59,7 +62,8 @@ export default {
 	data: function() {
 		return {
 			deliveryQuantity: 1,
-			deliveryDate: 1
+			deliveryDate: 1,
+			date: '2018-12-25',
 		};
 	},
 	mounted: function() {
@@ -67,28 +71,41 @@ export default {
 	},
 	watch: {},
 	methods: {
+		DateChange(e) {
+			this.date = e.detail.value
+		},
 		closeAttr: function() {
 			this.$emit('changeFun', { action: 'changeattr', value: false });
-		},
-		CartNumDes: function() {
-			this.$emit('changeFun', { action: 'ChangeCartNum', value: false });
-		},
-		CartNumAdd: function() {
-			this.$emit('changeFun', { action: 'ChangeCartNum', value: 1 });
 		},
 		CartDeliveryDes: function() {
 			this.deliveryQuantity--;
 		},
 		CartDeliveryAdd: function() {
-			this.deliveryQuantity++;
+			if(this.deliveryQuantity>=this.cartNum){
+				return uni.showToast({
+					title: '不能超出限定数量',
+					icon: 'none',
+					duration: 2000
+				});
+			}else{
+				this.deliveryQuantity++;
+			}
 		},
 		CartDateDes: function() {
 			this.deliveryDate--;
 		},
 		CartDateAdd: function() {
-			this.deliveryDate++;
+			if(this.deliveryDate>=5){
+				return uni.showToast({
+					title: '不能超出限定数量',
+					icon: 'none',
+					duration: 2000
+				});
+			}else{
+				this.deliveryDate++;
+			}
+			
 		},
-
 		previewImage() {
 			uni.previewImage({
 				current: 0,

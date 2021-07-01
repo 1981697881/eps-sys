@@ -370,7 +370,7 @@ export const handleGetUserInfo = () => {
 
 		// }
 		// console.log(url)
-		// if (url == '/pages/home/index' || url == '/pages/shop/GoodsClass/index' || url == '/pages/shop/ShoppingCart/index' || url == '/pages/user/User/index') {
+		// if (url == '/pages/home/index' || url == '/pages/home/GoodsClass/index' || url == '/pages/home/ShoppingCart/index' || url == '/pages/user/User/index') {
 		// 	switchTab({
 		// 		path: `${url}`,
 		// 		query
@@ -518,7 +518,7 @@ export const handleLoginStatus = (location, complete, fail, success) => {
 	return new Promise((resolve, reject) => {
 		if (isAuth) {
 			// 有token
-			if (path == '/pages/home/index' || path == '/pages/shop/GoodsClass/index' || path == '/pages/shop/ShoppingCart/index' || path == '/pages/user/User/index') {
+			if (path == '/pages/home/index' || path == '/pages/home/GoodsClass/index' || path == '/pages/home/ShoppingCart/index' || path == '/pages/user/User/index') {
 				// switchTab({
 				// 	path: parseUrl(location),
 				// })
@@ -575,7 +575,7 @@ export function routerPermissions(url, type) {
 				console.log('登录成功，跳转页面')
 				console.log('————————')
 				store.commit("updateAuthorizationPage", false);
-				if (path == '/pages/shop/ShoppingCart/index' || path == '/pages/user/User/index') {
+				if (path == '/pages/home/ShoppingCart/index' || path == '/pages/user/User/index') {
 					console.log('————————')
 					console.log('当前是购物车，或者个人中心')
 					console.log('————————')
@@ -613,7 +613,7 @@ export function routerPermissions(url, type) {
 			})
 		}).catch(error => {
 			// 跳转到登录页面或者授权页面
-			if (path == '/pages/shop/ShoppingCart/index' || path == '/pages/user/User/index') {
+			if (path == '/pages/home/ShoppingCart/index' || path == '/pages/user/User/index') {
 				switchTab({
 					path,
 				})
