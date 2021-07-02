@@ -35,13 +35,13 @@ export default {
           name: "分类",
           icon1: "icon-yingyongchengxu-xianxing",
           icon2: "icon-yingyongchengxu",
-          url: "/pages/shop/GoodsClass/index"
+          url: "/pages/home/GoodsClass/index"
         },
         {
           name: "购物车",
           icon1: "icon-caigou-xianxing",
           icon2: "icon-caigou",
-          url: "/pages/shop/ShoppingCart/index"
+          url: "/pages/home/ShoppingCart/index"
         },
         {
           name: "我的",

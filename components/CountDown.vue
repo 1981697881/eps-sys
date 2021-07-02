@@ -60,11 +60,11 @@
     methods: {
       show_time: function () {
         let that = this;
-
+		
         function runTime() {
           //时间函数
           let intDiff = that.datatime - Date.parse(new Date()) / 1000; //获取数据中的时间戳的时间差；
-          let day = 0,
+		  let day = 0,
             hour = 0,
             minute = 0,
             second = 0;

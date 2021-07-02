@@ -108,10 +108,10 @@ export default {
       var that = this
       uni.showLoading()
       getSeckillConfig().then(res => {
+		  console.log(res.data)
         that.$set(that, 'headerImg', res.data.lovely)
         that.$set(that, 'timeList', res.data.seckillTime)
         that.$set(that, 'active', res.data.seckillTimeIndex)
-		console.log(that.timeList)
         let title = []
         title = res.data.seckillTime.map((item, index) => {
           return {
@@ -149,7 +149,7 @@ export default {
         })
         that.$set(that, 'title', title)
         that.datatime = that.timeList[that.active].stop
-        that.getSeckillList()
+		that.getSeckillList()
         that.$nextTick(function() {
           that.sticky = true
           uni.hideLoading()

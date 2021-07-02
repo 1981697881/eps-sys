@@ -92,7 +92,6 @@ export default {
 		return {};
 	},
 	mounted() {
-		console.log(this.timeList)
 	},
 	methods: {
 		detail(path,parmas) {

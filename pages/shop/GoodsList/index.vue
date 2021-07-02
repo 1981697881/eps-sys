@@ -196,9 +196,15 @@ export default {
     },
   },
   mounted: function() {
-    const { s = '', id = 0, title = '', isIntegral = false } = this.$yroute.query
+    const { s = '', id = 0, title = '', isIntegral = false,type =0 } = this.$yroute.query
     this.where.keyword = s
-    this.where.isIntegral = isIntegral == 'true' ? 1 : 0
+	if(type == 0){
+		this.where.isIntegral = isIntegral == 'true' ? 1 : 0
+	}else if(type == 1){
+		this.where.isIntegral =  0
+	}else{
+		this.where.isIntegral =  2
+	}
     this.isIntegral = isIntegral
     this.updateTitle()
     this.getProductList()
