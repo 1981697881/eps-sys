@@ -1,12 +1,12 @@
 <template>
-	<view class="tui-goods__item" :class="{ 'tui-full__item': isList }" @tap="detail('/pages/activity/SeckillDetails/index', {id:item.id, status:item.status, time:item.time})">
+	<view class="tui-goods__item" :class="{ 'tui-full__item': isList }" @tap="detail('/pages/activity/SeckillDetails/index', {id:item.id, status:item.status, time:datatime})">
 		<view class="tui-image__box" :class="{ 'tui-full__imgbox': isList }">
 			<image class="tui-goods__img" :class="{ 'tui-full__img': isList }" :src="item.image" mode="widthFix"></image>
 		</view>
 		<view class="tui-goods__content" :class="{ 'tui-full__content': isList }">
 			<view class="tui-goods__title">{{ item.title || '' }}</view>
 			<view class="progress cart-color">
-				<view class="bg-red" :style="{ width: loading ? item.percent + '%' : '' }"></view>
+				<view class="bg-red" :style="{ 'width': loading ? item.percent + '%' : '' }"></view>
 				<view class="piece font-color-red" v-text="'仅剩' + item.stock + '件'"></view>
 			</view>
 			<view class="tui-tag__box"><tui-tag plain size="24rpx" type="red" padding="8rpx 12rpx">限时价</tui-tag></view>
@@ -23,7 +23,7 @@
 					<!-- <tui-button :width="status == 3 ? '146rpx' : '144rpx'" :height="status == 3 ? '60rpx' : '50rpx'" :size="status == 3 ? 26 : 24" :type="status == 1 ? 'gray' : 'danger'" :disabled="status == 1" :plain="status == 3">
 						{{ status | getBtnText(item.subscribe) }}
 					</tui-button> -->
-					<view class="grab bg-color-red" v-if="timeList[active].status === 1 && item.stock > 0" @click="goDetail">马上抢</view>
+					<view class="grab bg-color-red" v-if="timeList[active].status === 1 && item.stock > 0" @click="goDetail(item)">马上抢</view>
 					<view class="grab" v-if="timeList[active].status === 1 && item.stock <= 0">已售磬</view>
 					<view class="grab bg-color-red" v-if="timeList[active].status === 2">即将开始</view>
 					<view class="grab bg-color-red" v-if="timeList[active].status === 0">已结束</view>
@@ -43,6 +43,7 @@ export default {
 				return {};
 			}
 		},
+		
 		timeList: {
 			type: Array,
 			default: []
@@ -57,7 +58,15 @@ export default {
 			type: Number,
 			default: 2
 		},
+		loading: {
+			type: Number,
+			default: 0
+		},
 		active: {
+			type: [Number,String],
+			default: ''
+		},
+		datatime: {
 			type: [Number,String],
 			default: ''
 		}
@@ -95,6 +104,7 @@ export default {
 	},
 	methods: {
 		detail(path,parmas) {
+			console.log(parmas)
 			this.$yrouter.push({
 				path: path,
 				query: parmas
@@ -102,7 +112,7 @@ export default {
 			//项目中应该传id
 			/* this.tui.href(`../seckillDetail/seckillDetail?status=${this.status}`) */
 		},
-		goDetail: function() {
+		goDetail: function(item) {
 			this.$emit('goDetail', item);
 		}
 	}

@@ -10,7 +10,7 @@
               <view>
                 <text>￥</text>
                 <text class="tui-price">{{ formatPrice(storeInfo.price, 0) }}</text>
-                <text>.{{ formatPrice(storeInfo.price, 1) }}</text>
+                <text>.{{ formatPrice(productValue.price, 1) }}</text>
               </view>
               <view class="tui-original-price tui-white__gray" v-text="'￥' + storeInfo.price"></view>
             </view>

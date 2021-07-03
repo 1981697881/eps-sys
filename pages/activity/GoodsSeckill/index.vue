@@ -35,9 +35,9 @@
               </view>
             </tui-divider>
           </view>
-          <view class="tui-countdown__box" v-if="item.status == 1">
-            <text>距离{{ item.status == 2 ? '结束还剩' : '开始还有' }}</text>
-            <count-down :isDay="true" :tipText="'倒计时 '" :dayText="' 天 '" :hourText="' 时 '" :minuteText="' 分 '" :secondText="' 秒'" :datatime="datatime / 1000"></count-down>
+          <view class="tui-countdown__box" v-if="item.status != 0">
+            <text>距离{{ item.status == 1 ? '结束还剩' : '开始还有' }}</text>
+            <count-down v-if="item.status != 0" :isDay="true" :tipText="'倒计时 '" :dayText="' 天 '" :hourText="' 时 '" :minuteText="' 分 '" :secondText="' 秒'" :datatime="datatime"></count-down>
           </view>
         </view>
       </block>
@@ -45,12 +45,12 @@
       <view class="tui-list__goods">
         <view class="tui-goods__left">
           <block v-for="(item, index) in seckillList" :key="index">
-            <t-goods-item :timeList="timeList" :active="active" v-if="index % 2 == 0" :item="item" :isList="false" @goDetail="goDetail"></t-goods-item>
+            <t-goods-item :timeList="timeList" :active="active" v-if="index % 2 == 0" :item="item" :datatime="datatime" :isList="false" @goDetail="goDetail"></t-goods-item>
           </block>
         </view>
         <view class="tui-goods__right">
           <block v-for="(item, index) in seckillList" :key="index">
-            <t-goods-item :timeList="timeList" :active="active" v-if="index % 2 !== 0" :item="item" :isList="false" @goDetail="goDetail"></t-goods-item>
+            <t-goods-item :timeList="timeList" :active="active" v-if="index % 2 !== 0" :item="item" :datatime="datatime" :isList="false" @goDetail="goDetail"></t-goods-item>
           </block>
         </view>
       </view>
@@ -108,7 +108,6 @@ export default {
       var that = this
       uni.showLoading()
       getSeckillConfig().then(res => {
-		  console.log(res.data)
         that.$set(that, 'headerImg', res.data.lovely)
         that.$set(that, 'timeList', res.data.seckillTime)
         that.$set(that, 'active', res.data.seckillTimeIndex)
@@ -188,7 +187,7 @@ export default {
         path: '/pages/activity/SeckillDetails/index',
         query: {
           id: item.id,
-          time,
+          time:time,
           status: item.status,
         },
       })

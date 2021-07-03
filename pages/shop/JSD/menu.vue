@@ -205,6 +205,7 @@ import modal from '@/components/modal/modal'
 import popupLayer from '@/components/popup-layer/popup-layer'
 import {mapState, mapMutations, mapActions, mapGetters} from 'vuex'
 import moreGoodList from '@/api/goods.json';
+import { getProducts } from '@/api/store'
 export default {
 	components: {
 		modal,
@@ -217,6 +218,15 @@ export default {
 				{image: ''},
 				{image: ''},
 			],
+			where: {
+			  page: 1,
+			  limit: 250,
+			  keyword: '',
+			  news: 0,
+			  priceOrder: '',
+			  isIntegral: 2,
+			  salesOrder: '',
+			},
 			loading: true,
 			currentCateId: 6905,//默认分类
 			cateScrollTop: 0,
@@ -271,7 +281,18 @@ export default {
 			this.loading = true
 			this.goods = moreGoodList.data
 			this.loading = false
-			this.cart = uni.getStorageSync('cart') || []
+			/* this.getProductList(); */
+		},
+		getProductList() {
+		  var that = this
+		  let q = that.where
+		  getProducts(that.where).then(res => {
+			  if(res.success){
+				  this.goods = res.data
+				  this.loading = false
+				  this.cart = uni.getStorageSync('cart') || []
+			  }
+		  })
 		},
 		takout() {
 			if(this.orderType == 'takeout') return
@@ -287,7 +308,6 @@ export default {
 			if(!this.sizeCalcState) {
 				this.calcSize()
 			}
-			
 			this.currentCateId = id
 			this.$nextTick(() => this.cateScrollTop = this.goods.find(item => item.id == id).top)
 		},

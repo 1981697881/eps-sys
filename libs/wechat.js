@@ -147,7 +147,7 @@ export async function oAuth() {
       toAuth()
       return
     } else {
-      auth(code)
+      /* auth(code) */
     }
     resolve()
   }).catch(error => {
