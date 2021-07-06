@@ -35,6 +35,14 @@ export function getProducts(q) {
 		login: false
 	});
 }
+/*
+ * 极速达商品列表
+ * */
+export function getJSDProducts(q) {
+	return request.get("/mall/products/JSD", q, {
+		login: false
+	});
+}
 
 /*
  * 积分商品列表
