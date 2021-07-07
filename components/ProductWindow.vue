@@ -35,21 +35,6 @@
           <view class="item plus" :class="cartNum >= attr.productSelect.stock ? 'on' : ''" @click="CartNumAdd">+</view>
         </view>
       </view>
-	  <view class="cart" v-if="type==2">
-        <view class="title">配送计划(每天配送数量/配送间隔天数)</view>
-        <view class="acea-row">
-			<view class="carnum acea-row row-left">
-			  <view class="item reduce" :class="deliveryQuantity <= 1 ? 'on' : ''" @click="CartDeliveryDes">-</view>
-			  <view class="item num">{{ deliveryQuantity }}</view>
-			  <view class="item plus" :class="deliveryQuantity >= cartNum ? 'on' : ''" @click="CartDeliveryAdd">+</view>
-			</view>
-			<view style="margin-left: 80rpx;" class="carnum acea-row row-left"> 
-			  <view class="item reduce" :class="deliveryDate <= 1 ? 'on' : ''" @click="CartDateDes">-</view>
-			  <view class="item num">{{ deliveryDate }}</view>
-			  <view class="item plus" :class="deliveryDate >= 5 ? 'on' : ''" @click="CartDateAdd">+</view>
-			</view>
-		</view>
-      </view>
     </view>
     <view class="mask" @touchmove.prevent :hidden="attr.cartAttr === false" @click="closeAttr"></view>
   </view>
@@ -93,18 +78,6 @@ export default {
     },
     CartNumAdd: function() {
       this.$emit('changeFun', { action: 'ChangeCartNum', value: 1 })
-    },
-	 CartDeliveryDes: function() {
-		this.deliveryQuantity--
-    },
-    CartDeliveryAdd: function() {
-		this.deliveryQuantity++
-    },
-	CartDateDes: function() {
-		this.deliveryDate--
-    },
-    CartDateAdd: function() {
-		this.deliveryDate++
     },
     tapAttr: function(indexw, indexn) {
       // 修改商品规格不生效的原因：

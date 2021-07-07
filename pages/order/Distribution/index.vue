@@ -63,8 +63,7 @@
 					<text class="money font-color-red" v-if="order.payType == 'integral'">{{ order.payIntegral }}积分</text>
 				</view>
 				<view class="bottom acea-row row-right row-middle">
-					<template v-if="order._status._type == 1 || order._status._type == 9">
-						<view class="bnt bg-color-red" @click="goOrderDetails(order)">查看详情</view>
+					<template v-if="order._status._type == 0 || order._status._type == 9">
 						<view class="bnt" style="background-color: #00B2EE;" @tap="getPlan">配送计划</view>
 					</template>
 					<template v-if="order._status._type == 3">
@@ -75,10 +74,6 @@
 						>
 						查看物流
 						</view>
-						<view class="bnt bg-color-red" @click="goOrderDetails(order)">去评价</view>
-					</template>
-					<template v-if="order._status._type === 4">
-						<view class="bnt bg-color-red" @click="goOrderDetails(order)">查看订单</view>
 					</template>
 				</view>
 			</view>
