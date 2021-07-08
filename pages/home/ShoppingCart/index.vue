@@ -17,18 +17,23 @@
 			</view>
 			<block v-for="(good, goodIndex) in cartList">
 				<view v-if="good.length > 0" class="type-nav">
-					<view v-if="goodIndex != 'invalid' && goodIndex != 'valid'" class="cartNav acea-row row-between-wrapper" :class="goodIndex=='普通商品'?'first-cart':''">
+					<view v-if="goodIndex != 'invalid' && goodIndex != 'valid'" class="cartNav acea-row row-between-wrapper" :class="goodIndex == '普通商品' ? 'first-cart' : ''">
+						<view class="checkbox-wrapper">
+							<checkbox-group @change="switchParentSelect(good, goodIndex)">
+								<label class="well-check"><checkbox color="#eb3729" value :checked="parentsList.indexOf(goodIndex) != -1"></checkbox></label>
+							</checkbox-group>
+						</view>
 						<view>
 							{{ goodIndex }}
 							<text class="num font-color-red">{{ good.length }}</text>
 						</view>
-						<view v-if="good.length > 0" class="administrate acea-row row-center-wrapper" @click="manage">{{ footerswitch ? '取消' : '管理' }}</view>
+						<view class="administrate acea-row row-center-wrapper" @click="manage">{{ footerswitch ? '取消' : '管理' }}</view>
 					</view>
 					<view class="list" v-if="goodIndex != 'invalid' && goodIndex != 'valid'">
 						<view class="item acea-row row-between-wrapper" v-for="(item, cartListValidIndex) in good" :key="cartListValidIndex">
 							<view class="select-btn">
 								<view class="checkbox-wrapper">
-									<checkbox-group @change="switchSelect(cartListValidIndex)">
+									<checkbox-group @change="switchSelect(good, goodIndex, item)">
 										<label class="well-check"><checkbox color="#eb3729" value :checked="item.checked"></checkbox></label>
 									</checkbox-group>
 								</view>
@@ -44,13 +49,13 @@
 									<view class="money">￥{{ item.truePrice }}</view>
 								</view>
 								<view class="carnum acea-row row-center-wrapper">
-									<view class="reduce" :class="good[cartListValidIndex].cartNum <= 1 ? 'on' : ''" @click.prevent="reduce(cartListValidIndex)">-</view>
+									<view class="reduce" :class="good[cartListValidIndex].cartNum <= 1 ? 'on' : ''" @click.prevent="reduce(item,cartListValidIndex)">-</view>
 									<view class="num">{{ item.cartNum }}</view>
 									<view
 										class="plus"
 										v-if="good[cartListValidIndex].attrInfo"
 										:class="good[cartListValidIndex].cartNum >= good[cartListValidIndex].attrInfo.stock ? 'on' : ''"
-										@click.prevent="plus(cartListValidIndex)"
+										@click.prevent="plus(item,cartListValidIndex)"
 									>
 										+
 									</view>
@@ -58,7 +63,7 @@
 										class="plus"
 										v-else
 										:class="good[cartListValidIndex].cartNum >= good[cartListValidIndex].stock ? 'on' : ''"
-										@click.prevent="plus(cartListValidIndex)"
+										@click.prevent="plus(item,cartListValidIndex)"
 									>
 										+
 									</view>
@@ -167,6 +172,7 @@ export default {
 			},
 			isH5: false,
 			validList: [],
+			parentsList: [],
 			isAllSelect: false,
 			cartCount: 0,
 			countmoney: 0,
@@ -238,18 +244,31 @@ export default {
 			let that = this;
 			getCartList().then(res => {
 				that.cartList = res.data;
+				that.parentsList = []
 				let checkedIds = cookie.get(CHECKED_IDS) || [];
 				if (!Array.isArray(checkedIds)) checkedIds = [];
-				this.cartList.valid.forEach(cart => {
-					if (checkedIds.indexOf(cart.id) !== -1) cart.checked = true;
-				});
+				let count = 0;
+				for (var item in that.cartList) {
+					if (item != 'invalid' && item != 'valid') {
+						let childCount = 0;
+						that.cartList[item].forEach((cart, cartIndex) => {
+							if (checkedIds.indexOf(cart.id) !== -1) {
+								cart.checked = true;
+								if (cartIndex == childCount) {
+									that.parentsList.push(item);
+								}
+								childCount++;
+							}
+							count++;
+						});
+					}
+				}
 				if (checkedIds.length) {
 					that.checkedIds = checkedIds;
-					that.isAllSelect = checkedIds.length === this.cartList.valid.length;
+					that.isAllSelect = checkedIds.length === count;
 					that.carnum();
 					that.countMoney();
 				}
-				console.log(that.cartList);
 				this.loaded = true;
 			});
 		},
@@ -258,12 +277,21 @@ export default {
 			let that = this,
 				id = [],
 				valid = [],
-				list = that.cartList.valid;
-			list.forEach(function(val) {
+				list = that.cartList;
+			for (var item in that.cartList) {
+				if (item != 'invalid' && item != 'valid') {
+					that.cartList[item].forEach(cart => {
+						if (cart.checked === true) {
+							id.push(cart.id);
+						}
+					});
+				}
+			}
+			/* list.forEach(function(val) {
 				if (val.checked === true) {
 					id.push(val.id);
 				}
-			});
+			}); */
 			if (id.length === 0) {
 				uni.showToast({
 					title: '请选择产品',
@@ -273,10 +301,10 @@ export default {
 				return;
 			}
 			postCartDel(id).then(function() {
-				list.forEach(function(val, i) {
+				/* list.forEach(function(val, i) {
 					if (val.checked === false || val.checked === undefined) valid.push(list[i]);
 				});
-				that.$set(that.cartList, 'valid', valid);
+				that.$set(that.cartList, 'valid', valid); */
 				that.carnum();
 				that.countMoney();
 				that.gainCount();
@@ -337,13 +365,17 @@ export default {
 		//立即下单；
 		placeOrder: function() {
 			let that = this,
-				list = that.cartList.valid,
+				list = that.cartList,
 				id = [];
-			list.forEach(function(val) {
-				if (val.checked === true) {
-					id.push(val.id);
+			for (var item in that.cartList) {
+				if (item != 'invalid' && item != 'valid') {
+					that.cartList[item].forEach(cart => {
+						if (cart.checked === true) {
+							id.push(cart.id);
+						}
+					});
 				}
-			});
+			}
 			if (id.length === 0) {
 				uni.showToast({
 					title: '请选择产品',
@@ -368,9 +400,9 @@ export default {
 			that.goodsHidden = !that.goodsHidden;
 		},
 		//加
-		plus: function(index) {
+		plus: function(item,index) {
 			let that = this;
-			let list = that.cartList.valid[index];
+			let list = item;
 			list.cartNum++;
 			if (list.attrInfo) {
 				if (list.cartNum >= list.attrInfo.stock) {
@@ -386,9 +418,9 @@ export default {
 			that.syncCartNum(list);
 		},
 		//减
-		reduce: function(index) {
+		reduce: function(item,index) {
 			let that = this;
-			let list = that.cartList.valid[index];
+			let list = item;
 			if (list.cartNum <= 1) {
 				uni.showToast({
 					title: '已经是底线啦!',
@@ -422,25 +454,80 @@ export default {
 					});
 			}
 		},
+		//子集全选
+		switchParentSelect: function(good, index) {
+			let that = this;
+			if (that.parentsList.indexOf(index) == -1) {
+				good.forEach(item => {
+					let i = that.checkedIds.indexOf(item.id);
+					item.checked = true;
+					if (i !== -1) that.checkedIds.splice(i, 1);
+					if (item.checked) {
+						that.checkedIds.push(item.id);
+					}
+				});
+				that.parentsList.push(index);
+			} else {
+				good.forEach(item => {
+					let i = that.checkedIds.indexOf(item.id);
+					item.checked = false;
+					if (i !== -1) that.checkedIds.splice(i, 1);
+				});
+				that.parentsList.splice(that.parentsList.indexOf(index), 1);
+			}
+			let ccarnum = 0;
+			for (var item in that.cartList) {
+				if (item != 'invalid' && item != 'valid') {
+					that.cartList[item].forEach(cart => {
+						if (cart.checked === true) {
+							ccarnum += parseInt(cart.cartNum);
+						}
+					});
+				}
+			}
+			that.isAllSelect = ccarnum === that.count;
+			that.$set(that, 'cartList', that.cartList);
+			that.$set(that, 'isAllSelect', that.isAllSelect);
+			cookie.set(CHECKED_IDS, that.checkedIds);
+			that.carnum();
+			that.gainCount();
+			that.countMoney();
+		},
 		//单选
-		switchSelect: function(index) {
+		switchSelect: function(good, goodIndex, item) {
 			let that = this,
-				cart = that.cartList.valid[index],
+				cart = item,
 				i = this.checkedIds.indexOf(cart.id);
 			cart.checked = !cart.checked;
-
 			if (i !== -1) this.checkedIds.splice(i, 1);
 			if (cart.checked) {
 				this.checkedIds.push(cart.id);
 			}
-			let len = that.cartList.valid.length;
+			let len = good.length;
 			let selectnum = [];
 			for (let i = 0; i < len; i++) {
-				if (that.cartList.valid[i].checked === true) {
+				if (good[i].checked === true) {
 					selectnum.push(true);
 				}
 			}
-			that.isAllSelect = selectnum.length === len;
+			if (selectnum.length === len) {
+				that.parentsList.push(goodIndex);
+			} else {
+				if (that.parentsList.indexOf(goodIndex) != -1) {
+					that.parentsList.splice(that.parentsList.indexOf(goodIndex), 1);
+				}
+			}
+			let ccarnum = 0;
+			for (var item in that.cartList) {
+				if (item != 'invalid' && item != 'valid') {
+					that.cartList[item].forEach(cart => {
+						if (cart.checked === true) {
+							ccarnum += parseInt(cart.cartNum);
+						}
+					});
+				}
+			}
+			that.isAllSelect = ccarnum === that.count;
 			that.$set(that, 'cartList', that.cartList);
 			that.$set(that, 'isAllSelect', that.isAllSelect);
 			cookie.set(CHECKED_IDS, that.checkedIds);
@@ -452,26 +539,40 @@ export default {
 		allChecked: function(e) {
 			console.log(e);
 			let that = this;
+			that.parentsList = []
 			let selectAllStatus = e.mp.detail.value[0] == 'allSelect' ? true : false;
-			console.log(selectAllStatus);
 			// let selectAllStatus = that.isAllSelect;
 			let checkedIds = [];
 			// for (let i = 0; i < array.length; i++) {
 			//   array[i].checked = selectAllStatus;
 			//   checked.push()
 			// }
-			that.cartList.valid.forEach(cart => {
+			for (var item in that.cartList) {
+				if (item != 'invalid' && item != 'valid') {
+					let childCount = 0;
+					that.cartList[item].forEach((cart, cartIndex)  => {
+						cart.checked = selectAllStatus;
+						if (selectAllStatus) {
+							checkedIds.push(cart.id);
+							if (cartIndex == childCount) {
+								that.parentsList.push(item);
+							}
+							childCount++;
+						}
+					});
+				}
+			}
+			/* that.cartList.valid.forEach(cart => {
 				cart.checked = selectAllStatus;
 				if (selectAllStatus) {
 					checkedIds.push(cart.id);
 				}
-			});
+			}); */
 			let cartList = {
 				...that.cartList
 			};
 			that.cartList = [];
 			that.cartList = cartList;
-			console.log(this.cartList);
 			this.$set(this, 'cartList', this.cartList);
 			this.$set(this, 'isAllSelect', selectAllStatus);
 			this.checkedIds = checkedIds;
@@ -484,24 +585,42 @@ export default {
 		carnum: function() {
 			let that = this;
 			var carnum = 0;
-			var array = that.cartList.valid;
-			for (let i = 0; i < array.length; i++) {
+			/* var array = that.cartList.valid; */
+			for (var item in that.cartList) {
+				if (item != 'invalid' && item != 'valid') {
+					that.cartList[item].forEach(cart => {
+						if (cart.checked === true) {
+							carnum += parseInt(cart.cartNum);
+						}
+					});
+				}
+			}
+			/* for (let i = 0; i < array.length; i++) {
 				if (array[i].checked === true) {
 					carnum += parseInt(array[i].cartNum);
 				}
-			}
+			} */
 			that.$set(that, 'cartCount', carnum);
 		},
 		//总共价钱；
 		countMoney: function() {
 			let that = this;
 			let carmoney = 0;
-			let array = that.cartList.valid;
-			for (let i = 0; i < array.length; i++) {
+			/* let array = that.cartList.valid; */
+			for (var item in that.cartList) {
+				if (item != 'invalid' && item != 'valid') {
+					that.cartList[item].forEach(cart => {
+						if (cart.checked === true) {
+							carmoney = add(carmoney, mul(cart.cartNum, cart.truePrice));
+						}
+					});
+				}
+			}
+			/* for (let i = 0; i < array.length; i++) {
 				if (array[i].checked === true) {
 					carmoney = add(carmoney, mul(array[i].cartNum, array[i].truePrice));
 				}
-			}
+			} */
 			that.countmoney = carmoney;
 		}
 	}
@@ -512,10 +631,11 @@ export default {
 .footer-h5 {
 	bottom: 50px;
 }
-.shoppingCart,.type-nav {
+.shoppingCart,
+.type-nav {
 	position: relative;
 }
-.cartNav{
+.cartNav {
 	width: 100%;
 	height: 80rpx;
 	background-color: #fff;
@@ -529,6 +649,6 @@ export default {
 	margin-top: 80rpx;
 }
 .shoppingCart .list {
-  margin-top: 0rpx !important;
+	margin-top: 0rpx !important;
 }
 </style>

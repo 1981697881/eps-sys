@@ -48,7 +48,7 @@
 											<text class="tips">{{ good.storeInfo }}</text>
 											<view class="price_and_action">
 												<text class="price">￥{{ good.price }}</text>
-												<view class="btn-group" v-if="good.productAttr.length > 0">
+												<view class="btn-group" v-if="good.productAttr.length > 1">
 													<button type="primary" class="btn property_btn" hover-class="none" size="mini" @tap="showGoodDetailModal(item, good)">
 														选规格
 													</button>
@@ -67,7 +67,7 @@
 														<view class="iconfont iconsami-select"></view>
 													</button>
 													<view class="number" v-show="goodCartNum(good.id)">{{ goodCartNum(good.id) }}</view>
-													<button type="primary" class="btn add_btn" size="min" hover-class="none" @tap="handleAddToCart(item, good, 1)">
+													<button type="primary" class="btn add_btn" size="min" hover-class="none" @tap="handleAddToCart(item, good, 1, true)">
 														<view class="iconfont iconadd-select"></view>
 													</button>
 												</view>
@@ -186,6 +186,7 @@
 <script>
 import modal from '@/components/modal/modal';
 import popupLayer from '@/components/popup-layer/popup-layer';
+import { postCartAdd } from '@/api/store';
 import { mapState, mapMutations, mapActions, mapGetters } from 'vuex';
 import moreGoodList from '@/api/goods.json';
 import { getJSDProducts } from '@/api/store';
@@ -314,7 +315,8 @@ export default {
 		calcSize() {
 			let h = 10;
 			let view = uni.createSelectorQuery().select('#ads');
-			view.fields({
+			view.fields(
+				{
 					size: true
 				},
 				data => {
@@ -336,10 +338,13 @@ export default {
 			});
 			this.sizeCalcState = true;
 		},
-		handleAddToCart(cate, good, num) {
+		handleAddToCart(cate, good, num, isSku) {
 			//添加到购物车
 			let that = this;
-			
+			if (isSku) {
+				that.DefaultSelect(good);
+			}
+			let obj = that.getGoodSelectedPrice(good);
 			const index = this.cart.findIndex(item => {
 				if (good.productAttr.length > 0) {
 					return item.id === good.id && item.props_text === good.props_text;
@@ -350,32 +355,19 @@ export default {
 			if (index > -1) {
 				this.cart[index].number += num;
 			} else {
-				if (good.productAttr.length > 0) {
-					let obj = that.getGoodSelectedPrice(good)
-					that.cart.push({
-						id: obj.id,
-						cate_id: cate.id,
-						storeName: good.storeName,
-						price: obj.price,
-						number: num,
-						image: good.images,
-						storeInfo: good.storeInfo,
-						props_text: good.props_text,
-						props: good.props
-					});
-				}else{
-					that.cart.push({
-						id: good.id,
-						cate_id: cate.id,
-						storeName: good.storeName,
-						price: good.price,
-						number: num,
-						image: good.images,
-						storeInfo: good.storeInfo,
-						props_text: good.props_text,
-						props: good.props
-					});
-				}
+				console.log(obj);
+				that.cart.push({
+					id: obj.productId,
+					cate_id: cate.id,
+					unique: obj.unique,
+					storeName: good.storeName,
+					price: obj.price,
+					number: num,
+					image: good.images,
+					storeInfo: good.storeInfo,
+					props_text: obj.sku,
+					props: good.props
+				});
 			}
 		},
 		handleReduceFromCart(item, good) {
@@ -447,8 +439,8 @@ export default {
 		},
 		handleAddToCartInModal() {
 			const product = Object.assign({}, this.good, { props_text: this.getGoodSelectedProps(this.good), props: this.getGoodSelectedProps(this.good, 'id') });
-			console.log(product)
-			this.handleAddToCart(this.category, product, this.good.number);
+			console.log(product);
+			this.handleAddToCart(this.category, product, this.good.number, false);
 			this.closeGoodDetailModal();
 		},
 		openCartPopup() {
@@ -481,30 +473,54 @@ export default {
 				this.cartPopupVisible = false;
 			}
 		},
-		toPay() {
+		async toPay() {
 			uni.showLoading({ title: '加载中' });
-			console.log(this.cart)
 			let that = this,
-			  list = that.cart,
-			  id = []
-			list.forEach(function(val) {
-			    id.push(val.id)
-			})
-			if (id.length === 0) {
-			  uni.showToast({
-			    title: '请选择产品',
-			    icon: 'none',
-			    duration: 2000,
-			  })
-			  return
+				list = that.cart,
+				id = [];
+			for (let i = 0; i < list.length; i++) {
+				await postCartAdd({
+					productId: list[i].id,
+					cartNum: list[i].number,
+					new: 1,
+					uniqueId: list[i].unique
+				})
+					.then(function(res) {
+						if (!res.data) {
+							uni.showToast({
+								title: res.msg || res.data.msg || res.data.message,
+								icon: 'none',
+								duration: 2000
+							});
+							return;
+						} else {
+							id.push(res.data.cartId);
+						}
+					})
+					.catch(error => {
+						uni.showToast({
+							title: error.msg || error.response.data.msg || error.response.data.message,
+							icon: 'none',
+							duration: 2000
+						});
+					});
 			}
-			uni.setStorageSync('cart', JSON.parse(JSON.stringify(this.cart)));
+			if (id.length === 0) {
+				uni.showToast({
+					title: '请选择产品',
+					icon: 'none',
+					duration: 2000
+				});
+				return;
+			}
+			/* uni.setStorageSync('cart', JSON.parse(JSON.stringify(this.cart))); */
 			this.$yrouter.push({
-			  path: '/pages/order/OrderSubmission/index',
-			  query: {
-			    id: id.join(','),
-			  },
-			})
+				path: '/pages/order/OrderSubmission/index',
+				query: {
+					id: id.join(',')
+				}
+			});
+			that.cart = []
 			uni.hideLoading();
 		}
 	}
