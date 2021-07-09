@@ -10,8 +10,15 @@ import store from "@/store";
 import dayjs from "dayjs";
 import cookie from "@/utils/store/cookie";
 import stringify from "@/utils/querystring";
-import { VUE_APP_API_URL } from "@/config";
-import { wechat, auth, oAuth, toAuth } from '@/libs/wechat'
+import {
+	VUE_APP_API_URL
+} from "@/config";
+import {
+	wechat,
+	auth,
+	oAuth,
+	toAuth
+} from '@/libs/wechat'
 
 
 export function dataFormat(time, option) {
@@ -33,7 +40,8 @@ export function dataFormat(time, option) {
 	if (option) {
 		// return parseTime(time, option);
 	} else {
-		let timeStr = d.getFullYear() + "年" + (d.getMonth() + 1) + "月" + d.getDate() + "日" + d.getHours() + "时" + d.getMinutes() +
+		let timeStr = d.getFullYear() + "年" + (d.getMonth() + 1) + "月" + d.getDate() + "日" + d.getHours() + "时" + d
+			.getMinutes() +
 			"分"
 		return timeStr
 	}
@@ -58,6 +66,34 @@ export function dateFormatL(fmt, date) {
 		};
 	};
 	return fmt;
+}
+// 获取时间区间
+// 查询前后day天日期
+export function getDayList(date, day) {
+	let today = new Date();
+	let targetday_milliseconds = today.getTime() + 1000 * 60 * 60 * 24 * day;
+	today.setTime(targetday_milliseconds); //注意，这行是关键代码
+	let tYear = today.getFullYear();
+	let tMonth = today.getMonth();
+	let tDate = today.getDate();
+	let getDay = today.getDay();
+	tMonth = doHandleMonth(tMonth + 1);
+	tDate = doHandleMonth(tDate);
+	let weeks = new Array('周日', '周一', '周二', '周三', '周四', '周五', '周六');
+	let week = weeks[getDay];
+	return {
+		day: tYear + '-' + tMonth + '-' + tDate,
+		week: week,
+		date: tMonth + '-' + tDate
+	};
+}
+//格式化时间 单位数补0
+export function doHandleMonth(month) {
+	let m = month;
+	if (month.toString().length == 1) {
+		m = '0' + month;
+	}
+	return m;
 }
 export function dateFormatT(time) {
 	time = +time * 1000;
@@ -167,7 +203,7 @@ export const getProvider = (service) => {
 		// 获取当前环境的服务商
 		uni.getProvider({
 			service: service || 'oauth',
-			success: function (res) {
+			success: function(res) {
 				// 此处可以排除h5
 				if (res.provider) {
 					resolve(res.provider[0])
@@ -207,7 +243,9 @@ export const login = () => {
 	return new Promise((resolve, reject) => {
 		if (Vue.prototype.$deviceType == 'weixin') {
 			// 微信授权登录
-			const { code } = parseQuery()
+			const {
+				code
+			} = parseQuery()
 			if (code) {
 				auth(code)
 					.then(() => {
@@ -231,8 +269,7 @@ export const login = () => {
 							path: '/pages/home/index',
 						});
 					});
-			} else {
-			}
+			} else {}
 			return
 		}
 		if (Vue.prototype.$deviceType == 'weixinh5') {
@@ -259,7 +296,7 @@ export const login = () => {
 			console.log('调用登录接口')
 			uni.login({
 				provider: provider,
-				success: function (loginRes) {
+				success: function(loginRes) {
 					// 微信登录
 					console.log('登录接口调用成功')
 					console.log('开始检查用户信息授权')
@@ -271,29 +308,59 @@ export const login = () => {
 						console.log('开始获取用户信息')
 						uni.getUserInfo({
 							provider: provider,
-							success: function (user) {
+							success: function(user) {
 								console.log('获取用户信息成功')
 								console.log('开始调用登录接口')
 								wxappAuth({
-									encryptedData: user.encryptedData,
+									encryptedData: user
+										.encryptedData,
 									iv: user.iv,
 									code: code,
-									spread: cookie.get("spread")
-								}).then(({ data }) => {
+									spread: cookie.get(
+										"spread")
+								}).then(({
+									data
+								}) => {
 									console.log('登录接口调用成功')
-									console.log('开始处理登录信息保存，并获取用户详情')
+									console.log(
+										'开始处理登录信息保存，并获取用户详情'
+										)
 									uni.hideLoading();
-									store.commit("login", data.token, dayjs(data.expires_time));
-									store.dispatch('userInfo', true)
-									getUserInfo().then(user => {
-										console.log('获取用户信息成功')
-										uni.setStorageSync('uid', user.data.uid);
-										store.dispatch('setUserInfo', user.data)
-										resolve(user)
-									}).catch(error => {
-										console.log('获取用户信息失败')
-										reject('获取用户信息失败')
-									});
+									store.commit("login",
+										data.token,
+										dayjs(data
+											.expires_time
+											));
+									store.dispatch(
+										'userInfo', true
+										)
+									getUserInfo().then(
+										user => {
+											console.log(
+												'获取用户信息成功'
+												)
+											uni.setStorageSync(
+												'uid',
+												user
+												.data
+												.uid
+												);
+											store
+												.dispatch(
+													'setUserInfo',
+													user
+													.data
+													)
+											resolve(
+												user)
+										}).catch(
+										error => {
+											console.log(
+												'获取用户信息失败'
+												)
+											reject(
+												'获取用户信息失败')
+										});
 								}).catch(error => {
 									console.log(error)
 									console.log('登录接口调用失败')
@@ -465,32 +532,32 @@ export function handleAuth() {
 export const handleLoginStatus = (location, complete, fail, success) => {
 	// 不登录可访问的页面
 	let page = [{
-		path: '/pages/Loading/index',
-		name: 'loading页面'
-	},
-	{
-		path: '/pages/home/index',
-		name: '首页'
-	},
-	{
-		path: '/pages/user/Login/index',
-		name: '登录页面'
-	},
-	{
-		path: '/pages/authorization/index',
-		name: '授权页面'
-	},
-	{
-		path: '/pages/shop/GoodsList/index?type=1',
-		name: '全部商品'
-	},
-	{
-		path: '/pages/shop/GoodsList/index?type=2',
-		name: '预售商品'
-	},{
-		path: '/pages/shop/JSD/menu',
-		name: '极速达'
-	},
+			path: '/pages/Loading/index',
+			name: 'loading页面'
+		},
+		{
+			path: '/pages/home/index',
+			name: '首页'
+		},
+		{
+			path: '/pages/user/Login/index',
+			name: '登录页面'
+		},
+		{
+			path: '/pages/authorization/index',
+			name: '授权页面'
+		},
+		{
+			path: '/pages/shop/GoodsList/index?type=1',
+			name: '全部商品'
+		},
+		{
+			path: '/pages/shop/GoodsList/index?type=2',
+			name: '预售商品'
+		}, {
+			path: '/pages/shop/JSD/menu',
+			name: '极速达'
+		},
 	]
 
 	// 是否可以访问
@@ -498,9 +565,9 @@ export const handleLoginStatus = (location, complete, fail, success) => {
 	console.log('即将跳转', location, parseUrl(location))
 	// 从 location 中获取当前url，location typeof string || object
 	let path = ''
-	if (typeof location === 'string') {
+	if (typeof location === 'string') { 
 		path = location
-	} else {
+	 } else {
 		path = location.path
 	}
 
@@ -518,7 +585,8 @@ export const handleLoginStatus = (location, complete, fail, success) => {
 	return new Promise((resolve, reject) => {
 		if (isAuth) {
 			// 有token
-			if (path == '/pages/home/index' || path == '/pages/home/GoodsClass/index' || path == '/pages/home/ShoppingCart/index' || path == '/pages/user/User/index') {
+			if (path == '/pages/home/index' || path == '/pages/home/GoodsClass/index' || path ==
+				'/pages/home/ShoppingCart/index' || path == '/pages/user/User/index') {
 				// switchTab({
 				// 	path: parseUrl(location),
 				// })
@@ -681,8 +749,8 @@ export function go(delta) {
 export function back() {
 	uni.navigateBack({
 		delta: 1,
-		success: function (e) { },
-		fail: function (e) { }
+		success: function(e) {},
+		fail: function(e) {}
 	})
 }
 
@@ -749,13 +817,13 @@ const getImageInfo = (images) => {
 		images.map((item, index) => {
 			uni.getImageInfo({
 				src: item,
-				fail: function (res) {
+				fail: function(res) {
 					imageAry[index] = null
 					if (imageAry.length == images.length) {
 						resolve(imageAry)
 					}
 				},
-				success: function (res) {
+				success: function(res) {
 					imageAry[index] = res
 					if (Object.keys(imageAry).length == images.length) {
 						resolve(imageAry)
@@ -818,11 +886,11 @@ export const PosterCanvas = (store, successCallBack) => {
 				fileType: 'png',
 				destWidth: WIDTH,
 				destHeight: HEIGHT,
-				success: function (res) {
+				success: function(res) {
 					uni.hideLoading();
 					successCallBack && successCallBack(res.tempFilePath);
 				},
-				fail: function (error) {
+				fail: function(error) {
 					console.log(error)
 				},
 
@@ -994,7 +1062,10 @@ export function chooseImage(callback) {
 				src: res.tempFilePaths[0],
 				success: image => {
 					console.log(image);
-					uni.showLoading({ title: "图片上传中", mask: true });
+					uni.showLoading({
+						title: "图片上传中",
+						mask: true
+					});
 					uni.uploadFile({
 						url: `${VUE_APP_API_URL}/api/upload`,
 						file: image,
@@ -1037,8 +1108,7 @@ export function handleErrorMessage(err) {
 	console.log(err)
 	uni.hideLoading();
 	uni.showToast({
-		title:
-			err.msg ||
+		title: err.msg ||
 			err.response.data.msg ||
 			err.response.data.message ||
 			"创建订单失败",

@@ -18,12 +18,10 @@
 				<view class="item">
 					<view class="title">起送时间</view>
 					<view class="listn acea-row row-middle">
-							<!-- <view class="picker">
+						<!-- <view class="picker">
 								{{date}}
 							</view> -->
-						<picker mode="date" :value="date" start="2015-09-01" end="2020-09-01" @change="DateChange" class="itemn">
-							{{date}}
-						</picker>
+						<picker mode="date" :value="date" :start="start" :end="end" @change="DateChange" class="itemn">{{ date }}</picker>
 					</view>
 				</view>
 			</view>
@@ -42,11 +40,15 @@
 					</view>
 				</view>
 			</view>
+			<view class="cu-bar tabbar shadow foot">
+				<view class="box text-center"><button class="cu-btn bg-green shadow-blur round" style="width: 40%;" @tap="$manyCk(saveData)">提交</button></view>
+			</view>
 		</view>
 		<view class="mask" @touchmove.prevent :hidden="attr.cartAttr === false" @click="closeAttr"></view>
 	</view>
 </template>
 <script>
+import { getDayList } from '@/utils';
 export default {
 	name: 'PlanWindow',
 	props: {
@@ -57,22 +59,42 @@ export default {
 		cartNum: {
 			type: Number,
 			default: () => 1
+		}, // 开始日期
+		planDate: {
+			type: String,
+			default: function() {
+				return getDayList('', 0).day;
+			}
+		}, // 开始日期
+		start: {
+			type: String,
+			default: function() {
+				return getDayList('', 0).day;
+			}
+		},
+		// 结束日期
+		end: {
+			type: String,
+			default: function() {
+				return getDayList('', 15).day;
+			}
 		}
 	},
 	data: function() {
 		return {
 			deliveryQuantity: 1,
 			deliveryDate: 1,
-			date: '2018-12-25',
+			date: ''
 		};
 	},
 	mounted: function() {
+		this.date = this.planDate
 		console.log(this);
 	},
 	watch: {},
 	methods: {
 		DateChange(e) {
-			this.date = e.detail.value
+			this.date = e.detail.value;
 		},
 		closeAttr: function() {
 			this.$emit('changeFun', { action: 'changeattr', value: false });
@@ -81,13 +103,13 @@ export default {
 			this.deliveryQuantity--;
 		},
 		CartDeliveryAdd: function() {
-			if(this.deliveryQuantity>=this.cartNum){
+			if (this.deliveryQuantity >= this.cartNum) {
 				return uni.showToast({
 					title: '不能超出限定数量',
 					icon: 'none',
 					duration: 2000
 				});
-			}else{
+			} else {
 				this.deliveryQuantity++;
 			}
 		},
@@ -95,16 +117,15 @@ export default {
 			this.deliveryDate--;
 		},
 		CartDateAdd: function() {
-			if(this.deliveryDate>=5){
+			if (this.deliveryDate >= 5) {
 				return uni.showToast({
 					title: '不能超出限定数量',
 					icon: 'none',
 					duration: 2000
 				});
-			}else{
+			} else {
 				this.deliveryDate++;
 			}
-			
 		},
 		previewImage() {
 			uni.previewImage({
@@ -115,3 +136,11 @@ export default {
 	}
 };
 </script>
+<style scoped lang="less">
+.box {
+	width: 100%;
+}
+.cu-bar {
+	min-height: 30px;
+}
+</style>

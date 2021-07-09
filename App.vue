@@ -88,5 +88,7 @@ export default {
 @import './assets/css/base.less';
 @import './assets/css/reset.less';
 @import './assets/css/style.less';
+@import "./static/colorui/main.css";
+@import "./static/colorui/icon.css";
 /*每个页面公共css */
 </style>

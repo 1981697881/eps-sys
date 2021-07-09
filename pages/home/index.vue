@@ -18,14 +18,14 @@
         </view>
       </view>
       <Banner v-if="item.type == 'banner'" :detail="item.componentContent.bannerData" @getbgcolor="getbgcolor"></Banner>
-      <!-- <uni-notice-bar v-if="item.type == 'noticeBar'" scrollable="true" @click="goRoll(item.componentContent.roll[0])" single="true" :speed="10" showIcon="true" :text="item.componentContent.roll[0].info"></uni-notice-bar> -->
+     <!-- <uni-notice-bar v-if="item.type == 'noticeBar'" scrollable="true" @click="goRoll(item.componentContent.roll[0])" single="true" :speed="10" showIcon="true" :text="item.componentContent.roll[0].info"></uni-notice-bar> -->
       <view class="content_box home_content_box" v-if="item.type == 'menu' && item.componentContent.menus">
         <!-- 菜单 -->
         <Menu :list="menus"></Menu>
       </view>
       <!-- 滚动新闻 -->
       <!-- 广告 -->
-     <!-- <Adv v-if="item.type == 'adv' && item.componentContent.detail" :detail="item.componentContent.detail" /> -->
+	 <!-- <Adv v-if="item.type == 'adv' && item.componentContent.detail" :detail="item.componentContent.detail" /> -->
 	  <item-container v-if="item.type == 'fullReduction'" :num='itemcontainer3.noswipernum4' :banner='itemcontainer3.banner' :list='itemcontainer3.data1'></item-container>
 	  <!-- 热门榜单 -->
       <HotCommodity v-if="item.type == 'hotCommodity'" :detail="likeInfo"></HotCommodity>
@@ -78,12 +78,12 @@ export default {
   components: {
     // swiper,
     // swiperSlide,
-  /*  UniNoticeBar, */
+   UniNoticeBar,
     GoodList,
     PromotionGood,
     CouponWindow,
     Menu,
-    /* Adv, */
+    Adv,
     Groupon,
     Banner,
     HotCommodity,

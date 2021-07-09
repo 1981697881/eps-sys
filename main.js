@@ -4,13 +4,12 @@ import http from './utils/http.js'
 import monent from './libs/moment.js'
 import api from './config/api.js'
 import './utils/filters'
-//商城 ---start
+//商城 ---start 
 import store from './store'
 import schema from 'async-validator'
 import dialog from './utils/dialog'
 import cookie from '@/utils/store/cookie'
-import cuCustom from '@/components/colorui/components/cu-custom.vue'
-
+import cuCustom from '@/static/colorui/components/cu-custom.vue'
 import { parseRoute, _router, parseQuery } from '@/utils'
 import { VUE_APP_RESOURCES_URL, VUE_APP_API_URL } from '@/config'
 Vue.component('cu-custom', cuCustom)

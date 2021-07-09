@@ -366,17 +366,19 @@ export default {
 		placeOrder: function() {
 			let that = this,
 				list = that.cartList,
-				id = [];
+				arr = [];
 			for (var item in that.cartList) {
 				if (item != 'invalid' && item != 'valid') {
-					that.cartList[item].forEach(cart => {
+					let id = []
+					that.cartList[item].forEach((cart,index) => {
 						if (cart.checked === true) {
 							id.push(cart.id);
 						}
 					});
+					arr.push(id)
 				}
 			}
-			if (id.length === 0) {
+			if (arr.length === 0) {
 				uni.showToast({
 					title: '请选择产品',
 					icon: 'none',
@@ -387,7 +389,7 @@ export default {
 			this.$yrouter.push({
 				path: '/pages/order/OrderSubmission/index',
 				query: {
-					id: id.join(',')
+					id: JSON.stringify(arr)
 				}
 			});
 		},

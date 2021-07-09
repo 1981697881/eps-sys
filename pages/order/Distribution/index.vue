@@ -4,9 +4,9 @@
 			<view class="item" v-for="(order, orderListIndex) in orderList" :key="orderListIndex">
 				<view class="title acea-row row-between-wrapper">
 					<view class="acea-row row-middle">
-						{{ order.createTime }}
+						单号：{{ order.orderId }}
 					</view>
-					<view class="font-color-red">{{ order._status._type==1 || order._status._type == 2? order.timeText :''}} {{ getStatus(order) }}</view>
+					<view class="font-color-red">数量：{{ order.cartInfo.length || 0 }}</view>
 				</view>
 				<view @click="goOrderDetails(order)">
 					<view class="item-info acea-row row-between row-top" v-for="(cart, cartInfoIndex) in order.cartInfo" :key="cartInfoIndex">
@@ -48,7 +48,14 @@
 							/>
 						</view>
 						<view class="text acea-row row-between">
-							<view class="name line2">{{ cart.productInfo.storeName }}</view>
+							<view class="pei-name line2">
+								<view class="text-cut">
+									{{ cart.productInfo.storeName }}
+								</view>
+								<view>
+									<button class="cu-btn round sm bg-cyan shadow" @tap.stop="getPlan">配送计划</button>
+								</view>
+							</view>
 							<view class="money">
 								<view v-if="order.payType != 'integral'">￥{{ cart.productInfo.attrInfo ? cart.productInfo.attrInfo.price : cart.productInfo.price }}</view>
 								<view v-if="order.payType == 'integral'">{{ order.payIntegral }}积分</view>
@@ -58,13 +65,11 @@
 					</view>
 				</view>
 				<view class="totalPrice">
-					共{{ order.cartInfo.length || 0 }}件商品，总金额
-					<text class="money font-color-red" v-if="order.payType != 'integral'">￥{{ order.payPrice }}</text>
-					<text class="money font-color-red" v-if="order.payType == 'integral'">{{ order.payIntegral }}积分</text>
+					<text class="text-cut">地址：{{ order.userAddress }}</text>
 				</view>
 				<view class="bottom acea-row row-right row-middle">
 					<template v-if="order._status._type == 0 || order._status._type == 9">
-						<view class="bnt" style="background-color: #00B2EE;" @tap="getPlan">配送计划</view>
+						<view class="bnt bg-red" @tap="stopPlan">停止配送</view>
 					</template>
 					<template v-if="order._status._type == 3">
 						<view
@@ -85,6 +90,8 @@
 		<Payment v-model="pay" :types="payType" @checked="toPay" :balance="userInfo.nowMoney"></Payment>
 		<!-- 商品规格弹窗 -->
 		<PlanWindow  v-on:changeFun="changeFun" :attr="attr" ></PlanWindow>
+		<!-- 停止配送 -->
+		<l-modal ref="customModal" modalTitle="请输入起送日期" @onClickCancel="cancel" @onClickConfirm="confirm"></l-modal>
 	</view>
 </template>
 <script>
@@ -96,6 +103,7 @@ import DataFormat from '@/components/DataFormat';
 import { mapGetters } from 'vuex';
 import { isWeixin, dataFormat } from '@/utils';
 import PlanWindow from '@/components/PlanWindow'
+import lModal from '@/components/dialogBox'
 const STATUS = ['待付款', '待发货', '待收货', '待评价', '已完成', '', '', '', '', '待付款'];
 
 const NAME = 'MyOrder';
@@ -127,6 +135,7 @@ export default {
 		Loading,
 		Payment,
 		PlanWindow,
+		lModal,
 		DataFormat
 	},
 	computed: mapGetters(['userInfo']),
@@ -170,6 +179,15 @@ export default {
 		getPlan(){
 			this.attr.cartAttr = true 
 		},
+		stopPlan(){
+			this.$refs['customModal'].showModal()
+		},
+		cancel(val){
+			console.log(val) 
+		},
+		 confirm(val){
+			console.log(val) 
+		 },
 		//倒计时
 		countDownFun(time) {
 			let startTime = new Date().getTime(); //当前时间
@@ -348,5 +366,9 @@ export default {
 .noCart .pictrue image {
 	width: 4 * 100rpx;
 	height: 3 * 100rpx;
+}
+.pei-name{
+	width: 400rpx;
+	color: #282828;
 }
 </style>
