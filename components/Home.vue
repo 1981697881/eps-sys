@@ -21,7 +21,7 @@ export default {
 	computed: mapGetters(['homeActive']),
 	methods: {
 		userGo() {
-			this.$yrouter.push('/pages/user/User/index');
+			this.$yrouter.push('/pages/home/User/index');
 		},
 		homeGo() {
 			this.$yrouter.switchTab('/pages/home/index');

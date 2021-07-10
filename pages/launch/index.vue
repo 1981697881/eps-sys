@@ -20,7 +20,7 @@
 import Home from "@/pages/home/index";
 import GoodsClass from "@/pages/home/GoodsClass/index";
 import ShoppingCart from "@/pages/home/ShoppingCart/index";
-import User from "@/pages/user/User/index";
+import User from "@/pages/home/User/index";
 import FooterComponents from "@/components/Footer";
 import { mapState, mapMutations, mapActions } from "vuex";
 

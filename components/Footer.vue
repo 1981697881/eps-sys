@@ -47,7 +47,7 @@ export default {
           name: "我的",
           icon1: "icon-yonghu-xianxing",
           icon2: "icon-yonghu",
-          url: "/pages/user/User/index"
+          url: "/pages/home/User/index"
         }
       ],
       isIpx: false

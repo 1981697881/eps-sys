@@ -12,24 +12,7 @@
 				"navigationBarTitleText": "微信授权"
 			}
 		},
-		{
-			"path": "pages/user/Login/index",
-			"style": {
-				"navigationBarTitleText": "登录"
-			}
-		},
-		{
-			"path": "pages/user/Register/index",
-			"style": {
-				"navigationBarTitleText": "注册"
-			}
-		},
-		{
-			"path": "pages/user/RetrievePassword/index",
-			"style": {
-				"navigationBarTitleText": "重置密码"
-			}
-		},
+		
 		{
 			"path": "pages/launch/index",
 			"style": {
@@ -66,146 +49,9 @@
 			}
 		},
 		{
-			"path": "pages/user/User/index",
+			"path": "pages/home/User/index",
 			"style": {
 				"navigationBarTitleText": "我的"
-			}
-		},
-
-		{
-			"path": "pages/user/BindingPhone/index",
-			"style": {
-				"navigationBarTitleText": "绑定手机号"
-			}
-		},
-		{
-			"path": "pages/user/address/AddAddress/index",
-			"style": {
-				"navigationBarTitleText": "新增收货地址",
-				"usingComponents": {
-					"van-popup": "/wxcomponents/vant/popup/index",
-					"van-picker": "/wxcomponents/vant/picker/index"
-				}
-			}
-		},
-		{
-			"path": "pages/user/UserAccount/index",
-			"style": {
-				"navigationBarTitleText": "账户余额"
-			}
-		},
-		{
-			"path": "pages/user/address/AddressManagement/index",
-			"style": {
-				"navigationBarTitleText": "收货地址"
-			}
-		},
-		{
-			"path": "pages/user/promotion/Poster/index",
-			"style": {
-				"navigationBarTitleText": "推广名片"
-			}
-		},
-		{
-			"path": "pages/user/signIn/Sign/index",
-			"style": {
-				"navigationBarTitleText": "签到"
-			}
-		},
-		{
-			"path": "pages/user/signIn/SignRecord/index",
-			"style": {
-				"navigationBarTitleText": "签到记录"
-			}
-		},
-		{
-			"path": "pages/user/promotion/CashAudit/index",
-			"style": {
-				"navigationBarTitleText": "提现结果"
-			}
-		},
-		{
-			"path": "pages/user/promotion/PromoterOrder/index",
-			"style": {
-				"navigationBarTitleText": "分销详情"
-			}
-		},
-		{
-			"path": "pages/user/promotion/PromoterList/index",
-			"style": {
-				"navigationBarTitleText": "分销列表"
-			}
-		},
-		{
-			"path": "pages/user/promotion/UserPromotion/index",
-			"style": {
-				"navigationBarTitleText": "佣金"
-			}
-		},
-		{
-			"path": "pages/user/UserBill/index",
-			"style": {
-				"navigationBarTitleText": "账单记录"
-			}
-		},
-		{
-			"path": "pages/user/promotion/CashRecord/index",
-			"style": {
-				"navigationBarTitleText": "提现记录"
-			}
-		},
-		{
-			"path": "pages/user/promotion/CommissionDetails/index",
-			"style": {
-				"navigationBarTitleText": "佣金明细"
-			}
-		},
-		{
-			"path": "pages/user/signIn/Integral/index",
-			"style": {
-				"navigationBarTitleText": "我的积分"
-			}
-		},
-		{
-			"path": "pages/user/UserVip/index",
-			"style": {
-				"navigationBarTitleText": "用户vip"
-			}
-		},
-		{
-			"path": "pages/user/PersonalData/index",
-			"style": {
-				"navigationBarTitleText": "个人资料"
-			}
-		},
-		{
-			"path": "pages/user/coupon/UserCoupon/index",
-			"style": {
-				"navigationBarTitleText": "优惠券"
-			}
-		},
-		{
-			"path": "pages/user/coupon/GetCoupon/index",
-			"style": {
-				"navigationBarTitleText": "领取优惠券"
-			}
-		},
-		{
-			"path": "pages/user/promotion/UserCash/index",
-			"style": {
-				"navigationBarTitleText": "提现"
-			}
-		},
-		{
-			"path": "pages/user/CustomerList/index",
-			"style": {
-				"navigationBarTitleText": "客服列表"
-			}
-		},
-		{
-			"path": "pages/user/Recharge/index",
-			"style": {
-				"navigationBarTitleText": "充值"
 			}
 		},
 
@@ -488,7 +334,166 @@
 				}
 			}
 		]
-	}, {
+	},{
+		"root": "pages/user",
+		"pages": [
+			{
+						"path": "Login/index",
+						"style": {
+							"navigationBarTitleText": "登录"
+						}
+					},
+					{
+						"path": "Register/index",
+						"style": {
+							"navigationBarTitleText": "注册"
+						}
+					},
+					{
+						"path": "RetrievePassword/index",
+						"style": {
+							"navigationBarTitleText": "重置密码"
+						}
+					},
+					{
+						"path": "BindingPhone/index",
+						"style": {
+							"navigationBarTitleText": "绑定手机号"
+						}
+					},
+					{
+						"path": "address/AddAddress/index",
+						"style": {
+							"navigationBarTitleText": "新增收货地址",
+							"usingComponents": {
+								"van-popup": "/wxcomponents/vant/popup/index",
+								"van-picker": "/wxcomponents/vant/picker/index"
+							}
+						}
+					},
+					{
+						"path": "UserAccount/index",
+						"style": {
+							"navigationBarTitleText": "账户余额"
+						}
+					},
+					{
+						"path": "address/AddressManagement/index",
+						"style": {
+							"navigationBarTitleText": "收货地址"
+						}
+					},
+					{
+						"path": "promotion/Poster/index",
+						"style": {
+							"navigationBarTitleText": "推广名片"
+						}
+					},
+					{
+						"path": "signIn/Sign/index",
+						"style": {
+							"navigationBarTitleText": "签到"
+						}
+					},
+					{
+						"path": "signIn/SignRecord/index",
+						"style": {
+							"navigationBarTitleText": "签到记录"
+						}
+					},
+					{
+						"path": "promotion/CashAudit/index",
+						"style": {
+							"navigationBarTitleText": "提现结果"
+						}
+					},
+					{
+						"path": "promotion/PromoterOrder/index",
+						"style": {
+							"navigationBarTitleText": "分销详情"
+						}
+					},
+					{
+						"path": "promotion/PromoterList/index",
+						"style": {
+							"navigationBarTitleText": "分销列表"
+						}
+					},
+					{
+						"path": "promotion/UserPromotion/index",
+						"style": {
+							"navigationBarTitleText": "佣金"
+						}
+					},
+					{
+						"path": "UserBill/index",
+						"style": {
+							"navigationBarTitleText": "账单记录"
+						}
+					},
+					{
+						"path": "promotion/CashRecord/index",
+						"style": {
+							"navigationBarTitleText": "提现记录"
+						}
+					},
+					{
+						"path": "promotion/CommissionDetails/index",
+						"style": {
+							"navigationBarTitleText": "佣金明细"
+						}
+					},
+					{
+						"path": "signIn/Integral/index",
+						"style": {
+							"navigationBarTitleText": "我的积分"
+						}
+					},
+					{
+						"path": "UserVip/index",
+						"style": {
+							"navigationBarTitleText": "用户vip"
+						}
+					},
+					{
+						"path": "PersonalData/index",
+						"style": {
+							"navigationBarTitleText": "个人资料"
+						}
+					},
+					{
+						"path": "coupon/UserCoupon/index",
+						"style": {
+							"navigationBarTitleText": "优惠券"
+						}
+					},
+					{
+						"path": "coupon/GetCoupon/index",
+						"style": {
+							"navigationBarTitleText": "领取优惠券"
+						}
+					},
+					{
+						"path": "promotion/UserCash/index",
+						"style": {
+							"navigationBarTitleText": "提现"
+						}
+					},
+					{
+						"path": "CustomerList/index",
+						"style": {
+							"navigationBarTitleText": "客服列表"
+						}
+					},
+					{
+						"path": "Recharge/index",
+						"style": {
+							"navigationBarTitleText": "充值"
+						}
+					}
+			
+		]
+		}, {
 		"root": "pages/activity",
 		"pages": [{
 				"path": "Poster/index",
@@ -592,7 +597,7 @@
 				"text": "购物车"
 			},
 			{
-				"pagePath": "pages/user/User/index",
+				"pagePath": "pages/home/User/index",
 				"iconPath": "static/icon-user.png",
 				"selectedIconPath": "static/icon-user-hot.png",
 				"text": "我的"

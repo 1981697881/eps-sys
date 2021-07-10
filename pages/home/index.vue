@@ -14,6 +14,7 @@
           搜索商品
         </view>
         <view class="qr" @click="startQr()">
+			<!-- <text class="lg text-gray cuIcon-scan" style="font-size:50rpx"></text> -->
           <image :src="`${$VUE_APP_RESOURCES_URL}/images/qr.png`" />
         </view>
       </view>

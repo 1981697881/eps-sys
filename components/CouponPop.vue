@@ -42,7 +42,8 @@ export default {
   data: function() {
     return {}
   },
-  mounted: function() {},
+  mounted: function() {
+  },
   methods: {
     close: function() {
       this.$emit('changeFun', { action: 'changecoupon', value: false }) //$emit():注册事件；
