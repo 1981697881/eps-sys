@@ -513,11 +513,14 @@ export default {
 				});
 				return;
 			}
+			let arr = [
+				id
+			]
 			/* uni.setStorageSync('cart', JSON.parse(JSON.stringify(this.cart))); */
 			this.$yrouter.push({
 				path: '/pages/order/OrderSubmission/index',
 				query: {
-					id: id.join(',')
+					id: JSON.stringify(arr)
 				}
 			});
 			that.cart = []

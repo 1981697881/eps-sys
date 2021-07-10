@@ -17,7 +17,7 @@
 			</view>
 			<block v-for="(good, goodIndex) in cartList">
 				<view v-if="good.length > 0" class="type-nav">
-					<view v-if="goodIndex != 'invalid' && goodIndex != 'valid'" class="cartNav acea-row row-between-wrapper" :class="goodIndex == '普通商品' ? 'first-cart' : ''">
+					<view v-if="goodIndex != 'invalid' && goodIndex != 'valid' && goodIndex != '极速达商品'" class="cartNav acea-row row-between-wrapper" :class="goodIndex == '普通商品' ? 'first-cart' : ''">
 						<view class="checkbox-wrapper">
 							<checkbox-group @change="switchParentSelect(good, goodIndex)">
 								<label class="well-check"><checkbox color="#eb3729" value :checked="parentsList.indexOf(goodIndex) != -1"></checkbox></label>
@@ -29,7 +29,7 @@
 						</view>
 						<view class="administrate acea-row row-center-wrapper" @click="manage">{{ footerswitch ? '取消' : '管理' }}</view>
 					</view>
-					<view class="list" v-if="goodIndex != 'invalid' && goodIndex != 'valid'">
+					<view class="list" v-if="goodIndex != 'invalid' && goodIndex != 'valid' && goodIndex != '极速达商品'">
 						<view class="item acea-row row-between-wrapper" v-for="(item, cartListValidIndex) in good" :key="cartListValidIndex">
 							<view class="select-btn">
 								<view class="checkbox-wrapper">
@@ -249,7 +249,7 @@ export default {
 				if (!Array.isArray(checkedIds)) checkedIds = [];
 				let count = 0;
 				for (var item in that.cartList) {
-					if (item != 'invalid' && item != 'valid') {
+					if (item != 'invalid' && item != 'valid' && item != '极速达商品') {
 						let childCount = 0;
 						that.cartList[item].forEach((cart, cartIndex) => {
 							if (checkedIds.indexOf(cart.id) !== -1) {
@@ -279,7 +279,7 @@ export default {
 				valid = [],
 				list = that.cartList;
 			for (var item in that.cartList) {
-				if (item != 'invalid' && item != 'valid') {
+				if (item != 'invalid' && item != 'valid' && item != '极速达商品') {
 					that.cartList[item].forEach(cart => {
 						if (cart.checked === true) {
 							id.push(cart.id);
@@ -368,7 +368,7 @@ export default {
 				list = that.cartList,
 				arr = [];
 			for (var item in that.cartList) {
-				if (item != 'invalid' && item != 'valid') {
+				if (item != 'invalid' && item != 'valid'&& item != '极速达商品') {
 					let id = []
 					that.cartList[item].forEach((cart,index) => {
 						if (cart.checked === true) {
@@ -479,7 +479,7 @@ export default {
 			}
 			let ccarnum = 0;
 			for (var item in that.cartList) {
-				if (item != 'invalid' && item != 'valid') {
+				if (item != 'invalid' && item != 'valid'&& item != '极速达商品') {
 					that.cartList[item].forEach(cart => {
 						if (cart.checked === true) {
 							ccarnum += parseInt(cart.cartNum);
@@ -521,7 +521,7 @@ export default {
 			}
 			let ccarnum = 0;
 			for (var item in that.cartList) {
-				if (item != 'invalid' && item != 'valid') {
+				if (item != 'invalid' && item != 'valid'&& item != '极速达商品') {
 					that.cartList[item].forEach(cart => {
 						if (cart.checked === true) {
 							ccarnum += parseInt(cart.cartNum);
@@ -550,7 +550,7 @@ export default {
 			//   checked.push()
 			// }
 			for (var item in that.cartList) {
-				if (item != 'invalid' && item != 'valid') {
+				if (item != 'invalid' && item != 'valid'&& item != '极速达商品') {
 					let childCount = 0;
 					that.cartList[item].forEach((cart, cartIndex)  => {
 						cart.checked = selectAllStatus;
@@ -589,7 +589,7 @@ export default {
 			var carnum = 0;
 			/* var array = that.cartList.valid; */
 			for (var item in that.cartList) {
-				if (item != 'invalid' && item != 'valid') {
+				if (item != 'invalid' && item != 'valid'&& item != '极速达商品') {
 					that.cartList[item].forEach(cart => {
 						if (cart.checked === true) {
 							carnum += parseInt(cart.cartNum);
@@ -610,7 +610,7 @@ export default {
 			let carmoney = 0;
 			/* let array = that.cartList.valid; */
 			for (var item in that.cartList) {
-				if (item != 'invalid' && item != 'valid') {
+				if (item != 'invalid' && item != 'valid'&& item != '极速达商品') {
 					that.cartList[item].forEach(cart => {
 						if (cart.checked === true) {
 							carmoney = add(carmoney, mul(cart.cartNum, cart.truePrice));

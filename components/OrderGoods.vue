@@ -34,7 +34,9 @@ export default {
   data: function() {
     return {}
   },
-  mounted: function() {},
+  mounted: function() {
+	  
+  },
   methods: {
     routerGo(cart) {
       this.$yrouter.push({

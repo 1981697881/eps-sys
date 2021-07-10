@@ -95,7 +95,7 @@
 	</view>
 </template>
 <script>
-import { getOrderData, getOrderList } from '@/api/order';
+import { getOrderData, getYsOrderList } from '@/api/order';
 import { cancelOrderHandle, payOrderHandle, takeOrderHandle } from '@/libs/order';
 import Loading from '@/components/Loading';
 import Payment from '@/components/Payment';
@@ -146,9 +146,6 @@ export default {
 		this.getOrderList();
 	},
 	onHide: function() {
-		this.orderList.forEach((item,index)=>{
-			clearInterval(item.countDownFn);
-		})
 		this.orderList = [];
 		this.page = 1;
 		this.limit = 20;
@@ -156,9 +153,6 @@ export default {
 		this.loading = false;
 	},
 	onUnload: function() {
-		this.orderList.forEach((item,index)=>{
-			clearInterval(item.countDownFn);
-		})
 		this.orderList = [];
 		this.page = 1;
 		this.limit = 20;
@@ -188,63 +182,6 @@ export default {
 		 confirm(val){
 			console.log(val) 
 		 },
-		//倒计时
-		countDownFun(time) {
-			let startTime = new Date().getTime(); //当前时间
-			let end = new Date(time.replace(/\-/g, "/")).getTime(); //结束时间	
-			let result = parseInt((end - startTime) / 1000); //计算出豪秒
-			uni.showToast({
-			  title: result,
-			  icon: 'none',
-			})
-			result = result + 7200
-			let d = parseInt(result / (24 * 60 * 60)); //用总共的秒数除以1天的秒数
-			let h = parseInt((result / (60 * 60)) % 24); //精确小时，用去余
-			let m = parseInt((result / 60) % 60); //剩余分钟就是用1小时等于60分钟进行趣余
-			let s = parseInt(result % 60);
-			//当倒计时结束时，改变内容
-			if (result <= 0) {
-				return '订单已超时';
-			}
-			if (h < 10) {
-				h = '0' + h;
-			}
-			if (s < 10) {
-				s = '0' + s;
-			}
-			if (h == 0 && m == 0) {
-				return '剩余' + s + '秒';
-			} else if (h == 0) {
-				return '剩余' + m + '分' + s + '秒';
-			} else if (d == 0) {
-				return '剩余' + h + '时' + m + '分' + s + '秒';
-			} else {
-				return '剩余' + d + '天' + h + '时' + m + '分' + s + '秒';
-			}
-		},
-		// 定时器
-		// 页面多个倒计时 归零时清除
-		countDown(orderList) {
-			let that = this;
-			orderList.forEach((item,index)=>{
-				clearInterval(item.countDownFn);
-				item.countDownFn = setInterval(() => {
-					if (that.countDownFun(item.createTime) == '订单已超时') {
-						clearInterval(item.countDownFn)
-						item.timeText = '订单已超时';
-						that.$set(item, 'timeText', '订单已超时');
-						 //清除定时器
-						that.$set(item, 'countDownFn', clearInterval(item.countDownFn));
-						that.$set(item, 'countDownFn', '');
-						that.$forceUpdate()
-					} else {	
-						item.timeText = that.countDownFun(item.createTime);
-						that.$set(item, 'timeText', that.countDownFun(item.createTime));
-						that.$forceUpdate()
-					}
-				}, 1000);
-			})
-		},
 		goLogistics(order) {
 			this.$yrouter.push({
 				path: '/pages/order/Logistics/index',
@@ -295,15 +232,14 @@ export default {
 			if (this.loading || this.loaded) return;
 			this.loading = true;
 			const { page, limit, type } = this;
-			getOrderList({
+			getYsOrderList({
 				page,
 				limit,
 				type
 			}).then(res => {
-				that.orderList = [...res.data	];
+				that.orderList = [...res.data];
 				that.page++;
 				//这里应该写在请求接口拿到数据后，这里我使用模拟数据
-				that.countDown(that.orderList);
 				that.loaded = res.data.length < that.limit;
 				that.loading = false;
 			});

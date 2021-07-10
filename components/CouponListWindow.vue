@@ -65,8 +65,8 @@ export default {
     value: Boolean,
     checked: Number,
     price: {
-      type: [Number, String],
-      default: undefined,
+      type: Array,
+      default: [],
     },
     cartid: {
       type: String,
@@ -80,12 +80,15 @@ export default {
     }
   },
   watch: {
-    price(n) {
-      if (n === undefined || n == null) return
+   /* price(n) {
+		console.log(n)
+      if (n.length == 0) return
       this.getCoupon()
-    },
+    }, */
     cartid(n) {
-      if (n === undefined || n == null) return
+		console.log(123)
+		console.log(n)
+      if (n === undefined || n == null || n == '') return
       this.getCoupon()
     },
   },

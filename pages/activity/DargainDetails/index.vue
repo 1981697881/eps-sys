@@ -258,7 +258,7 @@ export default {
           that.$yrouter.push({
             path: '/pages/order/OrderSubmission/index',
             query: {
-              id: res.data.cartId,
+              id: JSON.stringify([[res.data.cartId]]),
             },
           })
         })

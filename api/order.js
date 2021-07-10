@@ -60,6 +60,14 @@ export function getOrderList(data) {
 }
 
 /**
+ * 预售订单列表
+ * @returns {*}
+ */
+export function getYsOrderList(data) {
+	return request.get("/mall/order/yuShouList", data);
+}
+
+/**
  * 取消订单
  * @returns {*}
  */

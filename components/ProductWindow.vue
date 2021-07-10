@@ -64,7 +64,7 @@ export default {
 	}
   },
   mounted: function() {
-    console.log(this)
+    console.log(this.attr)
   },
   watch: {
     attr(nextAttr) {},

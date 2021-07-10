@@ -41,7 +41,7 @@
 		<block v-for="(item, index) in orderGroupInfo" :key="index">
 			<OrderGoods :evaluate="0" :isIntegral="isIntegral" :cartInfo="item.cartInfo"></OrderGoods>
 			<view class="wrapper" style="margin-top: 0;">
-				<view class="item acea-row row-between-wrapper" @click="couponTap" v-if="item.deduction === false && !isIntegral">
+				<view class="item acea-row row-between-wrapper" @click="couponTap(item, index)" v-if="item.deduction === false && !isIntegral">
 					<view>优惠券</view>
 					<view class="discount">
 						{{ item.usableCoupon.couponTitle || '请选择' }}
@@ -158,14 +158,318 @@
 		<CouponListWindow
 			v-on:couponchange="changecoupon($event)"
 			v-model="showCoupon"
-			:price="orderPrice.totalPrice"
+			:price="orderPrice.cartPrice"
 			:checked="usableCoupon.id"
 			@checked="changeCoupon"
-			:cartid="cartid"
+			:cartid="couponCartid"
 		></CouponListWindow>
 		<AddressWindow @checked="changeAddress" @redirect="addressRedirect" v-model="showAddress" :checked="addressInfo.id" ref="mychild"></AddressWindow>
 	</view>
 </template>
+<script>
+import CouponListWindow from '@/components/CouponListWindow';
+import AddressWindow from '@/components/AddressWindow';
+import { postOrderConfirm, postOrderComputed, createOrder } from '@/api/order';
+import { mapGetters } from 'vuex';
+import { handleOrderPayResults, subscribeMessage } from '@/libs/order';
+import { weappPay } from '@/libs/wechat';
+import { isWeixin, handleErrorMessage } from '@/utils';
+import OrderGoods from '@/components/OrderGoods.vue';
+const NAME = 'OrderSubmission',
+	_isWeixin = isWeixin();
+export default {
+	name: NAME,
+	components: {
+		OrderGoods,
+		CouponListWindow,
+		AddressWindow
+	},
+	props: {},
+	data: function() {
+		return {
+			offlinePayStatus: 2,
+			from: this.$deviceType,
+			deduction: true,
+			enableIntegral: true,
+			enableIntegralNum: 0,
+			isWeixin: _isWeixin,
+			pinkId: 0,
+			active: _isWeixin ? 'weixin' : 'yue',
+			showCoupon: false,
+			showAddress: false,
+			addressInfo: {},
+			couponId: 0,
+			orderGroupInfo: {
+				priceGroup: {}
+			},
+			usableCoupon: {},
+			addressLoaded: false,
+			useIntegral: false,
+			orderPrice: {
+				payPrice: '计算中',
+				cartPrice: []
+			},
+			mark: '',
+			couponCartid: '',
+			systemStore: {},
+			shipping_type: 0,
+			contacts: '',
+			contactsTel: '',
+			storeSelfMention: 0,
+			cartid: [],
+			isIntegral: false
+		};
+	},
+	computed: mapGetters(['userInfo', 'storeItems']),
+	watch: {
+		useIntegral() {
+			this.computedPrice();
+		},
+		$yroute(n) {
+			if (n.name === NAME) this.getCartInfo();
+		},
+		shipping_type() {
+			this.computedPrice();
+		}
+	},
+	onShow: function() {
+		let that = this;
+		this.$store.dispatch('getUser', true);
+		that.getCartInfo();
+		if (that.$yroute.query.pinkid !== undefined) {
+			that.pinkId = that.$yroute.query.pinkid;
+		}
+		this.isIntegral = that.$yroute.query.isIntegral == 'true';
+		this.useIntegral = this.isIntegral;
+		if (this.isIntegral) {
+			this.active = 'integral';
+		}
+		if (that.$yroute.query.id !== undefined) {
+			that.cartid = JSON.parse(that.$yroute.query.id);
+		}
+	},
+	methods: {
+		showStoreList() {
+			this.$store.commit('get_to', 'orders');
+			this.$yrouter.push({
+				path: '/pages/shop/StoreList/index'
+			});
+		},
+		addressType: function(index) {
+			if (index && !this.systemStore.id) {
+				uni.showToast({
+					title: '暂无门店信息，您无法选择到店自提！',
+					icon: 'none',
+					duration: 2000
+				});
+				return;
+			}
+			this.shipping_type = index;
+		},
+		changeUseIntegral: function(e) {
+			// this.computedPrice();
+			if (this.isIntegral) {
+				return;
+			}
+			this.useIntegral = e.mp.detail.value[0];
+		},
+		computedPrice(params) {
+			this.orderPrice.cartPrice = []
+			let shipping_type = this.shipping_type;
+			postOrderComputed(params.orderKey, {
+				addressId: this.addressInfo.id || '',
+				useIntegral: this.useIntegral ? 1 : 0,
+				couponId: params.usableCoupon.id || 0,
+				shipping_type: parseInt(shipping_type) + 1
+			}).then(res => {
+				const data = res.data;
+				if (data.status === 'EXTEND_ORDER') {
+					this.$yrouter.replace({
+						path: '/pages/order/OrderDetails/index',
+						query: {
+							id: data.result.orderId
+						}
+					});
+				} else {
+					this.orderPrice.cartPrice.push(data.result)
+				}
+			});
+		},
+		getCartInfo() {
+			const cartIds = JSON.parse(this.$yroute.query.id);
+			if (!cartIds) {
+				uni.showToast({
+					title: '参数有误',
+					icon: 'none',
+					duration: 2000
+				});
+				return this.$yrouter.back();
+			}
+			let cartid = '';
+			cartIds.forEach((item, index) => {
+				cartid += item.join(',');
+				if (cartIds.length != index + 1) {
+					cartid = cartid + ',';
+				}
+			});
+			postOrderConfirm(cartid)
+				.then(res => {
+					this.offlinePayStatus = res.data.offline_pay_status;
+					this.orderGroupInfo = res.data;
+					/* this.deduction = res.data.deduction; */
+					/* this.usableCoupon = res.data.usableCoupon || {}; */
+					this.addressInfo = res.data[0].addressInfo || {};
+					// 用来显示到店自提的店铺地址
+					this.systemStore = res.data[0].systemStore || {};
+					this.storeSelfMention = res.data[0].storeSelfMention;
+					let data = [...res.data]
+					data.forEach(item => {
+						this.computedPrice(item);
+					});
+				})
+				.catch(() => {
+					uni.showToast({
+						title: '加载订单数据失败',
+						icon: 'none',
+						duration: 2000
+					});
+				});
+		},
+		addressTap: function() {
+			this.showAddress = true;
+			if (!this.addressLoaded) {
+				this.addressLoaded = true;
+				this.$refs.mychild.getAddressList();
+			}
+		},
+		addressRedirect() {
+			this.addressLoaded = false;
+			this.showAddress = false;
+		},
+		couponTap: function(item, index) {
+			this.showCoupon = true;
+			this.usableCoupon = item.usableCoupon
+			this.couponCartid = this.cartid[index].toString()
+		},
+		changeCoupon: function(coupon) {
+			if (!coupon) {
+				this.usableCoupon = {
+					couponTitle: '不使用优惠券',
+					id: 0
+				};
+			} else {
+				this.usableCoupon = coupon;
+			}
+			this.orderGroupInfo.forEach(item => {
+				this.computedPrice(item);
+			});
+		},
+		payItem: function(index) {
+			this.active = index;
+		},
+		changeAddress(addressInfo) {
+			this.addressInfo = addressInfo;
+			this.orderGroupInfo.forEach(item => {
+				this.computedPrice(item);
+			});
+		},
+		createOrder() {
+			if (this.isIntegral) {
+				// 积分支付
+				if (this.userInfo.integral < this.orderPrice.payIntegral) {
+					uni.showToast({
+						title: '积分不足',
+						icon: 'none',
+						duration: 2000
+					});
+					return;
+				}
+				this.active = 'integral';
+			}
+			let shipping_type = this.shipping_type;
+			if (!this.isIntegral && !this.active) {
+				uni.showToast({
+					title: '请选择支付方式',
+					icon: 'none',
+					duration: 2000
+				});
+				return;
+			}
+			if (!this.addressInfo.id && !this.shipping_type) {
+				uni.showToast({
+					title: '请选择收货地址',
+					icon: 'none',
+					duration: 2000
+				});
+				return;
+			}
+
+			if (this.shipping_type) {
+				if ((this.contacts === '' || this.contactsTel === '') && this.shipping_type) {
+					uni.showToast({
+						title: '请填写联系人或联系人电话',
+						icon: 'none',
+						duration: 2000
+					});
+					return;
+				}
+
+				if (!/^1(3|4|5|7|8|9|6)\d{9}$/.test(this.contactsTel)) {
+					uni.showToast({
+						title: '请填写正确的手机号',
+						icon: 'none',
+						duration: 2000
+					});
+					return;
+				}
+				if (!/^[\u4e00-\u9fa5\w]{2,16}$/.test(this.contacts)) {
+					uni.showToast({
+						title: '请填写您的真实姓名',
+						icon: 'none',
+						duration: 2000
+					});
+					return;
+				}
+			}
+
+			uni.showLoading({
+				title: '生成订单中'
+			});
+			let from = {};
+			if (this.$deviceType == 'app') {
+				from.from = 'app';
+			}
+			// #ifdef MP-WEIXIN
+			subscribeMessage();
+			// #endif
+			createOrder(this.orderGroupInfo.orderKey, {
+				realName: this.contacts,
+				phone: this.contactsTel,
+				addressId: this.addressInfo.id,
+				useIntegral: this.useIntegral ? 1 : 0,
+				couponId: this.usableCoupon.id || 0,
+				payType: this.active,
+				pinkId: this.pinkId,
+				seckillId: this.orderGroupInfo.seckill_id,
+				combinationId: this.orderGroupInfo.combination_id,
+				bargainId: this.orderGroupInfo.bargain_id,
+				from: this.from,
+				mark: this.mark || '',
+				shippingType: parseInt(shipping_type) + 1,
+				storeId: this.storeItems ? this.storeItems.id : this.systemStore.id,
+				...from
+			})
+				.then(res => {
+					uni.hideLoading();
+					handleOrderPayResults.call(this, res.data, 'create', this.active);
+				})
+				.catch(err => {
+					handleErrorMessage(err, '创建订单失败');
+				});
+		}
+	}
+};
+</script>
 <style scoped lang="less">
 .totalPrice {
 	height: 70rpx;
@@ -271,298 +575,3 @@
 	color: #ccc;
 }
 </style>
-<script>
-import OrderGoods from '@/components/OrderGoods';
-import CouponListWindow from '@/components/CouponListWindow';
-import AddressWindow from '@/components/AddressWindow';
-import { postOrderConfirm, postOrderComputed, createOrder } from '@/api/order';
-import { mapGetters } from 'vuex';
-import { handleOrderPayResults, subscribeMessage } from '@/libs/order';
-import { weappPay } from '@/libs/wechat';
-import { isWeixin, handleErrorMessage } from '@/utils';
-
-const NAME = 'OrderSubmission',
-	_isWeixin = isWeixin();
-export default {
-	name: NAME,
-	components: {
-		OrderGoods,
-		CouponListWindow,
-		AddressWindow
-	},
-	props: {},
-	data: function() {
-		return {
-			offlinePayStatus: 2,
-			from: this.$deviceType,
-			deduction: true,
-			enableIntegral: true,
-			enableIntegralNum: 0,
-			isWeixin: _isWeixin,
-			pinkId: 0,
-			active: _isWeixin ? 'weixin' : 'yue',
-			showCoupon: false,
-			showAddress: false,
-			addressInfo: {},
-			couponId: 0,
-			orderGroupInfo: {
-				priceGroup: {}
-			},
-			usableCoupon: {},
-			addressLoaded: false,
-			useIntegral: false,
-			orderPrice: {
-				payPrice: '计算中'
-			},
-			mark: '',
-			systemStore: {},
-			shipping_type: 0,
-			contacts: '',
-			contactsTel: '',
-			storeSelfMention: 0,
-			cartid: [],
-			isIntegral: false
-		};
-	},
-	computed: mapGetters(['userInfo', 'storeItems']),
-	watch: {
-		useIntegral() {
-			this.computedPrice();
-		},
-		$yroute(n) {
-			if (n.name === NAME) this.getCartInfo();
-		},
-		shipping_type() {
-			this.computedPrice();
-		}
-	},
-	onShow: function() {
-		let that = this;
-		this.$store.dispatch('getUser', true);
-		that.getCartInfo();
-		console.log(that.$yroute.query);
-		if (that.$yroute.query.pinkid !== undefined) {
-			that.pinkId = that.$yroute.query.pinkid;
-		}
-		this.isIntegral = that.$yroute.query.isIntegral == 'true';
-		this.useIntegral = this.isIntegral;
-		if (this.isIntegral) {
-			this.active = 'integral';
-		}
-		if (that.$yroute.query.id !== undefined) {
-			that.cartid = JSON.parse(that.$yroute.query.id);
-		}
-	},
-	methods: {
-		showStoreList() {
-			this.$store.commit('get_to', 'orders');
-			this.$yrouter.push({
-				path: '/pages/shop/StoreList/index'
-			});
-		},
-		addressType: function(index) {
-			if (index && !this.systemStore.id) {
-				uni.showToast({
-					title: '暂无门店信息，您无法选择到店自提！',
-					icon: 'none',
-					duration: 2000
-				});
-				return;
-			}
-			this.shipping_type = index;
-		},
-		changeUseIntegral: function(e) {
-			// this.computedPrice();
-			if (this.isIntegral) {
-				return;
-			}
-			this.useIntegral = e.mp.detail.value[0];
-		},
-		computedPrice() {
-			let shipping_type = this.shipping_type;
-			postOrderComputed(this.orderGroupInfo.orderKey, {
-				addressId: this.addressInfo.id,
-				useIntegral: this.useIntegral ? 1 : 0,
-				couponId: this.usableCoupon.id || 0,
-				shipping_type: parseInt(shipping_type) + 1
-			}).then(res => {
-				const data = res.data;
-				if (data.status === 'EXTEND_ORDER') {
-					this.$yrouter.replace({
-						path: '/pages/order/OrderDetails/index',
-						query: {
-							id: data.result.orderId
-						}
-					});
-				} else {
-					this.orderPrice = data.result;
-				}
-			});
-		},
-		getCartInfo() {
-			const cartIds = JSON.parse(this.$yroute.query.id);
-			if (!cartIds) {
-				uni.showToast({
-					title: '参数有误',
-					icon: 'none',
-					duration: 2000
-				});
-				return this.$yrouter.back();
-			}
-			let cartid = '';
-			cartIds.forEach((item, index) => {
-				cartid += item.join(',');
-				if (cartIds.length != index + 1) {
-					cartid = cartid + ',';
-				}
-			});
-			console.log(cartid);
-			postOrderConfirm(cartid)
-				.then(res => {
-					this.offlinePayStatus = res.data.offline_pay_status;
-					this.orderGroupInfo = res.data;
-					/* this.deduction = res.data.deduction; */
-					/* this.usableCoupon = res.data.usableCoupon || {}; */
-					this.addressInfo = res.data[0].addressInfo || {};
-					// 用来显示到店自提的店铺地址
-					this.systemStore = res.data[0].systemStore || {};
-					this.storeSelfMention = res.data[0].storeSelfMention;
-					this.computedPrice();
-				})
-				.catch(() => {
-					uni.showToast({
-						title: '加载订单数据失败',
-						icon: 'none',
-						duration: 2000
-					});
-				});
-		},
-		addressTap: function() {
-			this.showAddress = true;
-			if (!this.addressLoaded) {
-				this.addressLoaded = true;
-				this.$refs.mychild.getAddressList();
-			}
-		},
-		addressRedirect() {
-			this.addressLoaded = false;
-			this.showAddress = false;
-		},
-		couponTap: function() {
-			this.showCoupon = true;
-		},
-		changeCoupon: function(coupon) {
-			if (!coupon) {
-				this.usableCoupon = {
-					couponTitle: '不使用优惠券',
-					id: 0
-				};
-			} else {
-				this.usableCoupon = coupon;
-			}
-			this.computedPrice();
-		},
-		payItem: function(index) {
-			this.active = index;
-		},
-		changeAddress(addressInfo) {
-			this.addressInfo = addressInfo;
-			this.computedPrice();
-		},
-		createOrder() {
-			if (this.isIntegral) {
-				// 积分支付
-				if (this.userInfo.integral < this.orderPrice.payIntegral) {
-					uni.showToast({
-						title: '积分不足',
-						icon: 'none',
-						duration: 2000
-					});
-					return;
-				}
-				this.active = 'integral';
-			}
-			let shipping_type = this.shipping_type;
-			if (!this.isIntegral && !this.active) {
-				uni.showToast({
-					title: '请选择支付方式',
-					icon: 'none',
-					duration: 2000
-				});
-				return;
-			}
-			if (!this.addressInfo.id && !this.shipping_type) {
-				uni.showToast({
-					title: '请选择收货地址',
-					icon: 'none',
-					duration: 2000
-				});
-				return;
-			}
-
-			if (this.shipping_type) {
-				if ((this.contacts === '' || this.contactsTel === '') && this.shipping_type) {
-					uni.showToast({
-						title: '请填写联系人或联系人电话',
-						icon: 'none',
-						duration: 2000
-					});
-					return;
-				}
-
-				if (!/^1(3|4|5|7|8|9|6)\d{9}$/.test(this.contactsTel)) {
-					uni.showToast({
-						title: '请填写正确的手机号',
-						icon: 'none',
-						duration: 2000
-					});
-					return;
-				}
-				if (!/^[\u4e00-\u9fa5\w]{2,16}$/.test(this.contacts)) {
-					uni.showToast({
-						title: '请填写您的真实姓名',
-						icon: 'none',
-						duration: 2000
-					});
-					return;
-				}
-			}
-
-			uni.showLoading({
-				title: '生成订单中'
-			});
-			let from = {};
-			if (this.$deviceType == 'app') {
-				from.from = 'app';
-			}
-			// #ifdef MP-WEIXIN
-			subscribeMessage();
-			// #endif
-			createOrder(this.orderGroupInfo.orderKey, {
-				realName: this.contacts,
-				phone: this.contactsTel,
-				addressId: this.addressInfo.id,
-				useIntegral: this.useIntegral ? 1 : 0,
-				couponId: this.usableCoupon.id || 0,
-				payType: this.active,
-				pinkId: this.pinkId,
-				seckillId: this.orderGroupInfo.seckill_id,
-				combinationId: this.orderGroupInfo.combination_id,
-				bargainId: this.orderGroupInfo.bargain_id,
-				from: this.from,
-				mark: this.mark || '',
-				shippingType: parseInt(shipping_type) + 1,
-				storeId: this.storeItems ? this.storeItems.id : this.systemStore.id,
-				...from
-			})
-				.then(res => {
-					uni.hideLoading();
-					handleOrderPayResults.call(this, res.data, 'create', this.active);
-				})
-				.catch(err => {
-					handleErrorMessage(err, '创建订单失败');
-				});
-		}
-	}
-};
-</script>
