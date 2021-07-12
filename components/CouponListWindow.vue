@@ -72,6 +72,10 @@ export default {
       type: String,
       default: '',
     },
+	index: {
+      type: String,
+      default: '',
+    },
   },
   data: function() {
     return {
@@ -86,8 +90,6 @@ export default {
       this.getCoupon()
     }, */
     cartid(n) {
-		console.log(123)
-		console.log(n)
       if (n === undefined || n == null || n == '') return
       this.getCoupon()
     },
@@ -105,11 +107,11 @@ export default {
       })
     },
     click(coupon) {
-      this.$emit('checked', coupon)
+      this.$emit('checked', {item:coupon,index: this.index})
       this.$emit('input', false)
     },
     couponNo: function() {
-      this.$emit('checked', null)
+      this.$emit('checked', {item:null,index: this.index})
       this.$emit('input', false)
     },
   },

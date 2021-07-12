@@ -44,7 +44,7 @@
 				<view class="item acea-row row-between-wrapper" @click="couponTap(item, index)" v-if="item.deduction === false && !isIntegral">
 					<view>优惠券</view>
 					<view class="discount">
-						{{ item.usableCoupon.couponTitle || '请选择' }}
+						{{ item.usableCoupon.couponTitle || '请选择' }} {{item.usableCoupon.couponPrice || ''}}
 						<text class="iconfont icon-jiantou"></text>
 					</view>
 				</view>
@@ -56,9 +56,9 @@
 					<view>订单备注</view>
 					<textarea v-model="mark"></textarea>
 				</view>
-				<view class="totalPrice">
+				<view class="totalPrice" v-if="!isIntegral">
 					共{{ item.cartInfo.length || 0 }}件商品，小计
-					<text class="money font-color-red">￥{{ item.priceGroup.totalPrice }}</text>
+					<text class="money font-color-red">原价 ￥{{ item.priceGroup.totalPrice || 0 }} 优惠价 ￥{{cartPrice[index].payPrice || 0}}</text>
 				</view>
 			</view>
 		</block>
@@ -117,49 +117,50 @@
 						</view>
 						<view class="tip">可用余额：{{ userInfo.nowMoney || 0 }}</view>
 					</view>
-					<!-- <view class="payItem acea-row row-middle" v-if="isIntegral" :class="active === 'integral' ? 'on' : ''" @click="payItem('integral')">
+					<view class="payItem acea-row row-middle" v-if="isIntegral" :class="active === 'integral' ? 'on' : ''" @click="payItem('integral')">
 						<view class="name acea-row row-center-wrapper">
 							<view class="iconfont icon-icon-test" :class="active === 'integral' ? 'bounceIn' : ''"></view>
 							积分支付
 						</view>
 						<view class="tip">可用积分：{{ userInfo.integral || 0 }}</view>
-					</view> -->
+					</view>
 				</view>
 			</view>
 		</view>
 		<view class="moneyList">
 			<view class="item acea-row row-between-wrapper" v-if="orderPrice.totalPrice !== undefined">
 				<view>商品总价：</view>
-				<view class="money" v-if="!isIntegral">￥{{ orderPrice.totalPrice }}</view>
-				<view class="money" v-if="isIntegral">{{ orderPrice.payIntegral }}积分</view>
+				<view class="money" v-if="!isIntegral">￥{{ filterNumber(orderPrice.totalPrice)}}</view>
+				<view class="money" v-if="isIntegral">{{ filterNumber(orderPrice.payIntegral) }}积分</view>
 			</view>
 			<view class="item acea-row row-between-wrapper" v-if="orderPrice.payPostage > 0 && !isIntegral">
 				<view>运费：</view>
-				<view class="money">￥{{ orderPrice.payPostage }}</view>
+				<view class="money">￥{{ filterNumber(orderPrice.payPostage) }}</view>
 			</view>
 			<view class="item acea-row row-between-wrapper" v-if="orderPrice.couponPrice > 0 && !isIntegral">
 				<view>优惠券抵扣：</view>
-				<view class="money">-￥{{ orderPrice.couponPrice }}</view>
+				<view class="money">-￥{{ filterNumber(orderPrice.couponPrice) }}</view>
 			</view>
 			<view class="item acea-row row-between-wrapper" v-if="orderPrice.deductionPrice > 0 && !isIntegral">
 				<view>积分抵扣：</view>
-				<view class="money">-￥{{ orderPrice.deductionPrice }}</view>
+				<view class="money">-￥{{ filterNumber(orderPrice.deductionPrice) }}</view>
 			</view>
 		</view>
 		<view style="height: 120rpx"></view>
 		<view class="footer acea-row row-between-wrapper">
 			<view>
 				合计:
-				<text class="font-color-red" v-if="!isIntegral">￥{{ orderPrice.payPrice }}</text>
-				<text class="font-color-red" v-if="isIntegral">{{ orderPrice.payIntegral }}积分</text>
+				<text class="font-color-red" v-if="!isIntegral">￥{{ filterNumber(orderPrice.payPrice) }}</text>
+				<text class="font-color-red" v-if="isIntegral">{{ filterNumber(orderPrice.payIntegral) }}积分</text>
 			</view>
 			<view class="settlement" @click="createOrder">立即结算</view>
 		</view>
 		<CouponListWindow
 			v-on:couponchange="changecoupon($event)"
 			v-model="showCoupon"
-			:price="orderPrice.cartPrice"
-			:checked="usableCoupon.id"
+			:price="orderPrice.totalPrice"
+			:index="usableCoupon.index"
+			:checked="usableCoupon.item.id"
 			@checked="changeCoupon"
 			:cartid="couponCartid"
 		></CouponListWindow>
@@ -199,17 +200,15 @@ export default {
 			showAddress: false,
 			addressInfo: {},
 			couponId: 0,
-			orderGroupInfo: {
-				priceGroup: {}
-			},
+			orderGroupInfo: [],
 			usableCoupon: {},
 			addressLoaded: false,
 			useIntegral: false,
 			orderPrice: {
-				payPrice: '计算中',
-				cartPrice: []
+				payPrice: '计算中'
 			},
 			mark: '',
+			cartPrice: [],
 			couponCartid: '',
 			systemStore: {},
 			shipping_type: 0,
@@ -222,14 +221,33 @@ export default {
 	},
 	computed: mapGetters(['userInfo', 'storeItems']),
 	watch: {
+		cartPrice(n) {
+			n.forEach((item, index) => {
+				for (var pl in item) {
+					//数组对象遍历
+					if (index == 0) {
+						this.orderPrice[pl] = parseFloat(item[pl]);
+					} else {
+						this.orderPrice[pl] += parseFloat(item[pl]);
+					}
+				}
+			});
+		},
 		useIntegral() {
-			this.computedPrice();
+			if(this.orderGroupInfo.length>0){
+				this.orderGroupInfo.forEach(item => {
+					this.computedPrice(item);
+				});
+			}
+			/* this.computedPrice(); */
 		},
 		$yroute(n) {
 			if (n.name === NAME) this.getCartInfo();
 		},
 		shipping_type() {
-			this.computedPrice();
+			this.orderGroupInfo.forEach(item => {
+				this.computedPrice(item);
+			});
 		}
 	},
 	onShow: function() {
@@ -249,6 +267,24 @@ export default {
 		}
 	},
 	methods: {
+		filterNumber(value) {
+			console.log(value)
+			let num = value;
+			if (num.toString().split('.').length == 1) {
+				return num + '.00';
+			} else {
+				if (
+					num
+						.toString()
+						.split('.')[1]
+						.toString().length == 1
+				) {
+					return num + '0';
+				} else {
+					return num + '';
+				}
+			}
+		},
 		showStoreList() {
 			this.$store.commit('get_to', 'orders');
 			this.$yrouter.push({
@@ -274,12 +310,12 @@ export default {
 			this.useIntegral = e.mp.detail.value[0];
 		},
 		computedPrice(params) {
-			this.orderPrice.cartPrice = []
+			this.cartPrice = [];
 			let shipping_type = this.shipping_type;
 			postOrderComputed(params.orderKey, {
 				addressId: this.addressInfo.id || '',
 				useIntegral: this.useIntegral ? 1 : 0,
-				couponId: params.usableCoupon.id || 0,
+				couponId: params.usableCoupon != null ? params.usableCoupon.id : 0,
 				shipping_type: parseInt(shipping_type) + 1
 			}).then(res => {
 				const data = res.data;
@@ -291,7 +327,7 @@ export default {
 						}
 					});
 				} else {
-					this.orderPrice.cartPrice.push(data.result)
+					this.cartPrice.push(data.result);
 				}
 			});
 		},
@@ -322,7 +358,7 @@ export default {
 					// 用来显示到店自提的店铺地址
 					this.systemStore = res.data[0].systemStore || {};
 					this.storeSelfMention = res.data[0].storeSelfMention;
-					let data = [...res.data]
+					let data = [...res.data];
 					data.forEach(item => {
 						this.computedPrice(item);
 					});
@@ -348,18 +384,23 @@ export default {
 		},
 		couponTap: function(item, index) {
 			this.showCoupon = true;
-			this.usableCoupon = item.usableCoupon
-			this.couponCartid = this.cartid[index].toString()
+			this.usableCoupon = {
+				item: item.usableCoupon,
+				index: index
+			} ;
+			
+			this.couponCartid = this.cartid[index].toString();
 		},
 		changeCoupon: function(coupon) {
-			if (!coupon) {
+			if (!coupon.item) {
 				this.usableCoupon = {
 					couponTitle: '不使用优惠券',
 					id: 0
 				};
 			} else {
-				this.usableCoupon = coupon;
+				this.usableCoupon = coupon.item;
 			}
+			this.orderGroupInfo[coupon.index].usableCoupon= this.usableCoupon
 			this.orderGroupInfo.forEach(item => {
 				this.computedPrice(item);
 			});
@@ -442,6 +483,23 @@ export default {
 			// #ifdef MP-WEIXIN
 			subscribeMessage();
 			// #endif
+			console.log(this.orderGroupInfo.orderKey, {
+				realName: this.contacts,
+				phone: this.contactsTel,
+				addressId: this.addressInfo.id,
+				useIntegral: this.useIntegral ? 1 : 0,
+				couponId: this.usableCoupon.id || 0,
+				payType: this.active,
+				pinkId: this.pinkId,
+				seckillId: this.orderGroupInfo.seckill_id,
+				combinationId: this.orderGroupInfo.combination_id,
+				bargainId: this.orderGroupInfo.bargain_id,
+				from: this.from,
+				mark: this.mark || '',
+				shippingType: parseInt(shipping_type) + 1,
+				storeId: this.storeItems ? this.storeItems.id : this.systemStore.id,
+				...from
+			})
 			createOrder(this.orderGroupInfo.orderKey, {
 				realName: this.contacts,
 				phone: this.contactsTel,

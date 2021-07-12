@@ -32,7 +32,7 @@
       <view class="tui-product-container" v-if="Switch">
         <block v-for="(item, productListIndex) in productList" :key="productListIndex" :title="item.storeName">
           <!--商品列表-->
-          <view class="tui-pro-item" :class="[Switch ? 'tui-flex-list' : '']" hover-class="tui-hover" :hover-start-time="150" @tap="goGoodsCon(item)">
+          <view class="tui-pro-item" :class="[Switch ? 'tui-flex-list' : '']" hover-class="tui-hover" :hover-start-time="150" @tap="isIntegral !== 'true' ? goGoodsCon(item):goIntegralGoodsCon(item)">
             <image :src="item.image" class="tui-pro-img" :class="[Switch ? 'tui-proimg-list' : '']" mode="widthFix" />
             <view class="tui-pro-content">
               <view class="tui-pro-tit">{{ item.storeName }}</view>
@@ -51,7 +51,7 @@
       <view class="tui-product-container" v-if="!Switch">
         <block v-for="(item, productListIndex) in productList" :key="productListIndex" :title="item.storeName">
           <!--商品列表-->
-          <view class="tui-pro-item" :class="[Switch ? 'tui-flex-list' : '']" hover-class="tui-hover" :hover-start-time="150" @tap="goGoodsCon(item)">
+          <view class="tui-pro-item" :class="[Switch ? 'tui-flex-list' : '']" hover-class="tui-hover" :hover-start-time="150" @tap="isIntegral !== 'true' ? goGoodsCon(item):goIntegralGoodsCon(item)">
             <image :src="item.image" class="tui-pro-img" :class="[Switch ? 'tui-proimg-list' : '']" mode="widthFix" />
             <view class="tui-pro-content">
               <view class="tui-pro-tit">{{ item.storeName }}</view>
@@ -74,7 +74,7 @@
       <view class="tui-product-container" v-if="Switch">
         <block v-for="(item, productListIndex) in productList" :key="productListIndex" :title="item.storeName">
           <!--商品列表-->
-          <view class="tui-pro-item" :class="[Switch ? 'tui-flex-list' : '']" hover-class="tui-hover" :hover-start-time="150" @tap="goGoodsCon(item)">
+          <view class="tui-pro-item" :class="[Switch ? 'tui-flex-list' : '']" hover-class="tui-hover" :hover-start-time="150" @tap="isIntegral !== 'true' ? goGoodsCon(item):goIntegralGoodsCon(item)">
             <image :src="item.image" class="tui-pro-img" :class="[Switch ? 'tui-proimg-list' : '']" mode="widthFix" />
             <view class="tui-pro-content">
               <view class="tui-pro-tit">{{ item.storeName }}</view>
@@ -92,7 +92,7 @@
       <view class="tui-product-container" v-if="!Switch">
         <block v-for="(item, productListIndex) in productList" :key="productListIndex" :title="item.storeName">
           <!--商品列表-->
-          <view class="tui-pro-item" :class="[Switch ? 'tui-flex-list' : '']" hover-class="tui-hover" :hover-start-time="150" @tap="goGoodsCon(item)">
+          <view class="tui-pro-item" :class="[Switch ? 'tui-flex-list' : '']" hover-class="tui-hover" :hover-start-time="150" @tap="isIntegral !== 'true' ? goGoodsCon(item):goIntegralGoodsCon(item)">
             <image :src="item.image" class="tui-pro-img" :class="[Switch ? 'tui-proimg-list' : '']" mode="widthFix" />
             <view class="tui-pro-content">
               <view class="tui-pro-tit">{{ item.storeName }}</view>

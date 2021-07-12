@@ -142,8 +142,8 @@ export function changeCartNum(id, number) {
  * 搜索推荐关键字
  */
 export function getSearchKeyword() {
-	return request.get("/mall/search/keyword", {}, {
-		login: false
+	return request.get("/mall/shopindex/search/keyword", {}, {
+		login: true
 	});
 }
 
