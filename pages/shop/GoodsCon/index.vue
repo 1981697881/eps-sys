@@ -170,7 +170,6 @@
           </view>
         </view>
       </view>
-
       <!-- 优惠券 -->
       <CouponPop v-on:changeFun="changeFun" :coupon="coupon"></CouponPop>
       <!-- 商品规格弹窗 -->

@@ -18,7 +18,7 @@
           <image :src="`${$VUE_APP_RESOURCES_URL}/images/qr.png`" />
         </view>
       </view>
-      <Banner v-if="item.type == 'banner'" :detail="item.componentContent.bannerData" @getbgcolor="getbgcolor"></Banner>
+      <Banner v-if="item.type == 'banner'" :detail="banner" @getbgcolor="getbgcolor"></Banner>
      <!-- <uni-notice-bar v-if="item.type == 'noticeBar'" scrollable="true" @click="goRoll(item.componentContent.roll[0])" single="true" :speed="10" showIcon="true" :text="item.componentContent.roll[0].info"></uni-notice-bar> -->
       <view class="content_box home_content_box" v-if="item.type == 'menu' && item.componentContent.menus">
         <!-- 菜单 -->
@@ -221,6 +221,7 @@ export default {
 		  that.logoUrl = res.data.logoUrl
 		  res.data.banner.map(item => (item.bgcolor = item.color || ''))
 		  that.$set(that, 'info', res.data.info)
+		  that.$set(that, 'banner', res.data.banner)
 		  that.$set(that, 'menus', res.data.menus)
 		  that.$set(that, 'firstList', res.data.firstList)
 		  that.$set(that, 'bastList', res.data.bastList)

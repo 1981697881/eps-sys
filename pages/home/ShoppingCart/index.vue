@@ -15,8 +15,8 @@
 					售后无忧
 				</view>
 			</view>
-			<block v-for="(good, goodIndex) in cartList">
-				<view v-if="good.length > 0" class="type-nav">
+			<view v-if="cartList.invalid.length > 0" class="type-nav">
+				<block v-for="(good, goodIndex) in cartList">
 					<view v-if="goodIndex != 'invalid' && goodIndex != 'valid' && goodIndex != '极速达商品'" class="cartNav acea-row row-between-wrapper" :class="goodIndex == '普通商品' ? 'first-cart' : ''">
 						<view class="checkbox-wrapper">
 							<checkbox-group @change="switchParentSelect(good, goodIndex)">
@@ -49,13 +49,13 @@
 									<view class="money">￥{{ item.truePrice }}</view>
 								</view>
 								<view class="carnum acea-row row-center-wrapper">
-									<view class="reduce" :class="good[cartListValidIndex].cartNum <= 1 ? 'on' : ''" @click.prevent="reduce(item,cartListValidIndex)">-</view>
+									<view class="reduce" :class="good[cartListValidIndex].cartNum <= 1 ? 'on' : ''" @click.prevent="reduce(item, cartListValidIndex)">-</view>
 									<view class="num">{{ item.cartNum }}</view>
 									<view
 										class="plus"
 										v-if="good[cartListValidIndex].attrInfo"
 										:class="good[cartListValidIndex].cartNum >= good[cartListValidIndex].attrInfo.stock ? 'on' : ''"
-										@click.prevent="plus(item,cartListValidIndex)"
+										@click.prevent="plus(item, cartListValidIndex)"
 									>
 										+
 									</view>
@@ -63,7 +63,7 @@
 										class="plus"
 										v-else
 										:class="good[cartListValidIndex].cartNum >= good[cartListValidIndex].stock ? 'on' : ''"
-										@click.prevent="plus(item,cartListValidIndex)"
+										@click.prevent="plus(item, cartListValidIndex)"
 									>
 										+
 									</view>
@@ -71,36 +71,36 @@
 							</view>
 						</view>
 					</view>
-					<view class="invalidGoods" v-if="goodIndex == 'invalid'">
-						<view class="goodsNav acea-row row-between-wrapper">
-							<view @click="goodsOpen">
-								<text class="iconfont" :class="goodsHidden === true ? 'icon-xiangyou' : 'icon-xiangxia'"></text>
-								失效商品
-							</view>
-							<view class="del" @click="delInvalidGoods">
-								<text class="iconfont icon-shanchu1"></text>
-								清空
-							</view>
+				</block>
+				<view class="invalidGoods" v-if="cartList.invalid.length > 0">
+					<view class="goodsNav acea-row row-between-wrapper">
+						<view @click="goodsOpen">
+							<text class="iconfont" :class="goodsHidden === true ? 'icon-xiangyou' : 'icon-xiangxia'"></text>
+							失效商品
 						</view>
-						<view class="goodsList" :hidden="goodsHidden">
-							<view v-for="(item, cartListinvalidIndex) in good" :key="cartListinvalidIndex">
-								<view @click="goGoodsCon(item)" class="item acea-row row-between-wrapper" v-if="item.productInfo">
-									<view class="invalid acea-row row-center-wrapper">失效</view>
-									<view class="pictrue">
-										<image :src="item.productInfo.attrInfo.image" v-if="item.productInfo.attrInfo" />
-										<image :src="item.productInfo.image" v-else />
-									</view>
-									<view class="text acea-row row-column-between">
-										<view class="line1">{{ item.productInfo.storeName }}</view>
-										<view class="infor line1" v-if="item.productInfo.attrInfo">属性：{{ item.productInfo.attrInfo.sku }}</view>
-										<view class="acea-row row-between-wrapper"><view class="end">该商品已下架</view></view>
-									</view>
+						<view class="del" @click="delInvalidGoods">
+							<text class="iconfont icon-shanchu1"></text>
+							清空
+						</view>
+					</view>
+					<view class="goodsList" :hidden="goodsHidden">
+						<view v-for="(item, cartListinvalidIndex) in cartList.invalid" :key="cartListinvalidIndex">
+							<view @click="goGoodsCon(item)" class="item acea-row row-between-wrapper" v-if="item.productInfo">
+								<view class="invalid acea-row row-center-wrapper">失效</view>
+								<view class="pictrue">
+									<image :src="item.productInfo.attrInfo.image" v-if="item.productInfo.attrInfo" />
+									<image :src="item.productInfo.image" v-else />
+								</view>
+								<view class="text acea-row row-column-between">
+									<view class="line1">{{ item.productInfo.storeName }}</view>
+									<view class="infor line1" v-if="item.productInfo.attrInfo">属性：{{ item.productInfo.attrInfo.sku }}</view>
+									<view class="acea-row row-between-wrapper"><view class="end">该商品已下架</view></view>
 								</view>
 							</view>
 						</view>
 					</view>
 				</view>
-			</block>
+			</view>
 			<!--购物车暂无商品-->
 			<view class="noCart" v-if="count === 0">
 				<view class="pictrue"><image :src="`${$VUE_APP_RESOURCES_URL}/images/noCart.png`" /></view>
@@ -244,7 +244,7 @@ export default {
 			let that = this;
 			getCartList().then(res => {
 				that.cartList = res.data;
-				that.parentsList = []
+				that.parentsList = [];
 				let checkedIds = cookie.get(CHECKED_IDS) || [];
 				if (!Array.isArray(checkedIds)) checkedIds = [];
 				let count = 0;
@@ -368,14 +368,14 @@ export default {
 				list = that.cartList,
 				arr = [];
 			for (var item in that.cartList) {
-				if (item != 'invalid' && item != 'valid'&& item != '极速达商品') {
-					let id = []
-					that.cartList[item].forEach((cart,index) => {
+				if (item != 'invalid' && item != 'valid' && item != '极速达商品') {
+					let id = [];
+					that.cartList[item].forEach((cart, index) => {
 						if (cart.checked === true) {
 							id.push(cart.id);
 						}
 					});
-					arr.push(id)
+					arr.push(id);
 				}
 			}
 			if (arr.length === 0) {
@@ -402,7 +402,7 @@ export default {
 			that.goodsHidden = !that.goodsHidden;
 		},
 		//加
-		plus: function(item,index) {
+		plus: function(item, index) {
 			let that = this;
 			let list = item;
 			list.cartNum++;
@@ -420,7 +420,7 @@ export default {
 			that.syncCartNum(list);
 		},
 		//减
-		reduce: function(item,index) {
+		reduce: function(item, index) {
 			let that = this;
 			let list = item;
 			if (list.cartNum <= 1) {
@@ -479,7 +479,7 @@ export default {
 			}
 			let ccarnum = 0;
 			for (var item in that.cartList) {
-				if (item != 'invalid' && item != 'valid'&& item != '极速达商品') {
+				if (item != 'invalid' && item != 'valid' && item != '极速达商品') {
 					that.cartList[item].forEach(cart => {
 						if (cart.checked === true) {
 							ccarnum += parseInt(cart.cartNum);
@@ -521,7 +521,7 @@ export default {
 			}
 			let ccarnum = 0;
 			for (var item in that.cartList) {
-				if (item != 'invalid' && item != 'valid'&& item != '极速达商品') {
+				if (item != 'invalid' && item != 'valid' && item != '极速达商品') {
 					that.cartList[item].forEach(cart => {
 						if (cart.checked === true) {
 							ccarnum += parseInt(cart.cartNum);
@@ -541,7 +541,7 @@ export default {
 		allChecked: function(e) {
 			console.log(e);
 			let that = this;
-			that.parentsList = []
+			that.parentsList = [];
 			let selectAllStatus = e.mp.detail.value[0] == 'allSelect' ? true : false;
 			// let selectAllStatus = that.isAllSelect;
 			let checkedIds = [];
@@ -550,9 +550,9 @@ export default {
 			//   checked.push()
 			// }
 			for (var item in that.cartList) {
-				if (item != 'invalid' && item != 'valid'&& item != '极速达商品') {
+				if (item != 'invalid' && item != 'valid' && item != '极速达商品') {
 					let childCount = 0;
-					that.cartList[item].forEach((cart, cartIndex)  => {
+					that.cartList[item].forEach((cart, cartIndex) => {
 						cart.checked = selectAllStatus;
 						if (selectAllStatus) {
 							checkedIds.push(cart.id);
@@ -589,7 +589,7 @@ export default {
 			var carnum = 0;
 			/* var array = that.cartList.valid; */
 			for (var item in that.cartList) {
-				if (item != 'invalid' && item != 'valid'&& item != '极速达商品') {
+				if (item != 'invalid' && item != 'valid' && item != '极速达商品') {
 					that.cartList[item].forEach(cart => {
 						if (cart.checked === true) {
 							carnum += parseInt(cart.cartNum);
@@ -610,7 +610,7 @@ export default {
 			let carmoney = 0;
 			/* let array = that.cartList.valid; */
 			for (var item in that.cartList) {
-				if (item != 'invalid' && item != 'valid'&& item != '极速达商品') {
+				if (item != 'invalid' && item != 'valid' && item != '极速达商品') {
 					that.cartList[item].forEach(cart => {
 						if (cart.checked === true) {
 							carmoney = add(carmoney, mul(cart.cartNum, cart.truePrice));

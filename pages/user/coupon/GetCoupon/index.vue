@@ -16,7 +16,7 @@
             <view class="tui-coupon-title-box">
               <view class="tui-coupon-btn" v-if="item.ctype === 0" :class="{ 'tui-bg-grey': item.isUse }">通用劵</view>
               <view class="tui-coupon-btn" v-else-if="item.ctype === 1" :class="{ 'tui-bg-grey': item.isUse }">商品券</view>
-              <view class="tui-coupon-btn" v-else :class="{ 'tui-bg-grey': item.isUse }">未知</view>
+              <view class="tui-coupon-btn" v-else :class="{ 'tui-bg-grey': item.isUse }">快递券</view>
               <view class="tui-coupon-title">{{ item.cname }}</view>
             </view>
             <view class="tui-coupon-rule">
