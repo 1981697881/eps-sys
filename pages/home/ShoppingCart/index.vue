@@ -15,7 +15,7 @@
 					售后无忧
 				</view>
 			</view>
-			<view v-if="cartList.invalid.length > 0" class="type-nav">
+			<view v-if="cartList.valid.length > 0" class="type-nav">
 				<block v-for="(good, goodIndex) in cartList">
 					<view v-if="goodIndex != 'invalid' && goodIndex != 'valid' && goodIndex != '极速达商品'" class="cartNav acea-row row-between-wrapper" :class="goodIndex == '普通商品' ? 'first-cart' : ''">
 						<view class="checkbox-wrapper">
