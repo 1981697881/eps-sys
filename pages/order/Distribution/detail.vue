@@ -4,82 +4,36 @@
 			<view class="item" v-for="(order, orderListIndex) in orderList" :key="orderListIndex">
 				<view class="title acea-row row-between-wrapper">
 					<view class="acea-row row-middle">
-						单号：{{ order.orderId }}
+						快递单号：{{ order.orderId }}
 					</view>
-					<view class="font-color-red">数量：{{ order.cartInfo.length || 0 }}</view>
+					<view class="font-color-red">配送数量：{{ order.cartInfo.length || 0 }}</view>
 				</view>
 				<view @click="goOrderDetails(order)">
 					<view class="item-info acea-row row-between row-top" v-for="(cart, cartInfoIndex) in order.cartInfo" :key="cartInfoIndex">
 						<view class="pictrue">
 							<image
 								:src="cart.productInfo.image"
-								@click.stop="$yrouter.push({ path: '/pages/shop/GoodsCon/index', query: { id: cart.productInfo.id } })"
-								v-if="cart.combinationId === 0 && cart.bargainId === 0 && cart.seckillId === 0"
-							/>
-							<image
-								:src="cart.productInfo.image"
-								@click.stop="
-									$yrouter.push({
-										path: '/pages/activity/GroupDetails/index',
-										query: { id: cart.combinationId }
-									})
-								"
-								v-else-if="cart.combinationId > 0"
-							/>
-							<image
-								:src="cart.productInfo.image"
-								@click.stop="
-									$yrouter.push({
-										path: '/pages/activity/DargainDetails/index',
-										query: { id: cart.bargainId }
-									})
-								"
-								v-else-if="cart.bargainId > 0"
-							/>
-							<image
-								:src="cart.productInfo.image"
-								@click.stop="
-									$yrouter.push({
-										path: '/pages/activity/SeckillDetails/index',
-										query: { id: cart.seckillId }
-									})
-								"
-								v-else-if="cart.seckillId > 0"
 							/>
 						</view>
 						<view class="text acea-row row-between">
 							<view class="pei-name line2">
 								<view class="text-cut">
-									{{ cart.productInfo.storeName }}
-								</view>
-								<view>
-									<button class="cu-btn round sm bg-cyan shadow" @tap.stop="getPlan">配送计划</button>
+									是否签收：{{ cart.productInfo.storeName }}
 								</view>
 							</view>
-							<view class="money">
-								<view v-if="order.payType != 'integral'">￥{{ cart.productInfo.attrInfo ? cart.productInfo.attrInfo.price : cart.productInfo.price }}</view>
-								<view v-if="order.payType == 'integral'">{{ order.payIntegral }}积分</view>
-								<view>x{{ cart.cartNum }}</view>
+							<view class="money" style="text-align: left;">
+								<view>配送员：{{ cart.productInfo.attrInfo ? cart.productInfo.attrInfo.price : cart.productInfo.price }}</view>
+								<view>配送时间：{{ cart.cartNum }}</view>
 							</view>
 						</view>
 					</view>
 				</view>
 				<view class="totalPrice">
-					<text class="text-cut">地址：{{ order.userAddress }}</text>
+					<text class="text-cut">收件地址：{{ order.userAddress }}</text>
 				</view>
 				<view class="bottom acea-row row-right row-middle">
 					<template v-if="order._status._type == 0 || order._status._type == 9">
-						<view class="bnt bg-blue" @tap="planDetail(order)">配送明细</view>
-						<view class="bnt bg-red" @tap="stopPlan">停止配送</view>
-					</template>
-					<template v-if="order._status._type == 3">
-						<view
-						class="bnt default"
-						@click="$yrouter.push({ path: '/pages/order/Logistics/index',query:{id:order.orderId}})"
-						v-if="order.deliveryType == 'express'"
-						>
-						查看物流
-						</view>
+						<view class="bnt bg-blue" @tap="comfirm">确认收件</view>
 					</template>
 				</view>
 			</view>
@@ -88,29 +42,16 @@
 			<view class="pictrue"><image :src="`${$VUE_APP_RESOURCES_URL}/images/noOrder.png`" /></view>
 		</view>
 		<Loading :loaded="loaded" :loading="loading"></Loading>
-		<Payment v-model="pay" :types="payType" @checked="toPay" :balance="userInfo.nowMoney"></Payment>
-		<!-- 商品规格弹窗 -->
-		<PlanWindow  v-on:changeFun="changeFun" :attr="attr" ></PlanWindow>
-		<!-- 停止配送 -->
-		<l-modal ref="customModal" modalTitle="请输入起送日期" @onClickCancel="cancel" @onClickConfirm="confirm"></l-modal>
-	</view>
+		</view>
 </template>
 <script>
 import { getOrderData, getYsOrderList,getOrderList } from '@/api/order';
 import { cancelOrderHandle, payOrderHandle, takeOrderHandle } from '@/libs/order';
 import Loading from '@/components/Loading';
-import Payment from '@/components/Payment';
-import DataFormat from '@/components/DataFormat';
 import { mapGetters } from 'vuex';
 import { isWeixin, dataFormat } from '@/utils';
-import PlanWindow from '@/components/PlanWindow'
-import lModal from '@/components/dialogBox'
-const STATUS = ['待付款', '待发货', '待收货', '待评价', '已完成', '', '', '', '', '待付款'];
-
-const NAME = 'MyOrder';
 let timer;
 export default {
-	name: NAME,
 	data() {
 		return {
 			offlinePayStatus: 2,
@@ -134,10 +75,6 @@ export default {
 	},
 	components: {
 		Loading,
-		Payment,
-		PlanWindow,
-		lModal,
-		DataFormat
 	},
 	computed: mapGetters(['userInfo']),
 	onShow: function() {
@@ -171,17 +108,18 @@ export default {
 		  // 修改了规格
 		  this.attr.cartAttr = msg
 		},
+		comfirm(order){
+			uni.showToast({
+				title: '此功能暂未开放',
+				icon: 'none',
+				duration: 2000
+			});
+		},
 		getPlan(){
 			this.attr.cartAttr = true 
 		},
 		stopPlan(){
 			this.$refs['customModal'].showModal()
-		},
-		planDetail(order){
-			this.$yrouter.push({
-				path: '/pages/order/Distribution/detail',
-				query: { id: order.orderId }
-			});
 		},
 		cancel(val){
 			console.log(val) 
@@ -250,39 +188,6 @@ export default {
 				that.loaded = res.data.length < that.limit;
 				that.loading = false;
 			});
-		},
-		getStatus(order) {
-			return STATUS[order._status._type];
-		},
-		cancelOrder(order) {
-			cancelOrderHandle(order.orderId)
-				.then(() => {
-					this.getOrderData();
-					this.orderList.splice(this.orderList.indexOf(order), 1);
-				})
-				.catch(() => {
-					this.reload();
-				});
-		},
-		paymentTap: function(order) {
-			var that = this;
-			if (!(order.combinationId > 0 || order.bargainId > 0 || order.seckillId > 0)) {
-				that.setOfflinePayStatus(order.offlinePayStatus);
-			}
-			this.pay = true;
-			this.toPay = type => {
-				payOrderHandle(order.orderId, type, that.from)
-					.then(() => {
-						const type = parseInt(this.$yroute.query.type) || 0;
-						that.changeType(type);
-						that.getOrderData();
-					})
-					.catch(() => {
-						const type = parseInt(that.$yroute.query.type) || 0;
-						that.changeType(type);
-						that.getOrderData();
-					});
-			};
 		},
 		toPay() {}
 	},

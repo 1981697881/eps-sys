@@ -177,6 +177,11 @@
 					"navigationBarTitleText": "配送计划"
 				}
 			},{
+				"path": "Distribution/detail",
+				"style": {
+					"navigationBarTitleText": "配送明细"
+				}
+			},{
 				"path": "Logistics/index",
 				"style": {
 					"navigationBarTitleText": "查看物流"
