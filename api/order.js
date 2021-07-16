@@ -39,8 +39,8 @@ export function getOrderCoupon(cartId) {
  * @param data
  * @returns {*}
  */
-export function createOrder(key, data) {
-	return request.post("/mall/order/create/" + key, data || {});
+export function createOrder(data) {
+	return request.post("/mall/order/create", data || {});
 }
 
 /**

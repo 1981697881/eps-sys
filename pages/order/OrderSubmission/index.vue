@@ -44,7 +44,7 @@
 				<view class="item acea-row row-between-wrapper" @click="couponTap(item, index)" v-if="item.deduction === false && !isIntegral">
 					<view>优惠券</view>
 					<view class="discount">
-						{{ item.usableCoupon.couponTitle || '请选择' }} {{item.usableCoupon.couponPrice || ''}}
+						{{ item.usableCoupon.couponTitle || '请选择' }} {{ item.usableCoupon.couponPrice || '' }}
 						<text class="iconfont icon-jiantou"></text>
 					</view>
 				</view>
@@ -58,7 +58,7 @@
 				</view>
 				<view class="totalPrice" v-if="!isIntegral">
 					共{{ item.cartInfo.length || 0 }}件商品，小计
-					<text class="money font-color-red">原价 ￥{{ item.priceGroup.totalPrice || 0 }} 优惠价 ￥{{cartPrice[index].payPrice || 0}}</text>
+					<text class="money font-color-red">原价 ￥{{ item.priceGroup.totalPrice || 0 }} 优惠价 ￥{{ cartPrice[index].payPrice || 0 }}</text>
 				</view>
 			</view>
 		</block>
@@ -130,7 +130,7 @@
 		<view class="moneyList">
 			<view class="item acea-row row-between-wrapper" v-if="orderPrice.totalPrice !== undefined">
 				<view>商品总价：</view>
-				<view class="money" v-if="!isIntegral">￥{{ filterNumber(orderPrice.totalPrice)}}</view>
+				<view class="money" v-if="!isIntegral">￥{{ filterNumber(orderPrice.totalPrice) }}</view>
 				<view class="money" v-if="isIntegral">{{ filterNumber(orderPrice.payIntegral) }}积分</view>
 			</view>
 			<view class="item acea-row row-between-wrapper" v-if="orderPrice.payPostage > 0 && !isIntegral">
@@ -228,13 +228,13 @@ export default {
 					if (index == 0) {
 						this.orderPrice[pl] = parseFloat(item[pl]);
 					} else {
-						this.orderPrice[pl] += parseFloat(item[pl]);
+						this.orderPrice[pl] = this.numAdd(this.orderPrice[pl], item[pl]);
 					}
 				}
 			});
 		},
 		useIntegral() {
-			if(this.orderGroupInfo.length>0){
+			if (this.orderGroupInfo.length > 0) {
 				this.orderGroupInfo.forEach(item => {
 					this.computedPrice(item);
 				});
@@ -267,8 +267,22 @@ export default {
 		}
 	},
 	methods: {
+		numAdd(num1, num2) {
+			let baseNum, baseNum1, baseNum2;
+			try {
+				baseNum1 = num1.toString().split('.')[1].length;
+			} catch (e) {
+				baseNum1 = 0;
+			}
+			try {
+				baseNum2 = num2.toString().split('.')[1].length;
+			} catch (e) {
+				baseNum2 = 0;
+			}
+			baseNum = Math.pow(10, Math.max(baseNum1, baseNum2));
+			return (num1 * baseNum + num2 * baseNum) / baseNum;
+		},
 		filterNumber(value) {
-			console.log(value)
 			let num = value;
 			if (num.toString().split('.').length == 1) {
 				return num + '.00';
@@ -387,8 +401,8 @@ export default {
 			this.usableCoupon = {
 				item: item.usableCoupon,
 				index: index
-			} ;
-			
+			};
+
 			this.couponCartid = this.cartid[index].toString();
 		},
 		changeCoupon: function(coupon) {
@@ -400,7 +414,7 @@ export default {
 			} else {
 				this.usableCoupon = coupon.item;
 			}
-			this.orderGroupInfo[coupon.index].usableCoupon= this.usableCoupon
+			this.orderGroupInfo[coupon.index].usableCoupon = this.usableCoupon;
 			this.orderGroupInfo.forEach(item => {
 				this.computedPrice(item);
 			});
@@ -415,6 +429,7 @@ export default {
 			});
 		},
 		createOrder() {
+			let that = this;
 			if (this.isIntegral) {
 				// 积分支付
 				if (this.userInfo.integral < this.orderPrice.payIntegral) {
@@ -483,40 +498,31 @@ export default {
 			// #ifdef MP-WEIXIN
 			subscribeMessage();
 			// #endif
-			console.log(this.orderGroupInfo.orderKey, {
-				realName: this.contacts,
-				phone: this.contactsTel,
-				addressId: this.addressInfo.id,
-				useIntegral: this.useIntegral ? 1 : 0,
-				couponId: this.usableCoupon.id || 0,
-				payType: this.active,
-				pinkId: this.pinkId,
-				seckillId: this.orderGroupInfo.seckill_id,
-				combinationId: this.orderGroupInfo.combination_id,
-				bargainId: this.orderGroupInfo.bargain_id,
-				from: this.from,
-				mark: this.mark || '',
-				shippingType: parseInt(shipping_type) + 1,
-				storeId: this.storeItems ? this.storeItems.id : this.systemStore.id,
-				...from
-			})
-			createOrder(this.orderGroupInfo.orderKey, {
-				realName: this.contacts,
-				phone: this.contactsTel,
-				addressId: this.addressInfo.id,
-				useIntegral: this.useIntegral ? 1 : 0,
-				couponId: this.usableCoupon.id || 0,
-				payType: this.active,
-				pinkId: this.pinkId,
-				seckillId: this.orderGroupInfo.seckill_id,
-				combinationId: this.orderGroupInfo.combination_id,
-				bargainId: this.orderGroupInfo.bargain_id,
-				from: this.from,
-				mark: this.mark || '',
-				shippingType: parseInt(shipping_type) + 1,
-				storeId: this.storeItems ? this.storeItems.id : this.systemStore.id,
-				...from
-			})
+			let params = [];
+			this.orderGroupInfo.forEach((item, index) => {
+				let obj = {
+					key: item.orderKey,
+					param: {
+						realName: that.contacts,
+						phone: that.contactsTel,
+						addressId: that.addressInfo.id,
+						useIntegral: that.useIntegral ? 1 : 0,
+						couponId: item.usableCoupon != null ? item.usableCoupon.id : 0,
+						payType: that.active,
+						pinkId: that.pinkId,
+						seckillId: item.seckill_id,
+						combinationId: item.combination_id,
+						bargainId: item.bargain_id,
+						from: that.from,
+						mark: that.mark || '',
+						shippingType: parseInt(shipping_type) + 1,
+						storeId: that.storeItems ? that.storeItems.id : that.systemStore.id,
+						...from
+					}
+				};
+				params.push(obj)
+			});
+			createOrder(params)
 				.then(res => {
 					uni.hideLoading();
 					handleOrderPayResults.call(this, res.data, 'create', this.active);

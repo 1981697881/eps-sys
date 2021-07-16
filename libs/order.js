@@ -179,7 +179,7 @@ export function subscribeMessage() {
   // 调用订阅
   console.log('调用订阅')
   uni.requestSubscribeMessage({
-    tmplIds: ['W5r2c2kzhbq8uxStkPAVx_sk-5aapMFCqe7b7KU5jXI', '2CB_1UyQrbnlyjJa5syraqJ3cfztPPDOAHe3DEXpMjg', 'vuztugw9VbKbKJDAAVePkjqPpT5mdoREpd4Aq7EGPRU'],
+    tmplIds: ['G0TXSlQpzkEgnfjlwKap5iUmDpN5vF0eYAoE8E9m3FQ', 'yKNOPC0o_5Nq_G21CMgk6PSo9mxL-EkfqgoxLIsubBk', 'o8ZksnkELUt6wLuqKouZi8UiVCmPTv69fUten0qg6po'],
     success(res) { 
       console.log(res)
     },
@@ -193,11 +193,10 @@ export function subscribeMessage() {
 export function goOrderDetails(id, type) {
   // 创建订单时跳转到详情
   if (type == 'create') {
-    console.log(_router)
     _router.replace({
-      path: "/pages/order/OrderDetails/index",
+      path: "/pages/order/MyOrder/index",
       query: {
-        id
+        /* id */
       },
     });
   }
