@@ -173,7 +173,7 @@
       <!-- 优惠券 -->
       <CouponPop v-on:changeFun="changeFun" :coupon="coupon"></CouponPop>
       <!-- 商品规格弹窗 -->
-      <ProductWindow :type="type" :isIntegral="isIntegral" v-on:changeFun="changeFun" :attr="attr" :cartNum="cart_num"></ProductWindow>
+      <ProductWindow :startNum="storeInfo.startCount" :type="type" :isIntegral="isIntegral" v-on:changeFun="changeFun" :attr="attr" :cartNum="cart_num"></ProductWindow>
       <!-- 分享海报 -->
       <StorePoster v-on:setPosterImageStatus="setPosterImageStatus" :posterImageStatus="posterImageStatus" :posterData="posterData" :goodId="id"></StorePoster>
       <!-- 分享弹窗 -->
@@ -417,6 +417,7 @@ export default {
           that.$set(that, 'reply', that.reply)
           that.$set(that, 'priceName', res.data.priceName)
           that.$set(that, 'tempName', res.data.tempName)
+          that.$set(that, 'cart_num', res.data.storeInfo.startCount)
           that.posterData.image = that.storeInfo.image
           if (that.storeInfo.storeName.length > 30) {
             that.posterData.title = that.storeInfo.storeName.substring(0, 30) + '...'
@@ -470,7 +471,7 @@ export default {
         this.$set(this.attr.productSelect, 'stock', productSelect.stock)
         this.$set(this.attr.productSelect, 'unique', productSelect.unique)
         this.$set(this.attr.productSelect, 'integral', productSelect.integral)
-        this.$set(this.attr.productSelect, 'cart_num', 1)
+        this.$set(this.attr.productSelect, 'cart_num', this.storeInfo.startCount)
         this.$set(this, 'attrValue', value.sort().join(','))
         this.$set(this, 'attrTxt', '已选择')
       } else if (!productSelect && productAttr.length) {
@@ -490,7 +491,7 @@ export default {
         this.$set(this.attr.productSelect, 'stock', this.storeInfo.stock)
         this.$set(this.attr.productSelect, 'integral', this.storeInfo.integral)
         this.$set(this.attr.productSelect, 'unique', this.storeInfo.unique || '')
-        this.$set(this.attr.productSelect, 'cart_num', 1)
+        this.$set(this.attr.productSelect, 'cart_num', this.storeInfo.startCount)
         this.$set(this, 'attrValue', '')
         this.$set(this, 'attrTxt', '请选择')
       }
@@ -519,9 +520,9 @@ export default {
         }
       } else {
         num.cart_num--
-        if (num.cart_num < 1) {
-          this.$set(this.attr.productSelect, 'cart_num', 1)
-          this.$set(this, 'cart_num', 1)
+        if (num.cart_num < this.storeInfo.startCount) {
+          this.$set(this.attr.productSelect, 'cart_num', this.storeInfo.startCount)
+          this.$set(this, 'cart_num', this.storeInfo.startCount)
         } else {
           this.$set(this.attr.productSelect, 'cart_num', num.cart_num)
           this.$set(this, 'cart_num', num.cart_num)
@@ -586,7 +587,7 @@ export default {
         this.$set(this.attr.productSelect, 'stock', productSelect.stock)
         this.$set(this.attr.productSelect, 'unique', productSelect.unique)
         this.$set(this.attr.productSelect, 'integral', productSelect.integral)
-        this.$set(this.attr.productSelect, 'cart_num', 1)
+        this.$set(this.attr.productSelect, 'cart_num', this.storeInfo.startCount)
         this.$set(this, 'attrValue', res.value)
         this.$set(this, 'attrTxt', '已选择')
       } else {

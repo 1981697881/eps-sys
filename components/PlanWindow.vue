@@ -3,14 +3,14 @@
 		<view class="product-window" :class="attr.cartAttr === true ? 'on' : ''">
 			<view class="textpic acea-row row-between-wrapper">
 				<view class="pictrue">
-					<image @tap="previewImage" src="http://img.alicdn.com/bao/uploaded/i1/132691477/O1CN01uFj7651MmVXObEOla_!!0-item_pic.jpg_310x310.jpg" class="image" />
+					<image @tap="previewImage" :src="attr.cart.productInfo.image" class="image" />
 				</view>
 				<view class="iconfont icon-guanbi" @click="closeAttr"></view>
 				<view class="text">
-					<view class="line1">商品</view>
+					<view class="line1">{{attr.cart.productInfo.storeName}}</view>
 					<view class="money font-color-red">
-						<text class="num">123</text>
-						<text class="stock">订单数量: 10</text>
+						<!-- <text class="num">{{attr.cart.productInfo.}}</text> -->
+						<text class="stock">订单数量: {{attr.cart.cartNum}}</text>
 					</view>
 				</view>
 			</view>
@@ -41,7 +41,7 @@
 				</view>
 			</view>
 			<view class="cu-bar tabbar shadow foot">
-				<view class="box text-center"><button class="cu-btn bg-green shadow-blur round" style="width: 40%;" @tap="$manyCk(saveData)">提交</button></view>
+				<view class="box text-center"><button class="cu-btn bg-green shadow-blur round" style="width: 40%;" @tap="saveData">提交</button></view>
 			</view>
 		</view>
 		<view class="mask" @touchmove.prevent :hidden="attr.cartAttr === false" @click="closeAttr"></view>
@@ -101,6 +101,13 @@ export default {
 		},
 		CartDeliveryDes: function() {
 			this.deliveryQuantity--;
+		},
+		saveData(){
+			return uni.showToast({
+				title: '该功能尚未完善',
+				icon: 'none',
+				duration: 2000
+			});
 		},
 		CartDeliveryAdd: function() {
 			if (this.deliveryQuantity >= this.cartNum) {

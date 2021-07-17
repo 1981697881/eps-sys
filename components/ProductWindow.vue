@@ -30,7 +30,7 @@
       <view class="cart">
         <view class="title">数量</view>
         <view class="carnum acea-row row-left">
-          <view class="item reduce" :class="cartNum <= 1 ? 'on' : ''" @click="CartNumDes">-</view>
+          <view class="item reduce" :class="startNum<= cartNum  ? 'on' : ''" @click="CartNumDes">-</view>
           <view class="item num">{{ cartNum }}</view>
           <view class="item plus" :class="cartNum >= attr.productSelect.stock ? 'on' : ''" @click="CartNumAdd">+</view>
         </view>
@@ -52,6 +52,10 @@ export default {
       type: Number,
       default: () => 1,
     },
+	startNum: {
+      type: Number,
+      default: () => 1,
+    },
 	type: {
 		type: [Number,String],
 		default: 1,
@@ -64,7 +68,6 @@ export default {
 	}
   },
   mounted: function() {
-    console.log(this.attr)
   },
   watch: {
     attr(nextAttr) {},

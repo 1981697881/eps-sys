@@ -6,7 +6,7 @@
 					<view class="acea-row row-middle">
 						单号：{{ order.orderId }}
 					</view>
-					<view class="font-color-red">数量：{{ order.cartInfo.length || 0 }}</view>
+					<view class="font-color-red">商品件数：{{ order.cartInfo.length || 0 }}</view>
 				</view>
 				<view @click="goOrderDetails(order)">
 					<view class="item-info acea-row row-between row-top" v-for="(cart, cartInfoIndex) in order.cartInfo" :key="cartInfoIndex">
@@ -53,7 +53,7 @@
 									{{ cart.productInfo.storeName }}
 								</view>
 								<view>
-									<button class="cu-btn round sm bg-cyan shadow" @tap.stop="getPlan">配送计划</button>
+									<button class="cu-btn round sm bg-cyan shadow" @tap.stop="getPlan(cart)">配送计划</button>
 								</view>
 							</view>
 							<view class="money">
@@ -70,7 +70,7 @@
 				<view class="bottom acea-row row-right row-middle">
 					<template v-if="order._status._type == 0 || order._status._type == 9">
 						<view class="bnt bg-blue" @tap="planDetail(order)">配送明细</view>
-						<view class="bnt bg-red" @tap="stopPlan">停止配送</view>
+						<view class="bnt bg-red" @tap="stopPlan(order)">停止配送</view>
 					</template>
 					<template v-if="order._status._type == 3">
 						<view
@@ -89,7 +89,7 @@
 		</view>
 		<Loading :loaded="loaded" :loading="loading"></Loading>
 		<Payment v-model="pay" :types="payType" @checked="toPay" :balance="userInfo.nowMoney"></Payment>
-		<!-- 商品规格弹窗 -->
+		<!-- 配送弹窗 -->
 		<PlanWindow  v-on:changeFun="changeFun" :attr="attr" ></PlanWindow>
 		<!-- 停止配送 -->
 		<l-modal ref="customModal" modalTitle="请输入起送日期" @onClickCancel="cancel" @onClickConfirm="confirm"></l-modal>
@@ -142,8 +142,6 @@ export default {
 	computed: mapGetters(['userInfo']),
 	onShow: function() {
 		this.type = parseInt(this.$yroute.query.type) || 0;
-		this.changeType(this.type);
-		this.getOrderData();
 		this.getOrderList();
 	},
 	onHide: function() {
@@ -167,21 +165,23 @@ export default {
 		 let value = opt.value === undefined ? '' : opt.value
 		 this[action] && this[action](value)
 		},
-		changeattr: function(msg) {
-		  // 修改了规格
-		  this.attr.cartAttr = msg
-		},
-		getPlan(){
+		getPlan(cart){
 			this.attr.cartAttr = true 
+			this.attr.cart = cart
 		},
-		stopPlan(){
+		stopPlan(order){
 			this.$refs['customModal'].showModal()
 		},
 		planDetail(order){
-			this.$yrouter.push({
+			return uni.showToast({
+				title: '该功能尚未完善',
+				icon: 'none',
+				duration: 2000
+			});
+			/* this.$yrouter.push({
 				path: '/pages/order/Distribution/detail',
 				query: { id: order.orderId }
-			});
+			}); */
 		},
 		cancel(val){
 			console.log(val) 
@@ -189,12 +189,6 @@ export default {
 		 confirm(val){
 			console.log(val) 
 		 },
-		goLogistics(order) {
-			this.$yrouter.push({
-				path: '/pages/order/Logistics/index',
-				query: { id: order.orderId }
-			});
-		},
 		goOrderDetails(order) {
 			this.$yrouter.push({
 				path: '/pages/order/OrderDetails/index',
@@ -202,44 +196,12 @@ export default {
 			});
 		},
 		dataFormat,
-		setOfflinePayStatus: function(status) {
-			var that = this;
-			that.offlinePayStatus = status;
-			if (status === 1) {
-				if (that.payType.indexOf('offline') < 0) {
-					that.payType.push('offline');
-				}
-			}
-		},
-		getOrderData() {
-			getOrderData().then(res => {
-				this.orderData = res.data;
-			});
-		},
-		takeOrder(order) {
-			takeOrderHandle(order.orderId).finally(() => {
-				this.reload();
-				this.getOrderData();
-			});
-		},
-		reload() {
-			this.changeType(this.type);
-		},
-		changeType(type) {
-			let that = this
-			this.type = type;
-			this.orderList = [];
-			this.page = 1;
-			this.loaded = false;
-			this.loading = false;
-			this.getOrderList();
-		},
 		getOrderList() {
 			let that = this
 			if (this.loading || this.loaded) return;
 			this.loading = true;
 			const { page, limit, type } = this;
-			getOrderList({
+			getYsOrderList({
 				page,
 				limit,
 				type
@@ -250,39 +212,6 @@ export default {
 				that.loaded = res.data.length < that.limit;
 				that.loading = false;
 			});
-		},
-		getStatus(order) {
-			return STATUS[order._status._type];
-		},
-		cancelOrder(order) {
-			cancelOrderHandle(order.orderId)
-				.then(() => {
-					this.getOrderData();
-					this.orderList.splice(this.orderList.indexOf(order), 1);
-				})
-				.catch(() => {
-					this.reload();
-				});
-		},
-		paymentTap: function(order) {
-			var that = this;
-			if (!(order.combinationId > 0 || order.bargainId > 0 || order.seckillId > 0)) {
-				that.setOfflinePayStatus(order.offlinePayStatus);
-			}
-			this.pay = true;
-			this.toPay = type => {
-				payOrderHandle(order.orderId, type, that.from)
-					.then(() => {
-						const type = parseInt(this.$yroute.query.type) || 0;
-						that.changeType(type);
-						that.getOrderData();
-					})
-					.catch(() => {
-						const type = parseInt(that.$yroute.query.type) || 0;
-						that.changeType(type);
-						that.getOrderData();
-					});
-			};
 		},
 		toPay() {}
 	},

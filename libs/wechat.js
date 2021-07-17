@@ -38,14 +38,15 @@ export const weappPay = option => {
     }
     // 吊起微信支付
     // getProvider('payment').then(provider => {
-    let orderInfo = {
-      appid: option.appid,
-      noncestr: option.noncestr,
+    console.log(option)
+	let orderInfo = {
+      appid: option.appId,
+      noncestr: option.nonceStr,
       package: option.package,
       partnerid: option.partnerid,
       prepayid: option.prepayid,
       sign: option.sign,
-      timestamp: option.timestamp + '',
+      timestamp: option.timeStamp + '',
     }
     // 调用只接口
     uni.requestPayment({

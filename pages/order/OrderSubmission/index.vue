@@ -58,7 +58,7 @@
 				</view>
 				<view class="totalPrice" v-if="!isIntegral">
 					共{{ item.cartInfo.length || 0 }}件商品，小计
-					<text class="money font-color-red">原价 ￥{{ item.priceGroup.totalPrice || 0 }} 优惠价 ￥{{ cartPrice[index].payPrice || 0 }}</text>
+					<text class="money font-color-red">原价 ￥{{ item.priceGroup.totalPrice || 0 }} 优惠价 ￥{{ item.cartPrice.payPrice || 0 }}</text>
 				</view>
 			</view>
 		</block>
@@ -239,6 +239,7 @@ export default {
 					this.computedPrice(item);
 				});
 			}
+			console.log(this.cartPrice)
 			/* this.computedPrice(); */
 		},
 		$yroute(n) {
@@ -341,6 +342,7 @@ export default {
 						}
 					});
 				} else {
+					params.cartPrice = data.result
 					this.cartPrice.push(data.result);
 				}
 			});
@@ -376,6 +378,7 @@ export default {
 					data.forEach(item => {
 						this.computedPrice(item);
 					});
+					console.log(data)
 				})
 				.catch(() => {
 					uni.showToast({
@@ -402,7 +405,6 @@ export default {
 				item: item.usableCoupon,
 				index: index
 			};
-
 			this.couponCartid = this.cartid[index].toString();
 		},
 		changeCoupon: function(coupon) {
@@ -502,6 +504,9 @@ export default {
 			this.orderGroupInfo.forEach((item, index) => {
 				let obj = {
 					key: item.orderKey,
+					allPayPrice: that.orderPrice.payPrice,
+					jisuda: item.cartInfo[0].productInfo.isIntegral==3?1:0,
+					yushou: item.cartInfo[0].productInfo.isIntegral==2?1:0,
 					param: {
 						realName: that.contacts,
 						phone: that.contactsTel,
@@ -525,7 +530,12 @@ export default {
 			createOrder(params)
 				.then(res => {
 					uni.hideLoading();
-					handleOrderPayResults.call(this, res.data, 'create', this.active);
+					if(this.orderGroupInfo.length>1){
+						handleOrderPayResults.call(this, res.data.goPayList, 'create', this.active);
+					}else{
+						handleOrderPayResults.call(this, res.data, 'create', this.active);
+					}
+					
 				})
 				.catch(err => {
 					handleErrorMessage(err, '创建订单失败');

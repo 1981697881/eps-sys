@@ -117,7 +117,7 @@ export function handleOrderPayResults(data, type, payType) {
           duration: 2000,
         });
         resolve()
-        goOrderDetails(data.result.orderId, type)
+        goOrderDetails(data.result, type)
         break;
       case "PAY_DEFICIENCY":
         break;
@@ -129,7 +129,7 @@ export function handleOrderPayResults(data, type, payType) {
           duration: 2000,
         });
         reject()
-        goOrderDetails(data.result.orderId, type)
+        goOrderDetails(data.result, type)
         break;
       // 未传递支付环境
       case "SUCCESS":
@@ -139,11 +139,11 @@ export function handleOrderPayResults(data, type, payType) {
           duration: 2000,
         });
         resolve()
-        goOrderDetails(data.result.orderId, type)
+        goOrderDetails(data.result, type)
         break;
       // H5支付
       case "WECHAT_H5_PAY":
-        goOrderDetails(data.result.orderId, type)
+        goOrderDetails(data.result, type)
         console.log(data)
         setTimeout(() => {
           resolve()
@@ -157,7 +157,7 @@ export function handleOrderPayResults(data, type, payType) {
       case "WECHAT_PAY":
         weappPay(data.result.jsConfig).finally(() => {
           resolve()
-          goOrderDetails(data.result.orderId, type)
+          goOrderDetails(data.result, type)
         }).then(res => {
           // #ifdef MP-WEIXIN
           subscribeMessage()
@@ -168,7 +168,7 @@ export function handleOrderPayResults(data, type, payType) {
       case "WECHAT_APP_PAY":
         weappPay(data.result.jsConfig).finally(() => {
           resolve()
-          goOrderDetails(data.result.orderId, type)
+          goOrderDetails(data.result, type)
         })
         break;
     }
