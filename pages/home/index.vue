@@ -104,8 +104,8 @@ export default {
       formatMenus: [],
       categoryCurrent: 0,
       menuNum: 4,
-      bgcolor: '',
-      bgColor: '',
+      bgcolor: '#EEB422',
+      bgColor: '#EEB422',
       swiperCurrent: 0, //轮播下标
       webviewId: 0,
       showCoupon: false,
@@ -219,7 +219,7 @@ export default {
 		})
 		getHomeData().then(res => {
 		  that.logoUrl = res.data.logoUrl
-		  res.data.banner.map(item => (item.bgcolor = item.color || ''))
+		  /* res.data.banner.map(item => (item.bgcolor = item.color || '')) */
 		  that.$set(that, 'info', res.data.info)
 		  that.$set(that, 'banner', res.data.banner)
 		  that.$set(that, 'menus', res.data.menus)

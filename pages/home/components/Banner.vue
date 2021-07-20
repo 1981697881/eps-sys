@@ -38,24 +38,25 @@
 			async doColorThief() {
 				let that = this;
 				// 获取轮播图
+				
 				let item = this.detail[this.swiperCurrent];
 				// 获取轮播图颜色
 				let bgcolor = null;
 				// 颜色不存在
-				if (!bgcolor) {
+				/* if (!bgcolor) {
 					that.$set(item, 'bgcolor', '#EEB422');
 					that.$emit('getbgcolor', '#EEB422');
 				} else {
-					that.$set(item, 'bgcolor', bgcolor);
-					that.$emit('getbgcolor', bgcolor);
-				}
+					that.$set(item, 'bgcolor', null);
+					that.$emit('getbgcolor', null);
+				} */
 
 			},
 			swiperChange(e) {
 				this.swiperCurrent = e.detail.current;
 				this.doColorThief();
-				let bgcolor = this.detail[this.swiperCurrent].bgcolor;
-				this.$emit('getbgcolor', bgcolor);
+				/* let bgcolor = this.detail[this.swiperCurrent].bgcolor;
+				this.$emit('getbgcolor', bgcolor); */
 			},
 
 			// 路由跳转

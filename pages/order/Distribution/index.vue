@@ -96,7 +96,7 @@
 	</view>
 </template>
 <script>
-import { getOrderData, getYsOrderList,getOrderList } from '@/api/order';
+import { getYsOrderList,findPoject, setPoject } from '@/api/order';
 import { cancelOrderHandle, payOrderHandle, takeOrderHandle } from '@/libs/order';
 import Loading from '@/components/Loading';
 import Payment from '@/components/Payment';
@@ -141,8 +141,9 @@ export default {
 	},
 	computed: mapGetters(['userInfo']),
 	onShow: function() {
-		this.type = parseInt(this.$yroute.query.type) || 0;
+		this.type = parseInt(this.$yroute.query.type) || 5;
 		this.getOrderList();
+		
 	},
 	onHide: function() {
 		this.orderList = [];
@@ -160,9 +161,11 @@ export default {
 	},
 	methods: {
 		changeFun: function(opt) {
+			
 		 if (typeof opt !== 'object') opt = {}
 		 let action = opt.action || ''
 		 let value = opt.value === undefined ? '' : opt.value
+		 this.attr.cartAttr = value
 		 this[action] && this[action](value)
 		},
 		getPlan(cart){
@@ -211,6 +214,12 @@ export default {
 				//这里应该写在请求接口拿到数据后，这里我使用模拟数据
 				that.loaded = res.data.length < that.limit;
 				that.loading = false;
+			});
+		},
+		findPoject() {
+			let that = this
+			findPoject({
+			}).then(res => {
 			});
 		},
 		toPay() {}

@@ -17,7 +17,7 @@
 			</view>
 			<view v-if="cartList.valid.length > 0" class="type-nav">
 				<block v-for="(good, goodIndex) in cartList">
-					<view v-if="goodIndex != 'invalid' && goodIndex != 'valid' && goodIndex != '极速达商品'" class="cartNav acea-row row-between-wrapper" :class="goodIndex == '普通商品' ? 'first-cart' : ''">
+					<view v-if="goodIndex != 'invalid' && goodIndex != 'valid' && goodIndex != '极速达商品'" class="cartNav acea-row row-between-wrapper" ><!-- :class="goodIndex == '普通商品' ? 'first-cart' : ''" -->
 						<view class="checkbox-wrapper">
 							<checkbox-group @change="switchParentSelect(good, goodIndex)">
 								<label class="well-check"><checkbox color="#eb3729" value :checked="parentsList.indexOf(goodIndex) != -1"></checkbox></label>
@@ -49,7 +49,7 @@
 									<view class="money">￥{{ item.truePrice }}</view>
 								</view>
 								<view class="carnum acea-row row-center-wrapper">
-									<view class="reduce" :class="good[cartListValidIndex].cartNum <= 1 ? 'on' : ''" @click.prevent="reduce(item, cartListValidIndex)">-</view>
+									<view class="reduce" :class="good[cartListValidIndex].cartNum <= item.productInfo.startCount ? 'on' : ''" @click.prevent="reduce(item, cartListValidIndex)">-</view>
 									<view class="num">{{ item.cartNum }}</view>
 									<view
 										class="plus"
@@ -421,9 +421,10 @@ export default {
 		},
 		//减
 		reduce: function(item, index) {
+			console.log(item)
 			let that = this;
-			let list = item;
-			if (list.cartNum <= 1) {
+			let list = item;	
+			if (list.cartNum <= list.productInfo.startCount) {
 				uni.showToast({
 					title: '已经是底线啦!',
 					icon: 'none',
@@ -646,6 +647,9 @@ export default {
 	color: #282828;
 	margin-top: 20rpx;
 	border-bottom: 1px solid #f5f5f5;
+}
+.cartNav:first-child{
+	margin-top: 80rpx;
 }
 .first-cart {
 	margin-top: 80rpx;
