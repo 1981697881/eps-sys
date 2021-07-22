@@ -12,7 +12,7 @@
 					<view class="item-info acea-row row-between row-top">
 						<view class="pictrue">
 							<image
-								:src="order.productInfo.image"
+								:src="order.sliderImage"
 							/>
 						</view>
 						<view class="text acea-row row-between">
@@ -31,11 +31,11 @@
 				<view class="totalPrice">
 					<text class="text-cut">收件地址：{{ order.userAddress }}</text>
 				</view>
-				<view class="bottom acea-row row-right row-middle">
+				<!-- <view class="bottom acea-row row-right row-middle">
 					<template v-if="order._status._type == 0 || order._status._type == 9">
 						<view class="bnt bg-blue" @tap="comfirm">确认收件</view>
 					</template>
-				</view>
+				</view> -->
 			</view>
 		</view>
 		<view class="noCart" v-if="orderList.length === 0 && page > 1">

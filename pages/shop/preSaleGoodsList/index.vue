@@ -296,11 +296,13 @@ export default {
     //点击事件处理
     set_where: function(index) {
       let that = this
+	  console.log(index)
       switch (index) {
         case 0:
-          return that.$yrouter.push({
-            path: '/pages/home/GoodsClass/index',
+          uni.switchTab({
+          	url: '/pages/home/GoodsClass/index',
           })
+		  break;
         case 1:
           if (that.price === 0) that.price = 1
           else if (that.price === 1) that.price = 2

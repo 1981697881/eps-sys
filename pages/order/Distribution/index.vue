@@ -24,7 +24,8 @@
 									<button class="cu-btn round sm bg-cyan shadow" @tap.stop="getPlan(cart,order)">设定配送计划</button>
 								</view>
 								<view v-else>
-									<button class="cu-btn round sm bg-red shadow">系统默认已配送计划</button>
+									<button class="cu-btn round sm bg-gray shadow">系统默认已配送计划</button>
+									<button class="cu-btn round sm bg-red shadow" @tap="planDetail(cart,order)">停止配送</button>
 								</view>
 							</view>
 							<view class="money">
@@ -38,9 +39,9 @@
 				<view class="totalPrice">
 					<text class="text-cut">地址：{{ order.userAddress }}</text>
 				</view>
-				<view class="bottom acea-row row-right row-middle">
+				<!-- <view class="bottom acea-row row-right row-middle">
 					<template v-if="order._status._type == 1 || order._status._type == 2">
-						<!-- <view class="bnt bg-blue" @tap="planDetail(order)">配送明细</view> -->
+						<view class="bnt bg-blue" @tap="planDetail(order)">配送明细</view>
 						<view class="bnt bg-red" @tap="stopPlan(order)">停止配送</view>
 					</template>
 					<template v-if="order._status._type == 3">
@@ -52,7 +53,7 @@
 						查看物流
 						</view>
 					</template>
-				</view>
+				</view> -->
 			</view>
 		</view>
 		<view class="noCart" v-if="orderList.length === 0 && page > 1">
@@ -60,7 +61,7 @@
 		</view>
 		<Loading :loaded="loaded" :loading="loading"></Loading>
 		<Payment v-model="pay" :types="payType" @checked="toPay" :balance="userInfo.nowMoney"></Payment>
-		<!-- 配送弹窗 -->
+		<!-- 配送计划弹窗 -->
 		<PlanWindow  v-on:changeFun="changeFun" :attr="attr" ></PlanWindow>
 		<!-- 停止配送 -->
 		<l-modal ref="customModal" modalTitle="请输入起送日期" @onClickCancel="cancel" @onClickConfirm="confirm"></l-modal>
@@ -136,16 +137,22 @@ export default {
 		 let value = opt.value === undefined ? '' : opt.value
 		 this.attr.cartAttr = value
 		 this[action] && this[action](value)
+		 this.getOrderList();
 		},
 		getPlan(cart,order){
 			this.attr.cartAttr = true 
 			this.attr.cart = cart
 			this.attr.orderId = order.orderId
+			this.attr.totalNum = order.totalNum
 		},
-		stopPlan(order){
+		stopPlan(cart,order){
 			let that = this
-			stopPojectOd().then(res => {
-				
+			stopPojectOd({orderId: order.orderId,productId: cart.productId}).then(res => {
+				uni.showToast({
+					title: res.msg,
+					icon: 'none',
+					duration: 2000
+				});
 			});
 		},
 		planDetail(order){

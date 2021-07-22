@@ -10,7 +10,7 @@
 					<view class="line1">{{attr.cart.productInfo.storeName}}</view>
 					<view class="money font-color-red">
 						<!-- <text class="num">{{attr.cart.productInfo.}}</text> -->
-						<text class="stock">订单数量: {{attr.cart.cartNum}}</text>
+						<text class="stock">订单数量: {{attr.totalNum}}</text>
 					</view>
 				</view>
 			</view>
@@ -21,7 +21,7 @@
 						<!-- <view class="picker">
 								{{date}}
 							</view> -->
-						<picker mode="date" :value="date" :start="start" :end="end" @change="DateChange" class="itemn">{{ date }}</picker>
+						<picker mode="date" :value="startDate" :start="start" :end="end" @change="DateChange" class="itemn">{{ startDate }}</picker>
 					</view>
 				</view>
 			</view>
@@ -29,14 +29,14 @@
 				<view class="title">配送计划(每天配送数量/配送间隔天数)</view>
 				<view class="acea-row">
 					<view class="carnum acea-row row-left">
-						<view class="item reduce" :class="deliveryQuantity <= 1 ? 'on' : ''" @click="CartDeliveryDes">-</view>
-						<view class="item num">{{ deliveryQuantity }}</view>
-						<view class="item plus" :class="deliveryQuantity >= cartNum ? 'on' : ''" @click="CartDeliveryAdd">+</view>
+						<view class="item reduce" :class="dayNumber <= 1 ? 'on' : ''" @click="CartDeliveryDes">-</view>
+						<view class="item num">{{ dayNumber }}</view>
+						<view class="item plus" :class="dayNumber >= attr.cart.cartNum ? 'on' : ''" @click="CartDeliveryAdd">+</view>
 					</view>
 					<view style="margin-left: 80rpx;" class="carnum acea-row row-left">
-						<view class="item reduce" :class="deliveryDate <= 1 ? 'on' : ''" @click="CartDateDes">-</view>
-						<view class="item num">{{ deliveryDate }}</view>
-						<view class="item plus" :class="deliveryDate >= 5 ? 'on' : ''" @click="CartDateAdd">+</view>
+						<view class="item reduce" :class="dayCount <= 1 ? 'on' : ''" @click="CartDateDes">-</view>
+						<view class="item num">{{ dayCount }}</view>
+						<view class="item plus" :class="dayCount >= 5 ? 'on' : ''" @click="CartDateAdd">+</view>
 					</view>
 				</view>
 			</view>
@@ -49,6 +49,7 @@
 </template>
 <script>
 import { getDayList } from '@/utils';
+import { setPoject } from '@/api/order';
 export default {
 	name: 'PlanWindow',
 	props: {
@@ -82,60 +83,71 @@ export default {
 	},
 	data: function() {
 		return {
-			deliveryQuantity: 1,
-			deliveryDate: 1,
-			date: ''
+			dayCount: 1,
+			dayNumber: 1,
+			startDate: ''
 		};
 	},
 	mounted: function() {
-		this.date = this.planDate
+		this.startDate = this.planDate
 		console.log(this);
 	},
 	watch: {},
 	methods: {
 		DateChange(e) {
-			this.date = e.detail.value;
+			this.startDate = e.detail.value;
 		},
 		closeAttr: function() {
 			this.$emit('changeFun', { action: 'changeattr', value: false });
 		},
 		CartDeliveryDes: function() {
-			if(this.deliveryQuantity >1){
-				this.deliveryQuantity--;
+			if(this.dayNumber >1){
+				this.dayNumber--;
 			}
 		},
 		saveData(){
-			return uni.showToast({
-				title: '该功能尚未完善',
-				icon: 'none',
-				duration: 2000
+			let that = this
+			setPoject({
+				productId: this.attr.cart.productId,
+				orderId: this.attr.orderId,
+				startDate: this.startDate,
+				dayCount: this.dayCount,
+				allCount: this.attr.cart.cartNum,
+				dayNumber: this.dayNumber,
+			}).then(res => {
+				uni.showToast({
+					title: res.msg,
+					icon: 'none',
+					duration: 2000
+				});
+				this.$emit('changeFun', { action: 'changeattr', value: false });
 			});
 		},
 		CartDeliveryAdd: function() {
-			if (this.deliveryQuantity >= this.cartNum) {
+			if (this.dayNumber >= this.attr.cart.cartNum) {
 				return uni.showToast({
 					title: '不能超出限定数量',
 					icon: 'none',
 					duration: 2000
 				});
 			} else {
-				this.deliveryQuantity++;
+				this.dayNumber++;
 			}
 		},
 		CartDateDes: function() {
-			if(this.deliveryDate-- >1){
-				this.deliveryDate--;
+			if(this.dayCount-- >1){
+				this.dayCount--;
 			}
 		},
 		CartDateAdd: function() {
-			if (this.deliveryDate >= 5) {
+			if (this.dayCount >= 5) {
 				return uni.showToast({
 					title: '间隔天数不能大于5天',
 					icon: 'none',
 					duration: 2000
 				});
 			} else {
-				this.deliveryDate++;
+				this.dayCount++;
 			}
 		},
 		previewImage() {
