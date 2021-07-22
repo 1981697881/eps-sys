@@ -12,7 +12,6 @@
 		<view class="courier-box">
 			<view>
 				<view class="courier-item" :key="index" v-for="(item,index) in list" @tap="goToDeliveryDetail(item)">
-
 					<view>
 						<view class="uni-flex flex-item uni-row courier-info-box">
 							<view class="courier-name flex-item">
@@ -100,7 +99,6 @@
 			loadNextList() {
 				let vm = this;
 				let member = vm.$store.getters.getMember;
-
 				if (vm.pager && vm.pager.pageCount > vm.pager.pageIndex) {
 					uni.request({
 						url: vm.$api.receivingRecord.memberReceivingList,
@@ -111,7 +109,6 @@
 						},
 						header: {},
 						success: (res) => {
-
 							if (res.data.status === 200) {
 								let receivingRecords = res.data.data.receivingRecords
 								vm.pager = res.data.data.pager
@@ -127,7 +124,6 @@
 			loadList() {
 				let vm = this;
 				let member = vm.$store.getters.getMember;
-				console.log(1111)
 				uni.request({
 					url: vm.$api.receivingRecord.memberReceivingList,
 					data: {
@@ -136,7 +132,6 @@
 					},
 					header: {},
 					success: (res) => {
-
 						if (res.data.status === 200) {
 							vm.list = res.data.data.receivingRecords
 							vm.pager = res.data.data.pager
@@ -259,18 +254,14 @@
 			position: absolute;
 			top: 320rpx;
 			width: 702rpx;
-
 			.courier-item {
 				display: flex;
 				margin-bottom: 10rpx;
 				background-color: #FFFFFF;
 				padding: 40rpx;
-
-				width: 622rpx;
-
+				width: 702rpx;
 				.courier-info-box {
 					display: flex;
-
 					.courier-name {
 						font-size: 32rpx;
 						font-weight: bold;
@@ -316,7 +307,7 @@
 				}
 
 				.form-item-border {
-					width: 622rpx;
+					/* width: 622rpx; */
 					height: 2rpx;
 					background-color: #EAEAEA;
 					margin-top: 40rpx;

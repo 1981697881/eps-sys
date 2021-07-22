@@ -95,3 +95,10 @@ export function getLogistics() {
 export function imageBase64(image, code) {
   return request.post('/mall/shopindex/image_base64', { image: image, code: code }, { login: false })
 }
+/**
+ * 兑换优惠券
+ * @retins {*}
+ * */
+export function exchange(params) {
+  return request.post('/mall/coupon/exchange', params, { login: true })
+}

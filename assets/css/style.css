@@ -2421,8 +2421,10 @@ page {
 }
 .product-con .product-intro {
   margin-top: 20rpx;
+  text-align: center;
 }
 .product-con .product-intro .title {
+  display: inline-block;
   font-size: 30rpx;
   color: #282828;
   height: 86rpx;

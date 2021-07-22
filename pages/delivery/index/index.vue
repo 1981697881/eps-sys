@@ -268,7 +268,7 @@ export default {
 
 	.msg-box {
 		text-align: center;
-		width: 622rpx;
+		/* width: 622rpx; */
 		border-radius: 10rpx;
 
 		.msg-desc {

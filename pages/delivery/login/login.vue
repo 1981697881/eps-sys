@@ -120,7 +120,7 @@
 
 			.form-login-bg {
 				height: 346rpx;
-				width: 622rpx;
+				/* width: 622rpx; */
 			}
 
 			.form-item-border {

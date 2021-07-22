@@ -334,7 +334,6 @@ export default {
         this.$yrouter.back()
         return
       } else {
-        console.log(this)
         this.$yrouter.replace({
           path: '/pages/order/MyOrder/index',
         })
@@ -420,13 +419,18 @@ export default {
           } else if (this.orderInfo.seckillId > 0) {
             this.orderTypeName = '秒杀订单'
             this.orderTypeNameStatus = false
+          } else if (this.orderInfo.yushou > 0) {
+            this.orderTypeName = '预售订单'
+            this.orderTypeNameStatus = false
+          } else if (this.orderInfo.jisuda > 0) {
+            this.orderTypeName = '极速达订单'
+            this.orderTypeNameStatus = false
           }
           this.isIntegral = res.data.payType == 'integral'
           if (this.isIntegral) {
             this.orderTypeName = '积分兑换订单'
             this.orderTypeNameStatus = false
           }
-
           this.system_store = res.data.systemStore || {}
           this.mapKey = res.data.mapKay
           this.setOfflinePayStatus(this.orderInfo.offlinePayStatus)

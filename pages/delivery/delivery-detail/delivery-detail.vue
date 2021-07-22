@@ -496,9 +496,7 @@
 			line-height: 40rpx;
 			padding: 40rpx 40rpx;
 			color: #666666;
-			width: 622rpx;
-
-
+			/* width: 622rpx; */
 			.form-item-label {
 				width: 112rpx;
 				font-size: 28rpx;
@@ -591,14 +589,14 @@
 			width: 702rpx;
 
 			.courier-item {
-				width: 622rpx;
+				/* width: 622rpx; */
 				margin-bottom: 10rpx;
 				background-color: #FFFFFF;
 				position: relative;
 				padding: 40rpx 40rpx 42rpx 40rpx;
 
 				.courier-info-box {
-					width: 622rpx;
+					/* width: 622rpx; */
 					display: flex;
 
 					.courier-name {

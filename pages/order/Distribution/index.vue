@@ -8,43 +8,11 @@
 					</view>
 					<view class="font-color-red">商品件数：{{ order.cartInfo.length || 0 }}</view>
 				</view>
-				<view @click="goOrderDetails(order)">
-					<view class="item-info acea-row row-between row-top" v-for="(cart, cartInfoIndex) in order.cartInfo" :key="cartInfoIndex">
+				<view>
+					<view class="item-info acea-row row-between row-top" v-for="(cart, cartInfoIndex) in order.cartInfo" :key="cartInfoIndex" @click="goOrderDetails(order,cart)">
 						<view class="pictrue">
 							<image
 								:src="cart.productInfo.image"
-								@click.stop="$yrouter.push({ path: '/pages/shop/GoodsCon/index', query: { id: cart.productInfo.id } })"
-								v-if="cart.combinationId === 0 && cart.bargainId === 0 && cart.seckillId === 0"
-							/>
-							<image
-								:src="cart.productInfo.image"
-								@click.stop="
-									$yrouter.push({
-										path: '/pages/activity/GroupDetails/index',
-										query: { id: cart.combinationId }
-									})
-								"
-								v-else-if="cart.combinationId > 0"
-							/>
-							<image
-								:src="cart.productInfo.image"
-								@click.stop="
-									$yrouter.push({
-										path: '/pages/activity/DargainDetails/index',
-										query: { id: cart.bargainId }
-									})
-								"
-								v-else-if="cart.bargainId > 0"
-							/>
-							<image
-								:src="cart.productInfo.image"
-								@click.stop="
-									$yrouter.push({
-										path: '/pages/activity/SeckillDetails/index',
-										query: { id: cart.seckillId }
-									})
-								"
-								v-else-if="cart.seckillId > 0"
 							/>
 						</view>
 						<view class="text acea-row row-between">
@@ -52,8 +20,11 @@
 								<view class="text-cut">
 									{{ cart.productInfo.storeName }}
 								</view>
-								<view>
-									<button class="cu-btn round sm bg-cyan shadow" @tap.stop="getPlan(cart)">配送计划</button>
+								<view v-if="cart.isSetPoject =='true'">
+									<button class="cu-btn round sm bg-cyan shadow" @tap.stop="getPlan(cart,order)">设定配送计划</button>
+								</view>
+								<view v-else>
+									<button class="cu-btn round sm bg-red shadow">系统默认已配送计划</button>
 								</view>
 							</view>
 							<view class="money">
@@ -68,8 +39,8 @@
 					<text class="text-cut">地址：{{ order.userAddress }}</text>
 				</view>
 				<view class="bottom acea-row row-right row-middle">
-					<template v-if="order._status._type == 0 || order._status._type == 9">
-						<view class="bnt bg-blue" @tap="planDetail(order)">配送明细</view>
+					<template v-if="order._status._type == 1 || order._status._type == 2">
+						<!-- <view class="bnt bg-blue" @tap="planDetail(order)">配送明细</view> -->
 						<view class="bnt bg-red" @tap="stopPlan(order)">停止配送</view>
 					</template>
 					<template v-if="order._status._type == 3">
@@ -96,7 +67,7 @@
 	</view>
 </template>
 <script>
-import { getYsOrderList,findPoject, setPoject } from '@/api/order';
+import { getYsOrderList, setPoject,stopPojectOd } from '@/api/order';
 import { cancelOrderHandle, payOrderHandle, takeOrderHandle } from '@/libs/order';
 import Loading from '@/components/Loading';
 import Payment from '@/components/Payment';
@@ -143,7 +114,6 @@ export default {
 	onShow: function() {
 		this.type = parseInt(this.$yroute.query.type) || 5;
 		this.getOrderList();
-		
 	},
 	onHide: function() {
 		this.orderList = [];
@@ -161,30 +131,33 @@ export default {
 	},
 	methods: {
 		changeFun: function(opt) {
-			
 		 if (typeof opt !== 'object') opt = {}
 		 let action = opt.action || ''
 		 let value = opt.value === undefined ? '' : opt.value
 		 this.attr.cartAttr = value
 		 this[action] && this[action](value)
 		},
-		getPlan(cart){
+		getPlan(cart,order){
 			this.attr.cartAttr = true 
 			this.attr.cart = cart
+			this.attr.orderId = order.orderId
 		},
 		stopPlan(order){
-			this.$refs['customModal'].showModal()
+			let that = this
+			stopPojectOd().then(res => {
+				
+			});
 		},
 		planDetail(order){
-			return uni.showToast({
+			/* return uni.showToast({
 				title: '该功能尚未完善',
 				icon: 'none',
 				duration: 2000
-			});
-			/* this.$yrouter.push({
+			}); */
+			this.$yrouter.push({
 				path: '/pages/order/Distribution/detail',
 				query: { id: order.orderId }
-			}); */
+			});
 		},
 		cancel(val){
 			console.log(val) 
@@ -192,10 +165,10 @@ export default {
 		 confirm(val){
 			console.log(val) 
 		 },
-		goOrderDetails(order) {
+		goOrderDetails(order,cart) {
 			this.$yrouter.push({
-				path: '/pages/order/OrderDetails/index',
-				query: { id: order.orderId }
+				path: '/pages/order/Distribution/detail',
+				query: { orderId: order.orderId, productId: cart.productId }
 			});
 		},
 		dataFormat,
@@ -214,12 +187,6 @@ export default {
 				//这里应该写在请求接口拿到数据后，这里我使用模拟数据
 				that.loaded = res.data.length < that.limit;
 				that.loading = false;
-			});
-		},
-		findPoject() {
-			let that = this
-			findPoject({
-			}).then(res => {
 			});
 		},
 		toPay() {}

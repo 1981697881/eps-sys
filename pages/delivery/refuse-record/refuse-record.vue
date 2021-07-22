@@ -408,13 +408,13 @@
 
 			.courier-item {
 				display: flex;
-				width: 622rpx;
+				/* width: 622rpx; */
 				padding: 40rpx;
 				margin-bottom: 10rpx;
 				background-color: #FFFFFF;
 
 				.courier-info-box {
-					width: 622rpx;
+					/* width: 622rpx; */
 					height: 130rpx;
 					display: flex;
 					height: 56rpx;
@@ -445,7 +445,7 @@
 					text-align: left;
 					font-size: 28rpx;
 					color: #666666;
-					width: 622rpx;
+					/* width: 622rpx; */
 					word-break: break-all;
 					// word-wrap: break-word;
 					white-space: pre-line;

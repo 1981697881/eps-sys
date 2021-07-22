@@ -100,7 +100,9 @@ export default {
 			this.$emit('changeFun', { action: 'changeattr', value: false });
 		},
 		CartDeliveryDes: function() {
-			this.deliveryQuantity--;
+			if(this.deliveryQuantity >1){
+				this.deliveryQuantity--;
+			}
 		},
 		saveData(){
 			return uni.showToast({
@@ -121,12 +123,14 @@ export default {
 			}
 		},
 		CartDateDes: function() {
-			this.deliveryDate--;
+			if(this.deliveryDate-- >1){
+				this.deliveryDate--;
+			}
 		},
 		CartDateAdd: function() {
 			if (this.deliveryDate >= 5) {
 				return uni.showToast({
-					title: '不能超出限定数量',
+					title: '间隔天数不能大于5天',
 					icon: 'none',
 					duration: 2000
 				});

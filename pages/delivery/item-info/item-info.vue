@@ -190,7 +190,7 @@
 				font-size: 24rpx;
 				color: #999999;
 				line-height: 33rpx;
-				width: 622rpx;
+				/* width: 622rpx; */
 				word-break: break-all;
 				white-space: pre-line;
 				overflow: hidden;

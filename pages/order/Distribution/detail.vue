@@ -4,26 +4,26 @@
 			<view class="item" v-for="(order, orderListIndex) in orderList" :key="orderListIndex">
 				<view class="title acea-row row-between-wrapper">
 					<view class="acea-row row-middle">
-						快递单号：{{ order.orderId }}
+						快递单号：{{ order.orderId || '未生成快递单号' }}
 					</view>
-					<view class="font-color-red">配送数量：{{ order.cartInfo.length || 0 }}</view>
+					<view class="font-color-red">配送数量：{{ order.putCount || 0 }}</view>
 				</view>
 				<view @click="goOrderDetails(order)">
-					<view class="item-info acea-row row-between row-top" v-for="(cart, cartInfoIndex) in order.cartInfo" :key="cartInfoIndex">
+					<view class="item-info acea-row row-between row-top">
 						<view class="pictrue">
 							<image
-								:src="cart.productInfo.image"
+								:src="order.productInfo.image"
 							/>
 						</view>
 						<view class="text acea-row row-between">
 							<view class="pei-name line2">
 								<view class="text-cut">
-									是否签收：{{ cart.productInfo.storeName }}
+									是否签收：{{ order.storeName || '否'}}
 								</view>
 							</view>
 							<view class="money" style="text-align: left;">
-								<view>配送员：{{ cart.productInfo.attrInfo ? cart.productInfo.attrInfo.price : cart.productInfo.price }}</view>
-								<view>配送时间：{{ cart.cartNum }}</view>
+								<view>配送员：{{ order.cartNum || '未知' }}</view>
+								<view>配送时间：{{ order.putDate || ''}}</view>
 							</view>
 						</view>
 					</view>
@@ -45,8 +45,7 @@
 		</view>
 </template>
 <script>
-import { getOrderData, getYsOrderList,getOrderList } from '@/api/order';
-import { cancelOrderHandle, payOrderHandle, takeOrderHandle } from '@/libs/order';
+import { pojectDetail } from '@/api/order';
 import Loading from '@/components/Loading';
 import { mapGetters } from 'vuex';
 import { isWeixin, dataFormat } from '@/utils';
@@ -78,10 +77,7 @@ export default {
 	},
 	computed: mapGetters(['userInfo']),
 	onShow: function() {
-		this.type = parseInt(this.$yroute.query.type) || 0;
-		this.changeType(this.type);
-		this.getOrderData();
-		this.getOrderList();
+		this.getOrderList(this.$yroute.query);
 	},
 	onHide: function() {
 		this.orderList = [];
@@ -98,16 +94,6 @@ export default {
 		this.loading = false;
 	},
 	methods: {
-		changeFun: function(opt) {
-		 if (typeof opt !== 'object') opt = {}
-		 let action = opt.action || ''
-		 let value = opt.value === undefined ? '' : opt.value
-		 this[action] && this[action](value)
-		},
-		changeattr: function(msg) {
-		  // 修改了规格
-		  this.attr.cartAttr = msg
-		},
 		comfirm(order){
 			uni.showToast({
 				title: '此功能暂未开放',
@@ -115,73 +101,15 @@ export default {
 				duration: 2000
 			});
 		},
-		getPlan(){
-			this.attr.cartAttr = true 
-		},
-		stopPlan(){
-			this.$refs['customModal'].showModal()
-		},
-		cancel(val){
-			console.log(val) 
-		},
-		 confirm(val){
-			console.log(val) 
-		 },
-		goLogistics(order) {
-			this.$yrouter.push({
-				path: '/pages/order/Logistics/index',
-				query: { id: order.orderId }
-			});
-		},
-		goOrderDetails(order) {
-			this.$yrouter.push({
-				path: '/pages/order/OrderDetails/index',
-				query: { id: order.orderId }
-			});
-		},
 		dataFormat,
-		setOfflinePayStatus: function(status) {
-			var that = this;
-			that.offlinePayStatus = status;
-			if (status === 1) {
-				if (that.payType.indexOf('offline') < 0) {
-					that.payType.push('offline');
-				}
-			}
-		},
-		getOrderData() {
-			getOrderData().then(res => {
-				this.orderData = res.data;
-			});
-		},
-		takeOrder(order) {
-			takeOrderHandle(order.orderId).finally(() => {
-				this.reload();
-				this.getOrderData();
-			});
-		},
-		reload() {
-			this.changeType(this.type);
-		},
-		changeType(type) {
-			let that = this
-			this.type = type;
-			this.orderList = [];
-			this.page = 1;
-			this.loaded = false;
-			this.loading = false;
-			this.getOrderList();
-		},
-		getOrderList() {
+		getOrderList(params) {
+			console.log(params)
 			let that = this
 			if (this.loading || this.loaded) return;
 			this.loading = true;
-			const { page, limit, type } = this;
-			getOrderList({
-				page,
-				limit,
-				type
-			}).then(res => {
+			pojectDetail(
+			params
+			).then(res => {
 				that.orderList = [...res.data];
 				that.page++;
 				//这里应该写在请求接口拿到数据后，这里我使用模拟数据
@@ -189,7 +117,6 @@ export default {
 				that.loading = false;
 			});
 		},
-		toPay() {}
 	},
 	mounted() {},
 	onReachBottom() {

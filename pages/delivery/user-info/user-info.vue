@@ -805,7 +805,7 @@
 
 		.msg-box {
 			text-align: center;
-			width: 622rpx;
+			/* width: 622rpx; */
 			border-radius: 10rpx;
 
 			.msg-desc {
@@ -938,7 +938,7 @@
 			}
 
 			.form-item-no-delivery-time {
-				width: 622rpx;
+				/* width: 622rpx; */
 
 				.times-box {
 					margin-top: 40rpx;

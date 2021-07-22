@@ -160,12 +160,19 @@ export function findPoject(params) {
  * @returns {*}
  */
 export function setPoject(params) {
-	return request.post("/mall/order/setPoject ", {params});
+	return request.post("/mall/order/setPoject ", params);
 }
 /**
  * 配送计划明细
  * @returns {*}
  */
 export function pojectDetail(params) {
-	return request.post("/mall/order/pojectDetail ", {params});
+	return request.post("/mall/order/pojectDetail ", params);
+}
+/**
+ * 停止配送计划
+ * @returns {*}
+ */
+export function stopPojectOd(params) {
+	return request.post("/mall/order/stopPojectOd ", params);
 }
