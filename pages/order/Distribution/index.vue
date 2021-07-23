@@ -24,8 +24,8 @@
 									<button class="cu-btn round sm bg-cyan shadow" @tap.stop="getPlan(cart,order)">设定配送计划</button>
 								</view>
 								<view v-else>
-									<button class="cu-btn round sm bg-gray shadow">系统默认已配送计划</button>
-									<button class="cu-btn round sm bg-red shadow" @tap="planDetail(cart,order)">停止配送</button>
+									<text class="cu-btn round sm bg-blue shadow">系统默认或已设定配送计划</text>
+									<button class="cu-btn round sm bg-pink shadow" @tap.stop="stopPlan(cart,order)">停止配送</button>
 								</view>
 							</view>
 							<view class="money">
@@ -132,12 +132,12 @@ export default {
 	},
 	methods: {
 		changeFun: function(opt) {
+		 this.getOrderList();
 		 if (typeof opt !== 'object') opt = {}
 		 let action = opt.action || ''
 		 let value = opt.value === undefined ? '' : opt.value
 		 this.attr.cartAttr = value
 		 this[action] && this[action](value)
-		 this.getOrderList();
 		},
 		getPlan(cart,order){
 			this.attr.cartAttr = true 
@@ -146,14 +146,11 @@ export default {
 			this.attr.totalNum = order.totalNum
 		},
 		stopPlan(cart,order){
-			let that = this
-			stopPojectOd({orderId: order.orderId,productId: cart.productId}).then(res => {
-				uni.showToast({
-					title: res.msg,
-					icon: 'none',
-					duration: 2000
-				});
-			});
+			this.stopParams = {
+				cart: cart,
+				order: order
+			}
+			this.$refs['customModal'].showModal()
 		},
 		planDetail(order){
 			/* return uni.showToast({
@@ -170,7 +167,14 @@ export default {
 			console.log(val) 
 		},
 		 confirm(val){
-			console.log(val) 
+			let that = this
+			stopPojectOd({orderId: this.stopParams.order.orderId,startDate: val, productId: this.stopParams.cart.productId}).then(res => {
+				uni.showToast({
+					title: res.msg,
+					icon: 'none',
+					duration: 2000
+				});
+			});
 		 },
 		goOrderDetails(order,cart) {
 			this.$yrouter.push({

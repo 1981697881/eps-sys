@@ -4,7 +4,7 @@
 			<view class="item" v-for="(order, orderListIndex) in orderList" :key="orderListIndex">
 				<view class="title acea-row row-between-wrapper">
 					<view class="acea-row row-middle">
-						快递单号：{{ order.orderId || '未生成快递单号' }}
+						快递单号：{{ order.expressBill || '未生成快递单号' }}
 					</view>
 					<view class="font-color-red">配送数量：{{ order.putCount || 0 }}</view>
 				</view>
@@ -22,7 +22,7 @@
 								</view>
 							</view>
 							<view class="money" style="text-align: left;">
-								<view>配送员：{{ order.cartNum || '未知' }}</view>
+								<view>配送员：{{ order.putPeopleName || '未知' }}</view>
 								<view>配送时间：{{ order.putDate || ''}}</view>
 							</view>
 						</view>

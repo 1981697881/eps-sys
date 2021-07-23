@@ -260,21 +260,25 @@ export default {
 			let that = this;
 			orderList.forEach((item,index)=>{
 				clearInterval(item.countDownFn);
-				item.countDownFn = setInterval(() => {
-					if (that.countDownFun(item.createTime) == '订单已超时') {
-						clearInterval(item.countDownFn)
-						item.timeText = '订单已超时';
-						that.$set(item, 'timeText', '订单已超时');
-						 //清除定时器
-						that.$set(item, 'countDownFn', clearInterval(item.countDownFn));
-						that.$set(item, 'countDownFn', '');
-						that.$forceUpdate()
-					} else {	
-						item.timeText = that.countDownFun(item.createTime);
-						that.$set(item, 'timeText', that.countDownFun(item.createTime));
-						that.$forceUpdate()
-					}
-				}, 1000);
+				console.log(item.putDatetime)
+				if(item.putDatetime){
+					console.log(123)
+					item.countDownFn = setInterval(() => {
+						if (that.countDownFun(item.putDatetime) == '订单已超时') {
+							clearInterval(item.countDownFn)
+							item.timeText = '订单已超时';
+							that.$set(item, 'timeText', '订单已超时');
+							 //清除定时器
+							that.$set(item, 'countDownFn', clearInterval(item.countDownFn));
+							that.$set(item, 'countDownFn', '');
+							that.$forceUpdate()
+						} else {	
+							item.timeText = that.countDownFun(item.putDatetime);
+							that.$set(item, 'timeText', that.countDownFun(item.putDatetime));
+							that.$forceUpdate()
+						}
+					}, 1000);
+				}
 			})
 		},
 		goLogistics(order) {
@@ -315,6 +319,7 @@ export default {
 		},
 		changeType(type) {
 			let that = this
+			this.getOrderData();
 			this.type = type;
 			this.orderList = [];
 			this.page = 1;

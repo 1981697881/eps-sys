@@ -15,7 +15,7 @@
               <!-- <image class="tag-img" :src="item.image" mode=""></image> -->
               <image class="img" :src="item.image" lazy-load mode="aspectFill"></image>
             </view>
-            <view class="tip one-t">{{ item.storeName }}</view>
+            <view class="tip one-t" v-if="item.productText">{{ item.productText }}</view>
             <view class="title more-t">{{ item.storeName }}</view>
             <view class="price-box">
               <view class="flex x-bc align-end">

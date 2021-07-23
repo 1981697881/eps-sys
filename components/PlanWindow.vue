@@ -29,14 +29,14 @@
 				<view class="title">配送计划(每天配送数量/配送间隔天数)</view>
 				<view class="acea-row">
 					<view class="carnum acea-row row-left">
-						<view class="item reduce" :class="dayNumber <= 1 ? 'on' : ''" @click="CartDeliveryDes">-</view>
-						<view class="item num">{{ dayNumber }}</view>
-						<view class="item plus" :class="dayNumber >= attr.cart.cartNum ? 'on' : ''" @click="CartDeliveryAdd">+</view>
+						<view class="item reduce" :class="dayCount <= 1 ? 'on' : ''" @click="CartDeliveryDes">-</view>
+						<view class="item num">{{ dayCount }}</view>
+						<view class="item plus" :class="dayCount >= attr.cart.cartNum ? 'on' : ''" @click="CartDeliveryAdd">+</view>
 					</view>
 					<view style="margin-left: 80rpx;" class="carnum acea-row row-left">
-						<view class="item reduce" :class="dayCount <= 1 ? 'on' : ''" @click="CartDateDes">-</view>
-						<view class="item num">{{ dayCount }}</view>
-						<view class="item plus" :class="dayCount >= 5 ? 'on' : ''" @click="CartDateAdd">+</view>
+						<view class="item reduce" :class="dayNumber <= 1 ? 'on' : ''" @click="CartDateDes">-</view>
+						<view class="item num">{{ dayNumber }}</view>
+						<view class="item plus" :class="dayNumber >= 5 ? 'on' : ''" @click="CartDateAdd">+</view>
 					</view>
 				</view>
 			</view>
@@ -101,8 +101,8 @@ export default {
 			this.$emit('changeFun', { action: 'changeattr', value: false });
 		},
 		CartDeliveryDes: function() {
-			if(this.dayNumber >1){
-				this.dayNumber--;
+			if(this.dayCount >1){
+				this.dayCount--;
 			}
 		},
 		saveData(){
@@ -124,30 +124,30 @@ export default {
 			});
 		},
 		CartDeliveryAdd: function() {
-			if (this.dayNumber >= this.attr.cart.cartNum) {
+			if (this.dayCount >= this.attr.cart.cartNum) {
 				return uni.showToast({
 					title: '不能超出限定数量',
 					icon: 'none',
 					duration: 2000
 				});
 			} else {
-				this.dayNumber++;
+				this.dayCount++;
 			}
 		},
 		CartDateDes: function() {
-			if(this.dayCount-- >1){
-				this.dayCount--;
+			if(this.dayNumber-- >1){
+				this.dayNumber--;
 			}
 		},
 		CartDateAdd: function() {
-			if (this.dayCount >= 5) {
+			if (this.dayNumber >= 5) {
 				return uni.showToast({
 					title: '间隔天数不能大于5天',
 					icon: 'none',
 					duration: 2000
 				});
 			} else {
-				this.dayCount++;
+				this.dayNumber++;
 			}
 		},
 		previewImage() {
