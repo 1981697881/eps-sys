@@ -18,8 +18,8 @@
             <view class="tip one-t" v-if="item.productText">{{ item.productText }}</view>
             <view class="title more-t">{{ item.storeName }}</view>
             <view class="price-box">
-              <view class="flex x-bc align-end">
-                <view class="current">{{ item.activity_type === 'groupon' ? item.price : item.otPrice }} </view>
+              <view class="flex x-bc align-end"><!-- item.activity_type === 'groupon' ? item.price : item.otPrice -->
+                <view class="current">{{ item.price }} </view>
                 <view class="sales miso-font">仅剩：{{ item.stock }}{{ item.unitName }}</view>
               </view>
               <view class="x-f tag-box">
