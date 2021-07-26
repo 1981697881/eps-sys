@@ -20,7 +20,7 @@
 				</view>
 			</view>
 			<Banner v-if="item.type == 'banner'" :detail="banner" @getbgcolor="getbgcolor"></Banner>
-			<!-- <uni-notice-bar v-if="item.type == 'noticeBar'" scrollable="true" @click="goRoll(item.componentContent.roll[0])" single="true" :speed="10" showIcon="true" :text="item.componentContent.roll[0].info"></uni-notice-bar> -->
+			<uni-notice-bar v-if="item.type == 'noticeBar'" scrollable="true" @click="goRoll(roll[0])" single="true" :speed="10" showIcon="true" :text="roll[0].info"></uni-notice-bar>
 			<view class="content_box home_content_box" v-if="item.type == 'menu' && item.componentContent.menus">
 				<!-- 菜单 -->
 				<Menu :list="menus"></Menu>
@@ -125,6 +125,7 @@ export default {
 				bastList: []
 			},
 			likeInfo: [],
+			roll: [],
 			live: [],
 			lovely: [],
 			benefit: [],
@@ -229,6 +230,7 @@ export default {
 					that.$set(that, 'live', res.data.liveList);
 					that.$set(that, 'lovely', res.data.lovely);
 					that.$set(that, 'benefit', res.data.benefit);
+					that.$set(that, 'roll', res.data.roll);
 					that.$set(that, 'couponList', res.data.couponList);
 					that.$set(that, 'combinationList', res.data.combinationList);
 					that.$forceUpdate();
