@@ -218,15 +218,17 @@ export default {
 		}
 	},
 	mounted: function() {
-		const { s = '', id = 0, title = '', isIntegral = false, type = 0 } = this.$yroute.query;
+		const { s = '', id = 0, title = '', isIntegral = false, type } = this.$yroute.query;
 		this.where.keyword = s;
 		if (type == 0) {
 			this.where.isIntegral = isIntegral == 'true' ? 1 : 0;
 		} else if (type == 1) {
 			this.where.isIntegral = 0;
-		} else {
+		} else if (type == 2){
 			this.where.isIntegral = 2;
 		}
+		console.log(type)
+		console.log(this.where)
 		this.isIntegral = isIntegral;
 		this.updateTitle();
 		this.getProductList();
@@ -336,8 +338,8 @@ export default {
 					});
 					break;
 				/* return that.$yrouter.push({
-            path: '/pages/home/GoodsClass/index',
-          }) */
+					path: '/pages/home/GoodsClass/index',
+				  }) */
 				case 1:
 					if (that.price === 0) that.price = 1;
 					else if (that.price === 1) that.price = 2;

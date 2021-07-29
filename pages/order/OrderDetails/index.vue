@@ -445,8 +445,11 @@ export default {
     },
     async toPay(type) {
       var that = this
-      console.log(type, '支付方式')
-      await payOrderHandle(this.orderInfo.orderId, type, that.from)
+	  let isPreSale = false
+	  if(that.orderInfo.cartInfo[0].productInfo.isIntegral == 2){
+		  isPreSale = true
+	  }
+      await payOrderHandle(this.orderInfo.orderId, type, that.from,isPreSale)
       that.getDetail()
     },
   },

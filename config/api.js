@@ -1,5 +1,5 @@
-/* const root = 'http://test.gzfzdev.com:5030'; */
-const root = 'https://epssys.kuyuntech.com';
+const root = 'http://test.gzfzdev.com:5030';
+/* const root = 'https://epssys.kuyuntech.com'; */
 // const root = 'https://iyoze.utools.club';
 // const root = 'https://epssyst.kuyuntech.com';
 const api = {

@@ -28,7 +28,7 @@
 			<!-- 滚动新闻 -->
 			<!-- 广告 -->
 			<!-- <Adv v-if="item.type == 'adv' && item.componentContent.detail" :detail="item.componentContent.detail" /> -->
-			<item-container v-if="item.type == 'fullReduction'" :num="itemcontainer3.noswipernum4" :banner="itemcontainer3.banner" :list="itemcontainer3.data1"></item-container>
+			<!-- <item-container v-if="item.type == 'fullReduction'" :num="itemcontainer3.noswipernum4" :banner="itemcontainer3.banner" :list="itemcontainer3.data1"></item-container> -->
 			<!-- 热门榜单 -->
 			<HotCommodity v-if="item.type == 'hotCommodity'" :detail="likeInfo"></HotCommodity>
 			<!-- 超值拼团 -->
@@ -37,7 +37,6 @@
 			<FirstNewProduct v-if="item.type == 'firstNewProduct'" :detail="firstList"></FirstNewProduct>
 			<!-- 精品推荐 -->
 			<ProductsRecommended v-if="item.type == 'productsRecommended'" :detail="bastList"></ProductsRecommended>
-
 			<!-- 促销单品 -->
 			<PromoteProduct v-if="item.type == 'promoteProduct'" :detail="benefit"></PromoteProduct>
 			<!-- 直播 -->

@@ -530,12 +530,19 @@ export default {
 			createOrder(params)
 				.then(res => {
 					uni.hideLoading();
+					let isPreSale = false
+					this.orderGroupInfo.forEach((item)=>{
+						item.cartInfo.forEach((cart)=>{
+							if(cart.productInfo.isIntegral == 2){
+								isPreSale = true
+							}
+						})
+					})
 					if(this.orderGroupInfo.length>1){
-						handleOrderPayResults.call(this, res.data.goPayList, 'create', this.active);
+						handleOrderPayResults.call(this, res.data.goPayList, 'create', this.active,isPreSale);
 					}else{
-						handleOrderPayResults.call(this, res.data, 'create', this.active);
+						handleOrderPayResults.call(this, res.data, 'create', this.active,isPreSale);
 					}
-					
 				})
 				.catch(err => {
 					handleErrorMessage(err, '创建订单失败');

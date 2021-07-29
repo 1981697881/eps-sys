@@ -353,14 +353,12 @@
 						remarks: vm.form.remarks,
 						memberCouponCode: vm.form.memberCouponCode
 
-					}
-		
+					}	
 					uni.request({
 						url: vm.$api.receivingRecord.order,
 						data: obj,
 						header: {},
 						success: (res) => {
-
 							uni.showModal({
 								title: '系统提示',
 								confirmColor: '#DE1111',
