@@ -255,12 +255,11 @@ export default {
 		},
 		disabledPay() {
 			//是否达到起送价
-			return this.orderType == 'takeout' && this.getCartGoodsPrice < this.store.min_price ? true : false;
+			return  this.getCartGoodsPrice < Number(this.goods[0].startDeliveryCount) ? true : false;
 		},
 		spread() {
 			//差多少元起送
-			if (this.orderType != 'takeout') return;
-			return parseFloat((this.store.min_price - this.getCartGoodsPrice).toFixed(2));
+			return parseFloat((Number(this.goods[0].startDeliveryCount) - this.getCartGoodsPrice).toFixed(2));
 		}
 	},
 	methods: {
@@ -355,7 +354,6 @@ export default {
 			if (index > -1) {
 				this.cart[index].number += num;
 			} else {
-				console.log(obj);
 				that.cart.push({
 					id: obj.productId,
 					cate_id: cate.id,
@@ -439,7 +437,6 @@ export default {
 		},
 		handleAddToCartInModal() {
 			const product = Object.assign({}, this.good, { props_text: this.getGoodSelectedProps(this.good), props: this.getGoodSelectedProps(this.good, 'id') });
-			console.log(product);
 			this.handleAddToCart(this.category, product, this.good.number, false);
 			this.closeGoodDetailModal();
 		},

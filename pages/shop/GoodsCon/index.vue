@@ -3,7 +3,8 @@
     <view v-if="storeInfo.id">
       <!-- 轮播图 -->
       <product-con-swiper :img-urls="storeInfo.sliderImageArr"></product-con-swiper>
-      <!-- 商品信息描述 -->
+      <view class="tip one-t" v-if="storeInfo.productText">{{ storeInfo.productText }}</view>
+	  <!-- 商品信息描述 -->
       <view class="wrapper">
         <view class="share acea-row row-between row-bottom">
           <view class="money font-color-red" v-if="!isIntegral">
@@ -788,6 +789,16 @@ export default {
 		justify-content: center;
 		box-sizing: border-box;
 		margin-top: -6.09rpx;
+	}
+	.tip {
+	  width: 100%;
+	  line-height: 56rpx;
+	  background: rgba(246, 242, 234, 1);
+	  font-size: 22rpx;
+	  font-family: PingFang SC;
+	  font-weight: 400;
+	  color: rgba(168, 112, 13, 1);
+	  padding: 0 20rpx;
 	}
 .geoPage {
   position: fixed;

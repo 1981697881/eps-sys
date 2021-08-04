@@ -2,6 +2,7 @@
   <view :class="[posterImageStatus ? 'noscroll product-con' : 'product-con']" v-show="domStatus">
     <!-- 商品轮播 -->
     <product-con-swiper :imgUrls="imgUrls"></product-con-swiper>
+	<view class="tip one-t" v-if="storeInfo.productText">{{ storeInfo.productText }}</view>
     <view class="tui-pro-detail">
       <view class="tui-product-title tui-border-radius">
         <view class="tui-price__box">
@@ -128,10 +129,10 @@
     <view class="tui-operation">
       <view class="tui-operation-left tui-col-5">
         <!-- #ifdef MP-WEIXIN -->
-        <button class="tui-operation-item" hover-class="tui-opcity" :hover-stay-time="150">
+        <view class="tui-operation-item" hover-class="tui-opcity" :hover-stay-time="150">
           <view class="iconfont icon-kefu"></view>
           <view class="tui-operation-text tui-scale-small">客服</view>
-        </button>
+        </view>
         <!-- #endif -->
 
         <view class="tui-operation-item" hover-class="tui-opcity" :hover-stay-time="150" @click="setCollect" v-if="userCollect">
@@ -143,7 +144,6 @@
           <view class="tui-operation-text tui-scale-small">收藏</view>
         </view>
       </view>
-
       <view class="tui-operation-right tui-right-flex tui-col-7 tui-btnbox-4">
         <view class="tui-flex-1">
           <tui-button height="100rpx" :size="26" type="warning" shape="rightAngle" @click="openAlone">
@@ -1273,6 +1273,16 @@ export default {
   line-height: 34rpx;
   font-weight: 500;
 }
+.tip {
+	  width: 100%;
+	  line-height: 56rpx;
+	  background: rgba(246, 242, 234, 1);
+	  font-size: 22rpx;
+	  font-family: PingFang SC;
+	  font-weight: 400;
+	  color: rgba(168, 112, 13, 1);
+	  padding: 0 20rpx;
+	}
 .tui-flex-end {
   display: flex;
   align-items: flex-end;
