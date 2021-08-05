@@ -70,11 +70,11 @@
 			</view>
 		</block>
 		<view class="nav acea-row row-middle">
-			<view class="item first-menu" :class="{ on: showPage }" @tap="togglePage">
-				<text class="name">默认</text>
+			<view v-if="type==1" class="item" :class="{ on: showPage }" @tap="togglePage">
+				<text class="name text-cut">{{ title ? title : '默认' }}</text>
 				<text class="iconfont triangle" :style="'display: inline-block;transform:rotate(' + (showPage ? '180' : '0') + 'deg);'"></text>
 			</view>
-			<!-- <view class="item" :class="title ? 'font-color-red' : ''" @click="set_where(0)">{{ title ? title : '默认' }}</view> -->
+			<view v-else class="item" :class="title ? 'font-color-red' : ''" >{{ title ? title : '默认' }}</view><!-- @click="set_where(0)" -->
 			<view class="item" @click="set_where(1)">
 				价格
 				<image :src="`${$VUE_APP_RESOURCES_URL}/images/horn.png`" v-if="price === 0" />
@@ -225,7 +225,6 @@ export default {
 		const s = '',
 			id = 0,
 			title = '';
-
 		return {
 			hostProduct: [],
 			productList: [],
@@ -288,17 +287,6 @@ export default {
 			},
 			immediate: true
 		},
-		defaultSelected(newVal) {
-			if (newVal.length == 0) {
-				return;
-			}
-			this.defaultActive = JSON.parse(JSON.stringify(newVal));
-			this.activeMenuArr = JSON.parse(JSON.stringify(newVal));
-			this.shadowActiveMenuArr = JSON.parse(JSON.stringify(newVal));
-			if (this.updateMenuName) {
-				this.setMenuName();
-			}
-		},
 		$yroute(to) {
 			// if (to.name !== "GoodsList") return;
 			// const { s = "", id = 0, title = "" } = to.query;
@@ -320,6 +308,8 @@ export default {
 	mounted: function() {
 		const { s = '', id = 0, title = '', isIntegral = false, type } = this.$yroute.query;
 		this.where.keyword = s;
+		this.title = title;
+		this.where.sid = id;
 		if (type == 0) {
 			this.where.isIntegral = isIntegral == 'true' ? 1 : 0;
 		} else if (type == 1) {
@@ -327,8 +317,9 @@ export default {
 		} else if (type == 2) {
 			this.where.isIntegral = 2;
 		}
+		
 		this.isIntegral = isIntegral;
-		this.updateTitle();
+		/* this.updateTitle(); */
 		this.getProductList();
 	},
 	async onLoad(option) {
@@ -341,6 +332,31 @@ export default {
 	},
 	onHide() {},
 	methods: {
+		defaultSelected(newVal) {
+			if(newVal.length==0){
+				return;
+			}
+			this.defaultActive = JSON.parse(JSON.stringify(newVal));
+			this.activeMenuArr = JSON.parse(JSON.stringify(newVal));
+			this.shadowActiveMenuArr = JSON.parse(JSON.stringify(newVal));
+			this.setMenuName();
+		},
+		setMenuName(){
+			for(var i=0;i<this.activeMenuArr.length;i++){
+				let row = this.activeMenuArr[i];
+				if(this.subData[i].type=='hierarchy'){
+					if (typeof(row[0]) == 'number'){
+						let tmpsub = this.subData[i].children[row[0]];
+						if(row.length>1){
+							tmpsub = tmpsub.children[row[1]];
+							if(row.length>2){
+								tmpsub = tmpsub.children[row[2]];
+							}
+						}
+					}
+				}
+			}
+		},
 		initMenu() {
 			let tmpMenuActiveArr = [];
 			for (let i = 0; i < this.filterData.length; i++) {
@@ -356,10 +372,20 @@ export default {
 			this.defaultActive = [];
 			this.activeMenuArr = JSON.parse(JSON.stringify(tmpMenuActiveArr));
 			this.shadowActiveMenuArr = JSON.parse(JSON.stringify(tmpMenuActiveArr));
+			//加载菜单数据
+			this.subData = this.filterData;
+			if(this.$yroute.query.pid){
+				console.log([this.$yroute.query.pid,this.$yroute.query.id])
+				this.defaultSelected([[Number(this.$yroute.query.pid),Number(this.$yroute.query.child)]])
+			}else{
+				this.setMenuName();
+			}
+			
 		},
 		confirm() {
 			let index = JSON.parse(JSON.stringify(this.shadowActiveMenuArr));
 			let value = JSON.parse(JSON.stringify(this.shadowActiveMenuArr));
+			let name = JSON.parse(JSON.stringify(this.shadowActiveMenuArr));
 			//对结果做一下处理
 			index.forEach((item, i) => {
 				if (typeof item[0] == 'object') {
@@ -372,8 +398,10 @@ export default {
 							item[j] = s;
 							s.forEach((v, k) => {
 								value[i][j][k] = v == null || v >= this.subData[i].children[j].children.length ? null : this.subData[i].children[j].children[v].value;
+								name[i][j][k] = v == null || v >= this.subData[i].children[j].children.length ? null : this.subData[i].children[j].children[v].cateName;
 								if (value[i][j][k] == null) {
 									value[i][j] = [];
+									name[i][j] = [];
 									index[i][j] = [];
 								}
 							});
@@ -382,19 +410,24 @@ export default {
 				} else {
 					let children = this.subData[i].children[item[0]];
 					value[i][0] = children.id;
+					name[i][0] = children.cateName;
 					if (value[i].length >= 2 && item[1] != null) {
 						if (children.children.length > 0) {
 							children = children.children[item[1]];
 							value[i][1] = children.hasOwnProperty('id') ? children.id : null;
+							name[i][1] = children.hasOwnProperty('cateName') ? children.cateName : null;
 						} else {
 							value[i][1] = null;
+							name[i][1] = null;
 						}
 						if (value[i].length >= 3 && item[2] != null) {
 							if (children.children.length > 0) {
 								children = children.children[item[2]];
 								value[i][2] = children.hasOwnProperty('id') ? children.id : null;
+								name[i][2] = children.hasOwnProperty('cateName') ? children.cateName : null;
 							} else {
 								value[i][2] = null;
+								name[i][2] = null;
 							}
 						}
 					}
@@ -403,8 +436,12 @@ export default {
 			});
 			console.log({
 				index: index,
+				name: name,
 				value: value
 			})
+			this.title = name[0][1]
+			this.where.sid = value[0][1];
+			this.submitForm();
 		},
 		//hide菜单页
 		hidePageLayer(isAnimation) {
@@ -635,8 +672,8 @@ export default {
 				this.loadend = false;
 				this.loading = false;
 				this.where.page = 1;
-				this.where.sid = id;
-				this.title = title && id ? title : '';
+				/* this.where.sid = id; */
+				/* this.title = title && id ? title : ''; */
 				this.nows = false;
 				this.$set(this, 'productList', []);
 				this.price = 0;
@@ -762,7 +799,7 @@ export default {
 	background-color: #ffffff;
 	flex-direction: row;
 	.first-menu {
-		font-size: 14px;
+		font-size: 13px;
 		color: #757575;
 		flex-direction: row;
 		align-items: center;
@@ -809,7 +846,7 @@ export default {
 	}
 
 	&.show {
-		transform: translate3d(0, calc(-90rpx + 1rpx), 0);
+		transform: translate3d(0, calc(15rpx + 1rpx), 0);
 	}
 }
 .sub-menu-list {

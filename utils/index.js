@@ -550,6 +550,9 @@ export const handleLoginStatus = (location, complete, fail, success) => {
 		{
 			path: '/pages/shop/GoodsList/index?type=1',
 			name: '全部商品'
+		},{
+			path: '/pages/shop/GoodsList/index',
+			name: '全部商品'
 		},
 		{
 			path: '/pages/shop/GoodsList/index?type=2',

@@ -48,7 +48,7 @@
 											<text class="tips">{{ good.storeInfo }}</text>
 											<view class="price_and_action">
 												<text class="price">￥{{ good.price }}</text>
-												<view class="btn-group" v-if="good.productAttr.length > 1">
+												<view class="btn-group" v-if="good.productValue.length > 1">
 													<button type="primary" class="btn property_btn" hover-class="none" size="mini" @tap="showGoodDetailModal(item, good)">
 														选规格
 													</button>
@@ -344,13 +344,16 @@ export default {
 				that.DefaultSelect(good);
 			}
 			let obj = that.getGoodSelectedPrice(good);
+			console.log(this.cart)
+			console.log(obj)
 			const index = this.cart.findIndex(item => {
 				if (good.productAttr.length > 0) {
-					return item.id === good.id && item.props_text === good.props_text;
+					return item.id === good.id && item.props_text === obj.sku;
 				} else {
 					return item.id === good.id;
 				}
 			});
+			
 			if (index > -1) {
 				this.cart[index].number += num;
 			} else {
@@ -475,6 +478,7 @@ export default {
 			let that = this,
 				list = that.cart,
 				id = [];
+				console.log(list)
 			for (let i = 0; i < list.length; i++) {
 				await postCartAdd({
 					productId: list[i].id,

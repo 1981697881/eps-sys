@@ -31,7 +31,7 @@
               class="item acea-row row-column row-middle"
               v-for="(child, categoryIndex) in item.children"
               :key="categoryIndex"
-              @click="goGoodsList(child)"
+              @click="goGoodsList(eq,categoryIndex,child)"
             >
               <view class="picture">
                 <image :src="child.pic" />
@@ -76,10 +76,10 @@ export default {
     goGoodSearch() {
       this.$yrouter.push("/pages/shop/GoodSearch/index");
     },
-    goGoodsList(child) {
+    goGoodsList(eq,categoryIndex,child) {
       this.$yrouter.push({
         path: "/pages/shop/GoodsList/index",
-        query: { id: child.id, title: child.cateName }
+        query: { id:child.id, child: categoryIndex, pid: eq, title: child.cateName }
       });
     },
     activeCateId(n) {

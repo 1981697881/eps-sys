@@ -40,7 +40,7 @@
 						<span class="sign cart-color acea-row row-center-wrapper" v-if="order.storeId > 0">门店</span>
 						{{ order.createTime }}
 					</view>
-					<view class="font-color-red">{{ order._status._type == 2 && order.cartInfo[0].productInfo.isIntegral == 2 ? order.timeText :''}} {{ getStatus(order) }}</view>
+					<view class="font-color-red">{{ order._status._type == 2 && order.cartInfo[0].productInfo.isIntegral == 3 ? order.timeText :''}} {{ getStatus(order) }}</view>
 				</view>
 				<view @click="goOrderDetails(order)">
 					<view class="item-info acea-row row-between row-top" v-for="(cart, cartInfoIndex) in order.cartInfo" :key="cartInfoIndex">
