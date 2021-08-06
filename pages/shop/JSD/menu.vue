@@ -3,7 +3,7 @@
 		<view class="main" v-if="goods.length">
 			<view class="nav">
 				<view class="coupon">
-					<text class="title">两小时内配送上门，赶紧去购买</text>
+					<text class="title">极速配送需配送费两小时内配送上门，</text>
 					<view class="iconfont iconarrow-right"></view>
 				</view>
 			</view>
@@ -86,12 +86,27 @@
 			<!-- content end -->
 			<!-- 购物车栏 begin -->
 			<view class="cart-box" v-if="cart.length > 0">
-				<view class="mark">
-					<image src="/static/images/menu/cart.png" class="cart-img" @tap="openCartPopup"></image>
-					<view class="tag">{{ getCartGoodsNumber }}</view>
+				<view class="box-first">
+					<view class="mark">
+						<image src="/static/images/menu/cart.png" class="cart-img" @tap="openCartPopup"></image>
+						<view class="tag">{{ getCartGoodsNumber }}</view>
+					</view>
+					<view class="price">￥{{ getCartGoodsPrice }}</view>
+					<button type="primary" class="pay-btn" @tap="toPay" :disabled="disabledPay">{{ disabledPay ? `差${spread}元起送` : '去结算' }}</button>
 				</view>
-				<view class="price">￥{{ getCartGoodsPrice }}</view>
-				<button type="primary" class="pay-btn" @tap="toPay" :disabled="disabledPay">{{ disabledPay ? `差${spread}元起送` : '去结算' }}</button>
+				<radio-group @change="selPay" class="pay-box">
+					<label class="x-bc pay-item">
+						<view class="x-f"><text>极速配送(需要运费)</text></view>
+						<radio value="extreme" :class="{ checked: payType === 'extreme' }" class="pay-radio orange" :checked="payType === 'extreme'"></radio>
+						<view class="x-f">
+							<text>
+								普通配送
+								<text class="text-red padding-left"></text>
+							</text>
+						</view>
+						<radio value="ordinary" :class="{ checked: payType === 'ordinary' }" class="pay-radio orange" :checked="payType === 'ordinary'"></radio>
+					</label>
+				</radio-group>
 			</view>
 			<!-- 购物车栏 end -->
 		</view>
@@ -212,6 +227,7 @@ export default {
 			currentCateId: 0, //默认分类
 			cateScrollTop: 0,
 			menuScrollIntoView: '',
+			payType: 'ordinary',
 			cart: [], //购物车
 			goodDetailModalVisible: false, //是否饮品详情模态框
 			good: {}, //当前饮品
@@ -255,7 +271,7 @@ export default {
 		},
 		disabledPay() {
 			//是否达到起送价
-			return  this.getCartGoodsPrice < Number(this.goods[0].startDeliveryCount) ? true : false;
+			return this.getCartGoodsPrice < Number(this.goods[0].startDeliveryCount) ? true : false;
 		},
 		spread() {
 			//差多少元起送
@@ -263,6 +279,10 @@ export default {
 		}
 	},
 	methods: {
+		selPay(e){
+			let that = this;
+			that.payType = e.detail.value;
+		},
 		async init() {
 			//页面初始化
 			this.loading = true;
@@ -344,8 +364,6 @@ export default {
 				that.DefaultSelect(good);
 			}
 			let obj = that.getGoodSelectedPrice(good);
-			console.log(this.cart)
-			console.log(obj)
 			const index = this.cart.findIndex(item => {
 				if (good.productAttr.length > 0) {
 					return item.id === good.id && item.props_text === obj.sku;
@@ -353,7 +371,7 @@ export default {
 					return item.id === good.id;
 				}
 			});
-			
+
 			if (index > -1) {
 				this.cart[index].number += num;
 			} else {
@@ -406,7 +424,7 @@ export default {
 		},
 		getGoodSelectedPrice(good) {
 			let obj = {};
-			if (good.id) {
+			if (good.id) {	
 				let value = this.getGoodSelectedProps(good);
 				good.productValue.forEach((item, index) => {
 					if (item.sku == value) {
@@ -478,7 +496,6 @@ export default {
 			let that = this,
 				list = that.cart,
 				id = [];
-				console.log(list)
 			for (let i = 0; i < list.length; i++) {
 				await postCartAdd({
 					productId: list[i].id,
@@ -514,9 +531,7 @@ export default {
 				});
 				return;
 			}
-			let arr = [
-				id
-			]
+			let arr = [id];
 			/* uni.setStorageSync('cart', JSON.parse(JSON.stringify(this.cart))); */
 			this.$yrouter.push({
 				path: '/pages/order/OrderSubmission/index',
@@ -524,7 +539,7 @@ export default {
 					id: JSON.stringify(arr)
 				}
 			});
-			that.cart = []
+			that.cart = [];
 			uni.hideLoading();
 		}
 	}
@@ -534,5 +549,27 @@ export default {
 @import '~@/pages/shop/JSD/menu.scss';
 .nav {
 	height: 100rpx;
+}
+.pay-item {
+	height: 90rpx;
+	margin: 0 30rpx;
+	position: relative;
+	font-size: 26rpx;
+	background: #fff;
+	width: 630rpx;
+	border-bottom: 1rpx solid #eeeeee;
+	&:last-child {
+		border-bottom: none;
+	}
+	.pay-radio {
+		transform: scale(0.8);
+	}
+
+	.pay-img {
+		width: 40rpx;
+		height: 40rpx;
+		// background: #ccc;
+		margin-right: 25rpx;
+	}
 }
 </style>
