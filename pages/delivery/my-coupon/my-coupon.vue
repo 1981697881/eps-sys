@@ -14,25 +14,25 @@
 				<view class="coupon-item" :key="index" v-for="(item,index) in list">
 
 					<view @click="onClick(item)">
-						<image v-if="item.state === 'NOT_USED'" class="item-bg" src="/static/img/bg_11.png"></image>
-						<image v-if="item.state === 'USED'" class="item-bg" src="/static/img/bg_11_r.png"></image>
+						<image v-if="item._msg === '已使用'" class="item-bg" src="/static/img/bg_11.png"></image>
+						<image v-else class="item-bg" src="/static/img/bg_11_r.png"></image>
 						<view class="coupon-info-box">
 							<view class="coupon-info-l">
-								<view class="start-amount-box">满{{item.startingAmount}}元可用</view>
+								<view class="start-amount-box">满{{item.useMinPrice}}元可用</view>
 								<view class="coupon-amount">
 									<text class="min-amount">￥</text>
-									<text class="max-amount">{{item.discountAmount}}</text>
+									<text class="max-amount">{{item.couponPrice}}</text>
 								</view>
 								<view class="amount-desc">优惠金额</view>
 							</view>
 							<view class="coupon-info-r">
-								<view class="coupon-info">{{item.name}}</view>
+								<view class="coupon-info text-cut">{{item.couponTitle}}</view>
 								<view class="coupon-info">卡券用途：寄件</view>
 								<view class="coupon-info">截止时间：{{item.endTime | dateFormat('yyyy-MM-dd HH:mm:ss')}}</view>
-								<view class="coupon-info">卡券编号：{{item.number}}</view>
+								<view class="coupon-info">卡券编号：{{item.useTime || '暂无'}}</view>
 							</view>
 						</view>
-						<view v-if="item.state === 'NOT_USED'" class="type-box bgDE1">未使用</view>
+						<view v-if="item._msg !== '已使用'" class="type-box bgDE1">未使用</view>
 						<view v-else class="type-box bg999">已使用</view>
 					</view>
 
@@ -87,10 +87,8 @@
 			onClick(item) {
 				let vm = this;
 				if (vm.pageFlag === 'index') {
-					
 				} else if (vm.pageFlag === 'sendDelivery'){
-					if (item.state === 'USED') {
-						
+					if (item._msg === '已使用') {
 						uni.showModal({
 						    title: '温馨提示',
 							confirmColor: '#DE1111',
@@ -100,15 +98,13 @@
 						
 						return;
 					}
-					console.log(item)
 					let receivingForm = vm.$store.getters.getReceivingForm;
 					if (receivingForm) {
-						receivingForm.memberCouponCode = item.code;
-						receivingForm.discountAmount = item.discountAmount;
+						receivingForm.memberCouponCode = item.id;
+						receivingForm.discountAmount = item.couponPrice;
 					}
-					
+					console.log(receivingForm)
 					vm.$store.dispatch("addReceivingForm", receivingForm);
-					
 					let pages = getCurrentPages(); // 当前页面
 					let beforePage = pages[pages.length - 2]; // 前一个页面
 					uni.navigateBack({
@@ -284,6 +280,7 @@
 						.coupon-info {
 							font-size: 28rpx;
 							height: 40rpx;
+							width:400rpx;
 							line-height: 40rpx;
 							color: #666666;
 							margin-bottom: 10rpx;

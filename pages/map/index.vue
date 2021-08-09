@@ -44,7 +44,12 @@ export default {
       name: this.$yroute.query.name,
       address: this.$yroute.query.detailedAddress
     }];
-    console.log(this.mapConfig);
+	uni.openLocation({
+	   latitude: this.$yroute.query.latitude,
+	   longitude: this.$yroute.query.longitude,
+	   name:"广地花园",
+	   scale: 28
+	  })
   },
   methods: {}
 };

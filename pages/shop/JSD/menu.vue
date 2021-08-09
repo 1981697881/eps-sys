@@ -105,6 +105,13 @@
 							</text>
 						</view>
 						<radio value="ordinary" :class="{ checked: payType === 'ordinary' }" class="pay-radio orange" :checked="payType === 'ordinary'"></radio>
+						<view class="x-f">
+							<text>
+								自提
+								<text class="text-red padding-left"></text>
+							</text>
+						</view>
+						<radio value="selfMention" :class="{ checked: payType === 'selfMention' }" class="pay-radio orange" :checked="payType === 'selfMention'"></radio>
 					</label>
 				</radio-group>
 			</view>
@@ -227,7 +234,7 @@ export default {
 			currentCateId: 0, //默认分类
 			cateScrollTop: 0,
 			menuScrollIntoView: '',
-			payType: 'ordinary',
+			payType: 'selfMention',
 			cart: [], //购物车
 			goodDetailModalVisible: false, //是否饮品详情模态框
 			good: {}, //当前饮品
@@ -270,12 +277,22 @@ export default {
 			return this.cart.reduce((acc, cur) => acc + cur.number * cur.price, 0);
 		},
 		disabledPay() {
-			//是否达到起送价
-			return this.getCartGoodsPrice < Number(this.goods[0].startDeliveryCount) ? true : false;
+			if(this.payType == 'selfMention'){
+				return false;
+			}else{
+				//是否达到起送价
+				return this.getCartGoodsPrice < Number(this.goods[0].startDeliveryCount) ? true : false;
+				
+			}
 		},
 		spread() {
-			//差多少元起送
-			return parseFloat((Number(this.goods[0].startDeliveryCount) - this.getCartGoodsPrice).toFixed(2));
+			if(this.payType == 'selfMention'){
+				return 0;
+			}else{
+				//差多少元起送
+				return parseFloat((Number(this.goods[0].startDeliveryCount) - this.getCartGoodsPrice).toFixed(2));
+				
+			}
 		}
 	},
 	methods: {

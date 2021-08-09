@@ -120,9 +120,6 @@ export async function payOrderHandle(orderId, type, from, isPreSale) {
 // 处理调用支付接口的逻辑
 // @type create(创建订单)||pay(支付订单)
 export function handleOrderPayResults(data, type, payType, isPreSale) {
-	console.log(data, type, payType)
-
-	console.log(data, type)
 	return new Promise((resolve, reject) => {
 		uni.hideLoading()
 		switch (data.status) {
@@ -165,7 +162,6 @@ export function handleOrderPayResults(data, type, payType, isPreSale) {
 				// H5支付
 			case "WECHAT_H5_PAY":
 				goOrderDetails(data.result, type, isPreSale)
-				console.log(data)
 				setTimeout(() => {
 					resolve()
 					// #ifdef H5
@@ -176,13 +172,15 @@ export function handleOrderPayResults(data, type, payType, isPreSale) {
 				break;
 				// 小程序支付
 			case "WECHAT_PAY":
-				weappPay(data.result.jsConfig).finally(() => {
+				weappPay(data.result.jsConfig).then(res => {
 					resolve()
 					goOrderDetails(data.result, type, isPreSale)
-				}).then(res => {
 					// #ifdef MP-WEIXIN
 					subscribeMessage()
 					// #endif
+				}).catch(res=>{
+					resolve()
+					goOrderDetails(data.result, type, false)
 				})
 				break;
 				// APP支付
@@ -214,6 +212,7 @@ export function subscribeMessage() {
 
 
 export function goOrderDetails(id, type, isPreSale) {
+	console.log(isPreSale)
 	// 创建订单时跳转到详情
 	if (!isPreSale) {
 		if (type == 'create') {

@@ -195,7 +195,7 @@ export default {
 			enableIntegralNum: 0,
 			isWeixin: _isWeixin,
 			pinkId: 0,
-			active: _isWeixin ? 'weixin' : 'yue',
+			active: 'weixin',/* _isWeixin ? 'weixin' : 'yue' */
 			showCoupon: false,
 			showAddress: false,
 			addressInfo: {},

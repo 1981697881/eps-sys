@@ -86,9 +86,7 @@
 								<image class="form-icon-arrow" src="/static/img/arrow_1.png"></image>
 							</view>
 						</view>
-
 						<view class="flex-item form-item-border"></view>
-
 						<view class="uni-flex  uni-row form-item" @tap="goToMyCoupon">
 							<view class="flex-item form-item-label">优惠劵使用</view>
 							<view class="flex-item uni-row form-item-arrow">
@@ -97,34 +95,25 @@
 								<image class="form-icon-arrow" src="/static/img/arrow_1.png"></image>
 							</view>
 						</view>
-
 						<view class="flex-item form-item-border"></view>
-
 						<textarea v-model="form.remarks" class="form-textarea" placeholder-style="color:#999999" placeholder="输入备注，给快递员留言"></textarea>
 					</view>
-
 				</view>
 			</view>
-
 		</view>
-
 		<view class="content-bg">
-
 			<view class="agree-box">
 				<van-checkbox custom-class="agree-checkbox" :value="agreeChecked" shape="square" @change="agreeChecked = !agreeChecked">
 					<text style="margin-left: 28rpx;">我已阅读并同意</text>
 					<text style="color: #DE1111;">《寄件条款》</text>
 				</van-checkbox>
 			</view>
-
 			<button @click="order" class="order-button" type="warn">下单</button>
 		</view>
-
 		<van-popup :close-on-click-overlay="true" position="bottom" :show="showBusiness" @close="closeBusiness">
 			<van-picker column-class="picker-column" toolbar-class="picker-toolbar" :show-toolbar="true" :columns="businessColumns"
 			 @cancel="onCancelBusiness" @confirm="onConfirmBusiness" :item-height="40" />
 		</van-popup>
-
 		<van-popup :close-on-click-overlay="true" position="bottom" :show="showTimes" @close="closeTimes">
 			<van-picker column-class="picker-column" toolbar-class="picker-toolbar" :show-toolbar="true" :columns="timesColumns"
 			 @cancel="onCancelTimes" @confirm="onConfirmTimes" :item-height="40" />
@@ -194,6 +183,7 @@
 
 			let receivingForm = vm.$store.getters.getReceivingForm;
 			console.log(receivingForm)
+			console.log(123132)
 			if (receivingForm) {
 				vm.form = receivingForm;
 
@@ -346,7 +336,6 @@
 
 						deliveryTimeCode: vm.form.deliveryTimeCode,
 						dateType: vm.getDateType(vm.form.deliveryTimeCode),
-
 						business: vm.form.business,
 						articleInfo: vm.form.articleInfo,
 						weight: vm.form.weight,
@@ -515,7 +504,6 @@
 			let vm = this;
 			vm.member = vm.$store.getters.getMember;
 			if (vm.member) {
-				console.log(vm.member)
 				if (!vm.form.sender) {
 					let obj = {
 						sender: vm.member.realName,
