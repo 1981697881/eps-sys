@@ -2,8 +2,8 @@
 	<view class="order-submission">
 		<view class="allAddress" :style="systemStore ? '' : 'padding-top: 0.2*100rpx'">
 			<view class="nav acea-row">
-				<view class="item font-color-red" :class="shipping_type === 0 ? 'on' : 'on2'" @click="addressType(0)" v-if="systemStore"></view>
-				<view class="item font-color-red" :class="shipping_type === 1 ? 'on' : 'on2'" @click="addressType(1)" v-if="systemStore && !isIntegral"></view>
+				<view class="item font-color-red" :class="shipping_type === 0 ? 'on' : 'on2'" @click="addressType(0)" v-if="systemStore && isExpress"></view>
+				<view class="item font-color-red" :class="shipping_type === 1 && isExpress ? 'on' : 'on2'" @click="addressType(1)" v-if="systemStore && !isIntegral && isSelfMention"></view>
 			</view>
 			<view class="address acea-row row-between-wrapper" v-if="shipping_type === 0" @click="addressTap">
 				<view class="addressCon" v-if="addressInfo.realName">
@@ -197,6 +197,8 @@ export default {
 			pinkId: 0,
 			active: 'weixin',/* _isWeixin ? 'weixin' : 'yue' */
 			showCoupon: false,
+			isSelfMention: true,
+			isExpress: true,
 			showAddress: false,
 			addressInfo: {},
 			couponId: 0,
@@ -211,6 +213,7 @@ export default {
 			cartPrice: [],
 			couponCartid: '',
 			systemStore: {},
+			isNo: 0,
 			shipping_type: 0,
 			contacts: '',
 			contactsTel: '',
@@ -254,10 +257,38 @@ export default {
 	onShow: function() {
 		let that = this;
 		this.$store.dispatch('getUser', true);
-		that.getCartInfo();
+		
 		if (that.$yroute.query.pinkid !== undefined) {
 			that.pinkId = that.$yroute.query.pinkid;
 		}
+		if(that.$yroute.query.isSelfMention){
+			if(that.$yroute.query.isSelfMention == "true"){
+				that.isSelfMention = true
+			}else{
+				that.isSelfMention = false
+			}
+			if(that.$yroute.query.isExpress == "true"){
+				that.isExpress = true
+			}else{
+				that.isExpress = false
+			}
+		}
+		if(that.isExpress == true){
+			that.shipping_type = 0
+		}else{
+			that.shipping_type = 1
+		}
+		if(that.$yroute.query.payType){
+			if(that.$yroute.query.payType == 'extreme'){
+				this.isNo = 0
+			}else{
+				this.isNo = 1
+			}
+		}
+		that.getCartInfo();
+		console.log(that.$yroute.query.payType == 'extreme')
+		console.log(this.isNo)
+		console.log(that.$yroute.query.payType)
 		this.isIntegral = that.$yroute.query.isIntegral == 'true';
 		this.useIntegral = this.isIntegral;
 		if (this.isIntegral) {
@@ -330,6 +361,7 @@ export default {
 			postOrderComputed(params.orderKey, {
 				addressId: this.addressInfo.id || '',
 				useIntegral: this.useIntegral ? 1 : 0,
+				isNo: this.isNo,
 				couponId: params.usableCoupon != null ? params.usableCoupon.id : 0,
 				shipping_type: parseInt(shipping_type) + 1
 			}).then(res => {
@@ -364,7 +396,7 @@ export default {
 					cartid = cartid + ',';
 				}
 			});
-			postOrderConfirm(cartid)
+			postOrderConfirm(cartid,this.isNo)
 				.then(res => {
 					this.offlinePayStatus = res.data.offline_pay_status;
 					this.orderGroupInfo = res.data;
@@ -610,10 +642,10 @@ export default {
 	line-height: 0.14 * 100rpx;
 }
 
-.order-submission .allAddress .nav .item:nth-of-type(2).on:before {
+/* .order-submission .allAddress .nav .item:nth-of-type(2).on:before {
 	content: '到店自提';
 	border-width: 0.4 * 100rpx;
-}
+} */
 
 .order-submission .allAddress .nav .item.on2 {
 	position: relative;
@@ -635,10 +667,10 @@ export default {
 	line-height: 0.14 * 100rpx;
 }
 
-.order-submission .allAddress .nav .item:nth-of-type(1).on2:before {
+/* .order-submission .allAddress .nav .item:nth-of-type(1).on2:before {
 	content: '快递配送';
 	border-width: 0.4 * 100rpx;
-}
+} */
 
 .order-submission .allAddress .address {
 	width: 6.91 * 100rpx;

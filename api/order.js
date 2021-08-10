@@ -8,9 +8,10 @@ import request from "@/utils/request";
  * @param cartId
  * @returns {*}
  */
-export function postOrderConfirm(cartId) {
+export function postOrderConfirm(cartId,isNo) {
 	return request.post("/mall/order/confirm", {
-		cartId
+		cartId:cartId,
+		isNo: isNo
 	});
 }
 

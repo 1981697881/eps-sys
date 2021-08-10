@@ -553,7 +553,10 @@ export default {
 			this.$yrouter.push({
 				path: '/pages/order/OrderSubmission/index',
 				query: {
-					id: JSON.stringify(arr)
+					id: JSON.stringify(arr),
+					isSelfMention: that.payType == "selfMention",
+					isExpress: that.payType != "selfMention",
+					payType: that.payType,
 				}
 			});
 			that.cart = [];
