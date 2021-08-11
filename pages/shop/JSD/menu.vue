@@ -3,7 +3,7 @@
 		<view class="main" v-if="goods.length">
 			<view class="nav">
 				<view class="coupon">
-					<text class="title">极速配送需配送费两小时内配送上门，</text>
+					<text class="title">零批商品，全场满29.9元起送</text>
 					<view class="iconfont iconarrow-right"></view>
 				</view>
 			</view>

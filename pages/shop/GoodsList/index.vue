@@ -71,7 +71,7 @@
 		</block>
 		<view class="nav acea-row row-middle">
 			<view v-if="type==1" class="item" :class="{ on: showPage }" @tap="togglePage">
-				<text class="name text-cut">{{ title ? title : '默认' }}</text>
+				<text class="name text-cut">{{ title ? title : '分类查找' }}</text>
 				<text class="iconfont triangle" :style="'display: inline-block;transform:rotate(' + (showPage ? '180' : '0') + 'deg);'"></text>
 			</view>
 			<view v-else class="item" :class="title ? 'font-color-red' : ''" >{{ title ? title : '默认' }}</view><!-- @click="set_where(0)" -->
@@ -830,7 +830,7 @@ export default {
 }
 .sub-menu-class {
 	width: 100%;
-	position: absolute;
+	position: fixed;
 	left: 0;
 	transform: translate3d(0, -100%, 0);
 	max-height: 345px;

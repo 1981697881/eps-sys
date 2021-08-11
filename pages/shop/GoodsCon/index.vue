@@ -371,10 +371,18 @@ export default {
       })
     },
     showChang: function(data) {
-      this.$yrouter.push({
+		uni.openLocation({
+		   latitude: parseFloat(data.latitude),
+		   longitude: parseFloat(data.longitude),
+		   name:data.name,
+		   title: data.name,
+		   address: data.detailedAddress,
+		   scale: 28
+		  })
+      /* this.$yrouter.push({
         path: '/pages/map/index',
         query: data,
-      })
+      }) */
     },
     updateTitle() {
       // document.title = this.storeInfo.storeName || this.$yroute.meta.title;
