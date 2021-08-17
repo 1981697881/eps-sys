@@ -20,7 +20,15 @@
 				</view>
 			</view>
 			<Banner v-if="item.type == 'banner'" :detail="banner" @getbgcolor="getbgcolor"></Banner>
-			<uni-notice-bar v-if="item.type == 'noticeBar'" scrollable="true" @click="goRoll(roll[0])" single="true" :speed="10" showIcon="true" :text="roll[0].info"></uni-notice-bar>
+			<uni-notice-bar
+				v-if="item.type == 'noticeBar'"
+				scrollable="true"
+				@click="goRoll(roll[0])"
+				single="true"
+				:speed="10"
+				showIcon="true"
+				:text="roll[0].info"
+			></uni-notice-bar>
 			<view class="content_box home_content_box" v-if="item.type == 'menu' && item.componentContent.menus">
 				<!-- 菜单 -->
 				<Menu :list="menus"></Menu>
@@ -65,7 +73,7 @@ import FirstNewProduct from './components/FirstNewProduct';
 import ProductsRecommended from './components/ProductsRecommended';
 /* import Live from './components/Live' */
 
-import { getHomeData, getShare, getCanvas,exchange } from '@/api/public';
+import { getHomeData, getShare, getCanvas, exchange } from '@/api/public';
 import cookie from '@/utils/store/cookie';
 import { isWeixin, handleUrlParam } from '@/utils/index';
 import itemContainer from '@/components/item-container.vue';
@@ -199,7 +207,20 @@ export default {
 			return style;
 		}
 	},
-	onLoad: function() {
+	onLoad: function(option) {
+		console.log(option);
+		if (option.pageType == 'coupon') {
+			exchange({ qrCode: option.code }).then(res => {
+				if (res.success) {
+					uni.showToast({
+						title: '兑换成功，请在个人中心优惠券中查看',
+						icon: 'none',
+						duration: 2000
+					});
+				}
+			});
+		}
+
 		this.getLocation();
 		let that = this;
 		// uni.showLoading({
@@ -326,9 +347,9 @@ export default {
 							break;
 						case 'coupon':
 							/* console.log(res.result.split("?")[0]) */
-							console.log(res)
-							exchange({qrCode:res.result.split("?")[0]}).then(res => {
-								if(res.success){
+							console.log(res);
+							exchange({ qrCode: res.result.split('?')[0] }).then(res => {
+								if (res.success) {
 									uni.showToast({
 										title: '兑换成功，请在个人中心优惠券中查看',
 										icon: 'none',
