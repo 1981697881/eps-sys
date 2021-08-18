@@ -4,7 +4,7 @@
 			<view class="head_box" v-if="item.type == 'header'" :style="{ background: bgcolor }" :class="{ active: bgcolor }">
 				<cu-custom :isBack="true" :bgColor="bgcolor">
 					<block slot="backText">
-						<text class="nav-title shopro-selector-rect">心水达</text>
+						<text class="nav-title shopro-selector-rect">心水达会员店</text>
 						<!-- {{ item.componentContent.title }} -->
 					</block>
 				</cu-custom>
@@ -208,7 +208,6 @@ export default {
 		}
 	},
 	onLoad: function(option) {
-		console.log(option);
 		if (option.pageType == 'coupon') {
 			exchange({ qrCode: option.code }).then(res => {
 				if (res.success) {

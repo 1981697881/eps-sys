@@ -51,7 +51,7 @@
             <view class="track-rcol">
               <view class="track-list">
                 <view>
-                  <view class="track-list-item" v-for="(item, logisticsListindex) in logisticsList" :key="logisticsListindex">
+                  <view @tap="telPhone(item, logisticsListindex)" :class="logisticsListindex === logisticsList.length - 1 && detail._status._title =='已完成'?'untrack-list-item':'track-list-item'" v-for="(item, logisticsListindex) in logisticsList" :key="logisticsListindex">
                     <view class="active" v-if="logisticsListindex === 0">
                       <view></view>
                       <i class="node-icon"></i>
@@ -63,8 +63,8 @@
                       <text class="txt">{{ item.acceptStation }}</text>
                       <text class="time">{{ item.acceptTime }}</text>
                     </view>
-                    <view v-if="logisticsListindex === logisticsList.length - 1" class="finall">
-                      <i class="div-spilander"></i>
+                    <view :class="detail._status._title =='已完成'?'active':''" v-if="logisticsListindex === logisticsList.length - 1" class="finall">
+                      <!-- <i class="div-spilander"></i> -->
                       <i class="node-icon"></i>
                       <text class="txt">{{ item.acceptStation }}</text>
                       <text class="time">{{ item.acceptTime }}</text>
@@ -102,6 +102,7 @@ export default {
       cartInfo: [],
       orderInfo: {},
       expressList: [],
+	  detail: {},
       loaded: false,
       logisticsList: [
         {
@@ -125,6 +126,16 @@ export default {
   },
   methods: {
     copyClipboard,
+	telPhone(item,index){
+		console.log(index)
+		if(index==3){
+			let str = item.acceptStation.split(',')[1].substr(1,11)
+			console.log(str)
+			uni.makePhoneCall({
+			    phoneNumber: str //仅为示例
+			});
+		}
+	},
     getExpressInfo() {
       let params = {
         orderCode: this.id,
@@ -133,7 +144,7 @@ export default {
       }
       express(params)
         .then(res => {
-          this.logisticsList = res.data.traces.reverse()
+          this.logisticsList = res.data.Traces /* .reverse() */
         })
         .catch(err => {
           uni.showToast({
@@ -161,6 +172,7 @@ export default {
             deliverySn: res.data.deliverySn,
           }
           this.getExpressInfo()
+		  this.detail = res.data
           // const result = res.data.express.result || {};
           // this.cartInfo = res.data.order.cartInfo;
           // this.expressList = result.list || [];
@@ -301,7 +313,10 @@ ul {
   border-left: 1px solid #d9d9d9;
   color: #999;
 }
-
+.untrack-list-item {
+	position: relative;
+	color: #999;
+}
 .track-list view.first {
   color: red;
   padding-top: 0;
@@ -312,7 +327,7 @@ ul {
 
 .track-list view.node-icon {
   position: absolute;
-  left: -6.5px;
+  left: -4.5px;
   border-radius: 50%;
   width: 0.2 * 100rpx;
   height: 0.2 * 100rpx;

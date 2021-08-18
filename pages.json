@@ -3,7 +3,7 @@
 		{
 			"path": "pages/Loading/index",
 			"style": {
-				"navigationBarTitleText": "心水达商城"
+				"navigationBarTitleText": "心水达会员店"
 			}
 		},
 		{
@@ -22,7 +22,7 @@
 		{
 			"path": "pages/home/index",
 			"style": {
-				"navigationBarTitleText": "心水达商城",
+				"navigationBarTitleText": "心水达会员店",
 				"navigationBarTextStyle": "white",
 				// "enablePullDownRefresh": true,
 				"navigationStyle": "custom"
@@ -83,7 +83,7 @@
 			}, {
 				"path": "JSD/menu",
 				"style": {
-					"navigationBarTitleText": "极速达"
+					"navigationBarTitleText": "零批商品"
 				}
 			},
 			{
@@ -575,7 +575,7 @@
 	},
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
-		"navigationBarTitleText": "心水达",
+		"navigationBarTitleText": "心水达会员店",
 		"navigationBarBackgroundColor": "#F8F8F8",
 		"backgroundColor": "#F8F8F8",
 		"navigationStyle": "default"

@@ -260,9 +260,7 @@ export default {
 			let that = this;
 			orderList.forEach((item,index)=>{
 				clearInterval(item.countDownFn);
-				console.log(item.putDatetime)
 				if(item.putDatetime){
-					console.log(123)
 					item.countDownFn = setInterval(() => {
 						if (that.countDownFun(item.putDatetime) == '订单已超时') {
 							clearInterval(item.countDownFn)

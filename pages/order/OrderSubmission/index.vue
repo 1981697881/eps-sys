@@ -286,9 +286,6 @@ export default {
 			}
 		}
 		that.getCartInfo();
-		console.log(that.$yroute.query.payType == 'extreme')
-		console.log(this.isNo)
-		console.log(that.$yroute.query.payType)
 		this.isIntegral = that.$yroute.query.isIntegral == 'true';
 		this.useIntegral = this.isIntegral;
 		if (this.isIntegral) {
