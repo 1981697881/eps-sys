@@ -238,6 +238,8 @@
 											url: '/pages/delivery/' + jump + '/' + jump + '?pageFlag=index'
 										});
 									}
+									console.log(vm.member)
+									console.log(vm.form.sender)
 									if (vm.member) {
 										if (!vm.form.sender) {
 											let obj = {
@@ -577,7 +579,7 @@
 		created() {
 			let vm = this;
 			vm.member = vm.$store.getters.getMember;
-			/* if (vm.member) {
+			if (vm.member) {
 				if (!vm.form.sender) {
 					let obj = {
 						sender: vm.member.realName,
@@ -603,7 +605,7 @@
 					
 				}
 				
-			} */
+			}
 
 		}
 	}

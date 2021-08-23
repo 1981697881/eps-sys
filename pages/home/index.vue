@@ -346,8 +346,7 @@ export default {
 							break;
 						case 'coupon':
 							/* console.log(res.result.split("?")[0]) */
-							console.log(res);
-							exchange({ qrCode: res.result.split('?')[0] }).then(res => {
+							exchange({ qrCode: this.getQueryVariable('code',res.result) }).then(res => {
 								if (res.success) {
 									uni.showToast({
 										title: '兑换成功，请在个人中心优惠券中查看',
@@ -376,6 +375,17 @@ export default {
 					}
 				}
 			});
+		},
+		getQueryVariable(variable,url) {
+			var query = url;
+			var vars = query.split('&');
+			for (var i = 0; i < vars.length; i++) {
+				var pair = vars[i].split('=');
+				if (pair[0] == variable) {
+					return pair[1];
+				}
+			}
+			return false;
 		},
 		getbgcolor(e) {
 			this.bgcolor = e;

@@ -1,5 +1,5 @@
-const root = 'http://test.gzfzdev.com:5030';
-/* const root = 'http://zhongyao.gzfzdev.com:50025/web'; */
+/* const root = 'http://test.gzfzdev.com:5035'; */
+const root = 'http://xsd.gzfzdev.com:50025/xinshuida';
 
 /* const root = 'https://epssys.kuyuntech.com'; */
 // const root = 'https://iyoze.utools.club';

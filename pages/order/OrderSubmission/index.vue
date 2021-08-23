@@ -208,7 +208,7 @@ export default {
 			useIntegral: false,
 			orderPrice: {
 				payPrice: '计算中'
-			},
+			},	
 			mark: '',
 			cartPrice: [],
 			couponCartid: '',

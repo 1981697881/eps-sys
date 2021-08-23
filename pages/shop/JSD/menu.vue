@@ -277,20 +277,20 @@ export default {
 			return this.cart.reduce((acc, cur) => acc + cur.number * cur.price, 0);
 		},
 		disabledPay() {
-			if(this.payType == 'selfMention'){
-				return false;
-			}else{
+			if(this.payType == 'ordinary'){
 				//是否达到起送价
 				return this.getCartGoodsPrice < Number(this.goods[0].startDeliveryCount) ? true : false;
+			}else{
+				return false;
 				
 			}
 		},
 		spread() {
-			if(this.payType == 'selfMention'){
-				return 0;
-			}else{
+			if(this.payType == 'ordinary'){
 				//差多少元起送
 				return parseFloat((Number(this.goods[0].startDeliveryCount) - this.getCartGoodsPrice).toFixed(2));
+			}else{
+				return 0;
 				
 			}
 		}
