@@ -277,26 +277,24 @@ export default {
 			return this.cart.reduce((acc, cur) => acc + cur.number * cur.price, 0);
 		},
 		disabledPay() {
-			if(this.payType == 'ordinary'){
+			if (this.payType == 'ordinary') {
 				//是否达到起送价
 				return this.getCartGoodsPrice < Number(this.goods[0].startDeliveryCount) ? true : false;
-			}else{
+			} else {
 				return false;
-				
 			}
 		},
 		spread() {
-			if(this.payType == 'ordinary'){
+			if (this.payType == 'ordinary') {
 				//差多少元起送
 				return parseFloat((Number(this.goods[0].startDeliveryCount) - this.getCartGoodsPrice).toFixed(2));
-			}else{
+			} else {
 				return 0;
-				
 			}
 		}
 	},
 	methods: {
-		selPay(e){
+		selPay(e) {
 			let that = this;
 			that.payType = e.detail.value;
 		},
@@ -441,7 +439,7 @@ export default {
 		},
 		getGoodSelectedPrice(good) {
 			let obj = {};
-			if (good.id) {	
+			if (good.id) {
 				let value = this.getGoodSelectedProps(good);
 				good.productValue.forEach((item, index) => {
 					if (item.sku == value) {
@@ -512,6 +510,7 @@ export default {
 			uni.showLoading({ title: '加载中' });
 			let that = this,
 				list = that.cart,
+				msg = '',
 				id = [];
 			for (let i = 0; i < list.length; i++) {
 				await postCartAdd({
@@ -533,20 +532,30 @@ export default {
 						}
 					})
 					.catch(error => {
+						msg = error.msg;
 						uni.showToast({
-							title: error.msg || error.response.data.msg || error.response.data.message,
+							title: error.msg,
 							icon: 'none',
 							duration: 2000
 						});
 					});
 			}
 			if (id.length === 0) {
-				uni.showToast({
-					title: '请选择产品',
-					icon: 'none',
-					duration: 2000
-				});
-				return;
+				if (msg != '') {
+					uni.showToast({
+						title: msg,
+						icon: 'none',
+						duration: 2000
+					});
+					return;
+				} else {
+					uni.showToast({
+						title: '请选择产品',
+						icon: 'none',
+						duration: 2000
+					});
+					return;
+				}
 			}
 			let arr = [id];
 			/* uni.setStorageSync('cart', JSON.parse(JSON.stringify(this.cart))); */
@@ -554,9 +563,9 @@ export default {
 				path: '/pages/order/OrderSubmission/index',
 				query: {
 					id: JSON.stringify(arr),
-					isSelfMention: that.payType == "selfMention",
-					isExpress: that.payType != "selfMention",
-					payType: that.payType,
+					isSelfMention: that.payType == 'selfMention',
+					isExpress: that.payType != 'selfMention',
+					payType: that.payType
 				}
 			});
 			that.cart = [];

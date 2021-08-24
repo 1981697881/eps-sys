@@ -40,7 +40,7 @@
 					</view>
 				</view>
 
-				<view class="form-item-border"></view>
+				<!-- <view class="form-item-border"></view>
 				<view @click="showSelectDeliveryMethod" class="uni-flex  uni-row form-item">
 					<view class="flex-item form-item-label">派送方式</view>
 					<view class="flex-item uni-row form-item-arrow">
@@ -48,7 +48,7 @@
 						<text v-else class="form-item-arrow-text color28">{{ selectDeliveryMethodName }}</text>
 						<image class="form-icon-arrow" src="/static/img/arrow_1.png"></image>
 					</view>
-				</view>
+				</view> -->
 				
 				<view class="form-item-border"></view>
 				<view v-if="showDeliveryTime" class="uni-flex  uni-row form-item" @tap="goToNoDeliveryTime">

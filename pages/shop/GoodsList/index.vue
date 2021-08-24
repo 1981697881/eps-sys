@@ -103,7 +103,7 @@
 						:hover-start-time="150"
 						@tap="isIntegral !== 'true' ? goGoodsCon(item) : goIntegralGoodsCon(item)"
 					>
-						<image :src="item.image" class="tui-pro-img" :class="[Switch ? 'tui-proimg-list' : '']" mode="widthFix" />
+						<image :src="item.image" class="tui-pro-img" :class="[Switch ? 'tui-proimg-list' : '']" mode="aspectFill" />
 						<view class="tip one-t" v-if="item.productText">{{ item.productText }}</view>
 						<view class="tui-pro-content">
 							<view class="tui-pro-tit">{{ item.storeName }}</view>
@@ -129,7 +129,7 @@
 						:hover-start-time="150"
 						@tap="isIntegral !== 'true' ? goGoodsCon(item) : goIntegralGoodsCon(item)"
 					>
-						<image :src="item.image" class="tui-pro-img" :class="[Switch ? 'tui-proimg-list' : '']" mode="widthFix" />
+						<image :src="item.image" class="tui-pro-img" :class="[Switch ? 'tui-proimg-list' : '']" mode="aspectFill" />
 						<view class="tip one-t" v-if="item.productText">{{ item.productText }}</view>
 						<view class="tui-pro-content">
 							<view class="tui-pro-tit">{{ item.storeName }}</view>
@@ -159,7 +159,7 @@
 						:hover-start-time="150"
 						@tap="isIntegral !== 'true' ? goGoodsCon(item) : goIntegralGoodsCon(item)"
 					>
-						<image :src="item.image" class="tui-pro-img" :class="[Switch ? 'tui-proimg-list' : '']" mode="widthFix" />
+						<image :src="item.image" class="tui-pro-img" :class="[Switch ? 'tui-proimg-list' : '']" mode="aspectFill" />
 						<view class="tip one-t" v-if="item.productText">{{ item.productText }}</view>
 						<view class="tui-pro-content">
 							<view class="tui-pro-tit">{{ item.storeName }}</view>
@@ -184,7 +184,7 @@
 						:hover-start-time="150"
 						@tap="isIntegral !== 'true' ? goGoodsCon(item) : goIntegralGoodsCon(item)"
 					>
-						<image :src="item.image" class="tui-pro-img" :class="[Switch ? 'tui-proimg-list' : '']" mode="widthFix" />
+						<image :src="item.image" class="tui-pro-img" :class="[Switch ? 'tui-proimg-list' : '']" mode="aspectFill" />
 						<view class="tip one-t" v-if="item.productText">{{ item.productText }}</view>
 						<view class="tui-pro-content">
 							<view class="tui-pro-tit">{{ item.storeName }}</view>

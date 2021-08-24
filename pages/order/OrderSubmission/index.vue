@@ -50,15 +50,15 @@
 				</view>
 				<view class="item acea-row row-between-wrapper" v-if="shipping_type === 0">
 					<view>快递费用</view>
-					<view class="discount">{{ item.priceGroup.storePostage > 0 ? item.priceGroup.storePostage : '免运费' }}</view>
+					<view class="discount">{{ item.cartPrice.payPostage > 0 ? item.cartPrice.payPostage : '免运费' }}</view>
 				</view>
 				<view class="item">
 					<view>订单备注</view>
 					<textarea v-model="mark"></textarea>
 				</view>
 				<view class="totalPrice" v-if="!isIntegral">
-					共{{ item.cartInfo.length || 0 }}件商品，小计
-					<text class="money font-color-red">原价 ￥{{ item.priceGroup.totalPrice || 0 }} 优惠价 ￥{{ item.cartPrice.payPrice || 0 }}</text>
+					共{{ item.cartInfo.length || 0 }}件商品，小计 <!-- 原价 优惠价 ￥{{ item.cartPrice.payPrice || 0 }} -->
+					<text class="money font-color-red">￥{{ item.priceGroup.totalPrice || 0 }} </text>
 				</view>
 			</view>
 		</block>
