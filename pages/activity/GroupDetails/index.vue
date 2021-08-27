@@ -173,7 +173,7 @@
     </view>
 
     <!-- 商品信息弹窗 -->
-    <ProductWindow v-if="cartNum" v-on:changeFun="changeFun" :attr="attr" :cartNum="cartNum"></ProductWindow>
+    <ProductWindow :startNum="storeInfo.startCount" v-if="cartNum" v-on:changeFun="changeFun" :attr="attr" :cartNum="cart_num"></ProductWindow>
     <StorePoster v-on:setPosterImageStatus="setPosterImageStatus" :posterImageStatus="posterImageStatus" :posterData="posterData"></StorePoster>
   </view>
 </template>
@@ -242,6 +242,7 @@ export default {
         productSelect: {},
       },
       cartNum: 1,
+      cart_num: 1,
       userCollect: false,
     }
   },
@@ -314,6 +315,7 @@ export default {
         that.$set(that, 'reply', [res.data.reply])
         that.$set(that, 'replyCount', res.data.replyCount)
         that.$set(that, 'replyChance', res.data.replyChance)
+		that.$set(that, 'cart_num', res.data.storeInfo.startCount)
         that.posterData.image = that.storeInfo.image
         if (that.storeInfo.title.length > 30) {
           that.posterData.title = that.storeInfo.title.substring(0, 30) + '...'
@@ -343,7 +345,7 @@ export default {
         this.$set(this.attr.productSelect, 'price', productSelect.pinkPrice)
         this.$set(this.attr.productSelect, 'stock', productSelect.pinkStock)
         this.$set(this.attr.productSelect, 'unique', productSelect.unique)
-        this.$set(this.attr.productSelect, 'cart_num', 1)
+        this.$set(this.attr.productSelect, 'cart_num', this.storeInfo.startCount)
         this.$set(this, 'attrValue', value.sort().join(','))
         this.$set(this, 'attrTxt', '已选择')
       } else if (!productSelect && productAttr.length) {
@@ -361,7 +363,7 @@ export default {
         this.$set(this.attr.productSelect, 'price', this.storeInfo.pinkPrice)
         this.$set(this.attr.productSelect, 'stock', this.storeInfo.pinkStock)
         this.$set(this.attr.productSelect, 'unique', this.storeInfo.unique || '')
-        this.$set(this.attr.productSelect, 'cart_num', 1)
+        this.$set(this.attr.productSelect, 'cart_num', this.storeInfo.startCount)
         this.$set(this, 'attrValue', '')
         this.$set(this, 'attrTxt', '请选择')
       }
@@ -410,19 +412,49 @@ export default {
       var that = this
       that.attr.cartAttr = res
     },
-    ChangeCartNum: function(res) {
-      var that = this
+    ChangeCartNum: function(changeValue ) {
+     /* var that = this
       that.attr.productSelect.cart_num = 1
       that.cartNum = 1
       uni.showToast({
         title: '每人每次限购1' + that.storeInfo.unitName,
         icon: 'none',
         duration: 2000,
-      })
+      }) */
+	  //changeValue:是否 加|减
+	  //获取当前变动属性
+	  let productSelect = this.productValue[this.attrValue]
+	  //如果没有属性,赋值给商品默认库存
+	  if (productSelect === undefined && !this.attr.productAttr.length) {
+	    productSelect = this.attr.productSelect
+	  }
+	  //无属性值即库存为0；不存在加减；
+	  if (productSelect === undefined) return
+	  let stock = productSelect.pinkStock || 0
+	  let num = this.attr.productSelect
+	  if (changeValue) {
+	    num.cart_num++
+	    if (num.cart_num > stock) {
+	      this.$set(this.attr.productSelect, 'cart_num', stock)
+	      this.$set(this, 'cart_num', stock)
+	    } else {
+	      this.$set(this.attr.productSelect, 'cart_num', num.cart_num)
+	      this.$set(this, 'cart_num', num.cart_num)
+	    }
+	  } else {
+	    num.cart_num--
+	    if (num.cart_num < this.storeInfo.startCount) {
+	      this.$set(this.attr.productSelect, 'cart_num', this.storeInfo.startCount)
+	      this.$set(this, 'cart_num', this.storeInfo.startCount)
+	    } else {
+	      this.$set(this.attr.productSelect, 'cart_num', num.cart_num)
+	      this.$set(this, 'cart_num', num.cart_num)
+	    }
+	  }
     },
     //选择属性；
     ChangeAttr: function(res) {
-      // 修改了规格
+      // 修改了规格 
       let productSelect = this.productValue[res.value]
       if (productSelect) {
         this.attr.productAttr[res.indexw].index = res.indexn
@@ -430,7 +462,7 @@ export default {
         this.$set(this.attr.productSelect, 'price', productSelect.pinkPrice)
         this.$set(this.attr.productSelect, 'stock', productSelect.pinkStock)
         this.$set(this.attr.productSelect, 'unique', productSelect.unique)
-        this.$set(this.attr.productSelect, 'cart_num', 1)
+        this.$set(this.attr.productSelect, 'cart_num', this.storeInfo.startCount)
         this.$set(this, 'attrValue', res.value)
         this.$set(this, 'attrTxt', '已选择')
       } else {

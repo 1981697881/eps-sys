@@ -29,13 +29,11 @@
 							<image class="flex-item calendar-icon" src="/static/img/icon_7.png"></image>
 							<view class="flex-item calendar-icon-text">预约时间：{{item.receivingTimes}}</view>
 						</view>
-
 						<view v-if="item.payState === 'PAID' && item.state === 'RECEIVED'" class="form-item-border"></view>
-						<view v-if="item.payState === 'PAID' && item.state === 'RECEIVED'" class="calendar-icon-box uni-flex uni-row" style="margin-top: 30rpx;">
+						<view @tap="copyBtn(item.trackingNumber)" v-if="item.payState === 'PAID' && item.state === 'RECEIVED'" class="calendar-icon-box uni-flex uni-row" style="margin-top: 30rpx;">
 							<image class="flex-item calendar-icon" src="/static/img/icon_9.png"></image>
 							<view class="flex-item calendar-icon-text">快递单号：{{item.trackingNumber}}</view>
 						</view>
-
 						<view v-if="item.payState === 'PAID' && item.state === 'RECEIVED' && item.verifyState === 'VERIFIED'" class="type-box"
 						 style="background-color:#999999">已寄件</view>
 						<view v-if="item.payState === 'PAID' && item.state === 'RECEIVED' && item.verifyState === 'NOT_VERIFIED'" class="type-box"
@@ -96,6 +94,18 @@
 			this.loadNextList()
 		},
 		methods: {
+			//点击一键复制
+			copyBtn(e) {
+			    uni.setClipboardData({
+			      //准备复制的数据内容
+			      data: e,
+			      success: function (res) {
+			        uni.showToast({
+			          title: '复制成功',
+			        });
+			      }
+			    });
+			},
 			loadNextList() {
 				let vm = this;
 				let member = vm.$store.getters.getMember;
@@ -322,8 +332,8 @@
 				}
 
 				.courier-waiter {
-					height: 40rpx;
-					line-height: 40rpx;
+					/* height: 40rpx;
+					line-height: 40rpx; */
 					padding: 28rpx 0rpx 28rpx 40rpx;
 					background-color: #FFF9EF;
 					color: #E88500;

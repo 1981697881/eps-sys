@@ -274,7 +274,7 @@ export default {
 		},
 		getCartGoodsPrice() {
 			//计算购物车总价
-			return this.cart.reduce((acc, cur) => acc + cur.number * cur.price, 0);
+			return this.cart.reduce((acc, cur) => ((acc*1000) + (cur.number * (cur.price*1000)))/1000, 0);
 		},
 		disabledPay() {
 			if (this.payType == 'ordinary') {

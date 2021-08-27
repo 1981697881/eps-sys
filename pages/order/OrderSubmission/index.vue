@@ -254,10 +254,9 @@ export default {
 			});
 		}
 	},
-	onShow: function() {
+	onLoad: function() {
 		let that = this;
 		this.$store.dispatch('getUser', true);
-		
 		if (that.$yroute.query.pinkid !== undefined) {
 			that.pinkId = that.$yroute.query.pinkid;
 		}
@@ -527,7 +526,7 @@ export default {
 				from.from = 'app';
 			}
 			// #ifdef MP-WEIXIN
-			subscribeMessage();
+			/* subscribeMessage(); */
 			// #endif
 			let params = [];
 			this.orderGroupInfo.forEach((item, index) => {

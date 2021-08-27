@@ -80,7 +80,7 @@
 						<view class="flex-item courier-desc" style="margin-bottom: 40rpx;">拒收时间：{{item.signedTime}}</view>
 						<view class="type-box" style="background-color: #DE1111;">已拒收</view>
 					</view>
-
+					
 					<view v-if="item.state === 'EXCEPTION'">
 						<view class="uni-flex flex-item uni-row courier-info-box">
 							<view class="courier-name flex-item">
@@ -148,6 +148,7 @@
 			vm.setMyCourierButtonTopMargin();
 		},
 		methods: {
+			
 			phoneCall(item) {
 				uni.makePhoneCall({
 				    phoneNumber: item.deliverymanMobileNumber

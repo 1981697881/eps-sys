@@ -30,7 +30,7 @@
       <view class="cart">
         <view class="title">数量</view>
         <view class="carnum acea-row row-left">
-          <view class="item reduce" :class="startNum<= cartNum  ? 'on' : ''" @click="CartNumDes">-</view>
+          <view class="item reduce" :class="startNum>= cartNum  ? 'on' : ''" @click="CartNumDes">-</view>
           <view class="item num">{{ cartNum }}</view>
           <view class="item plus" :class="cartNum >= attr.productSelect.stock ? 'on' : ''" @click="CartNumAdd">+</view>
         </view>
@@ -68,6 +68,7 @@ export default {
 	}
   },
   mounted: function() {
+	 
   },
   watch: {
     attr(nextAttr) {},
@@ -78,10 +79,10 @@ export default {
     },
     CartNumDes: function() {
       this.$emit('changeFun', { action: 'ChangeCartNum', value: false })
-    },
+	},
     CartNumAdd: function() {
       this.$emit('changeFun', { action: 'ChangeCartNum', value: 1 })
-    },
+	},
     tapAttr: function(indexw, indexn) {
       // 修改商品规格不生效的原因：
       // H5端下面写法，attr更新，但是除H5外其他端不支持，

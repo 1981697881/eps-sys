@@ -108,7 +108,7 @@
       </view>
     </view>
 
-    <ProductWindow v-on:changeFun="changeFun" :attr="attr" :cartNum="cartNum"></ProductWindow>
+    <ProductWindow :startNum="storeInfo.startCount" v-on:changeFun="changeFun" :attr="attr" :cartNum="cart_num"></ProductWindow>
     <StorePoster v-on:setPosterImageStatus="setPosterImageStatus" :posterImageStatus="posterImageStatus" :posterData="posterData"></StorePoster>
   </view>
 </template>
@@ -155,6 +155,7 @@ export default {
       replyCount: 0,
       reply: [],
       cartNum: 1,
+      cart_num: 1,
       attrTxt: '请选择',
       productValue: [],
       attrValue: '',
@@ -167,12 +168,11 @@ export default {
       userCollect: false,
     }
   },
-  onShow: function() {
+  mounted: function() {
     this.mountedStart()
   },
   methods: {
     formatPrice(price, index) {
-      console.log(price)
       if (price) {
         return price.split('.')[index]
       }
@@ -239,6 +239,7 @@ export default {
         that.$set(that, 'imgUrls', res.data.storeInfo.sliderImageArr)
         that.$set(that, 'replyCount', res.data.replyCount)
         that.$set(that, 'reply', res.data.reply)
+		that.$set(that, 'cart_num', res.data.storeInfo.startCount)
         that.posterData.image = that.storeInfo.image_base
         that.updateTitle()
         if (that.storeInfo.title.length > 30) {
@@ -277,7 +278,7 @@ export default {
         this.$set(this.attr.productSelect, 'price', productSelect.seckillPrice)
         this.$set(this.attr.productSelect, 'stock', productSelect.seckillStock)
         this.$set(this.attr.productSelect, 'unique', productSelect.unique)
-        this.$set(this.attr.productSelect, 'cart_num', 1)
+         this.$set(this.attr.productSelect, 'cart_num', this.storeInfo.startCount)
         this.$set(this, 'attrValue', value.sort().join(','))
         this.$set(this, 'attrTxt', '已选择')
       } else if (!productSelect && productAttr.length) {
@@ -295,7 +296,7 @@ export default {
         this.$set(this.attr.productSelect, 'price', this.storeInfo.seckillPrice)
         this.$set(this.attr.productSelect, 'stock', this.storeInfo.seckillStock)
         this.$set(this.attr.productSelect, 'unique', this.storeInfo.unique || '')
-        this.$set(this.attr.productSelect, 'cart_num', 1)
+         this.$set(this.attr.productSelect, 'cart_num', this.storeInfo.startCount)
         this.$set(this, 'attrValue', '')
         this.$set(this, 'attrTxt', '请选择')
       }
@@ -326,7 +327,40 @@ export default {
     //     }
     //   }
     // },
-    ChangeCartNum: function(changeValue) {
+	//购物车；
+	ChangeCartNum: function(changeValue) {
+	  //changeValue:是否 加|减
+	  //获取当前变动属性
+	  let productSelect = this.productValue[this.attrValue]
+	  //如果没有属性,赋值给商品默认库存
+	  if (productSelect === undefined && !this.attr.productAttr.length) {
+	    productSelect = this.attr.productSelect
+	  }
+	  //无属性值即库存为0；不存在加减；
+	  if (productSelect === undefined) return
+	  let stock = productSelect.seckillStock || 0
+	  let num = this.attr.productSelect
+	  if (changeValue) {
+	    num.cart_num++
+	    if (num.cart_num > stock) {
+	      this.$set(this.attr.productSelect, 'cart_num', stock)
+	      this.$set(this, 'cart_num', stock)
+	    } else {
+	      this.$set(this.attr.productSelect, 'cart_num', num.cart_num)
+	      this.$set(this, 'cart_num', num.cart_num)
+	    }
+	  } else {
+	    num.cart_num--
+	    if (num.cart_num < this.storeInfo.startCount) {
+	      this.$set(this.attr.productSelect, 'cart_num', this.storeInfo.startCount)
+	      this.$set(this, 'cart_num', this.storeInfo.startCount)
+	    } else {
+	      this.$set(this.attr.productSelect, 'cart_num', num.cart_num)
+	      this.$set(this, 'cart_num', num.cart_num)
+	    }
+	  }
+	},
+    /* ChangeCartNum: function(changeValue) {
       //changeValue:是否 加|减
       //获取当前变动属性
       let productSelect = this.productValue[this.attrValue]
@@ -350,14 +384,14 @@ export default {
       } else {
         num.cart_num--
         if (num.cart_num < 1) {
-          this.$set(this.attr.productSelect, 'cart_num', 1)
+		  this.$set(this.attr.productSelect, 'cart_num', this.storeInfo.startCount)
           this.$set(this, 'cartNum', 1)
         } else {
           this.$set(this.attr.productSelect, 'cart_num', num.cart_num)
           this.$set(this, 'cartNum', num.cart_num)
         }
       }
-    },
+    }, */
     //选择属性；
     ChangeAttr: function(res) {
       // 修改了规格
@@ -368,7 +402,7 @@ export default {
         this.$set(this.attr.productSelect, 'price', productSelect.seckillPrice)
         this.$set(this.attr.productSelect, 'stock', productSelect.seckillStock)
         this.$set(this.attr.productSelect, 'unique', productSelect.unique)
-        this.$set(this.attr.productSelect, 'cart_num', 1)
+         this.$set(this.attr.productSelect, 'cart_num', this.storeInfo.startCount)
         this.$set(this, 'attrValue', res.value)
         this.$set(this, 'attrTxt', '已选择')
       } else {

@@ -307,6 +307,7 @@ export const login = () => {
 						console.log('授权通过')
 						console.log('开始获取用户信息')
 						uni.getUserInfo({
+							/* provider: 'weixin', */
 							provider: provider,
 							success: function(user) {
 								console.log('获取用户信息成功')
