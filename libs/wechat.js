@@ -66,7 +66,7 @@ export const weappPay = option => {
           resolve(success)
         }, 3000)
         // #ifdef MP-WEIXIN
-        subscribeMessage()
+       /* subscribeMessage() */
         // #endif
       },
       fail: error => {

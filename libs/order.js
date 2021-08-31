@@ -174,9 +174,50 @@ export function handleOrderPayResults(data, type, payType, isPreSale) {
 			case "WECHAT_PAY":
 				weappPay(data.result.jsConfig).then(res => {
 					resolve()
-					goOrderDetails(data.result, type, isPreSale)
 					// #ifdef MP-WEIXIN
-					uni.showModal({
+					uni.getSetting({
+					  withSubscriptions: true,
+					  success(res) {
+					    var itemSettings = res.subscriptionsSetting.itemSettings;
+					    if (itemSettings) {
+					      if (itemSettings['G0TXSlQpzkEgnfjlwKap5iUmDpN5vF0eYAoE8E9m3FQ']=='accept') {
+					        goOrderDetails(data.result, type, isPreSale)
+					      }else{
+							  uni.showModal({
+							  	title: '温馨提示',
+							  	content: '为更好的促进您与买家的交流，成交时向您发送消息',
+							  	confirmText: "同意",
+							  	cancelText: "拒绝",
+							  	success: function(res) {
+							  		if (res.confirm) {
+							  			Subscribe(['G0TXSlQpzkEgnfjlwKap5iUmDpN5vF0eYAoE8E9m3FQ','yKNOPC0o_5Nq_G21CMgk6PSo9mxL-EkfqgoxLIsubBk','o8ZksnkELUt6wLuqKouZi8UiVCmPTv69fUten0qg6po']).finally(mess=>{
+							  				console.log(mess)
+							  				goOrderDetails(data.result, type, isPreSale)
+							  			})
+							  		} else if (res.cancel) {
+							  			///显示第二个弹说明一下
+							  			uni.showModal({
+							  				title: '温馨提示',
+							  				content: '拒绝后您将无法获取实时的与卖家（买家）的交易消息',
+							  				confirmText: "知道了",
+							  				showCancel: false,
+							  				success: function(res) {
+							  					///点击知道了的后续操作 
+							  					///如跳转首页面 
+							  				}
+							  			});
+							  		}
+							  	}
+							  });
+						  }
+					    }
+					  }
+					})
+					/* Subscribe(['G0TXSlQpzkEgnfjlwKap5iUmDpN5vF0eYAoE8E9m3FQ','yKNOPC0o_5Nq_G21CMgk6PSo9mxL-EkfqgoxLIsubBk','o8ZksnkELUt6wLuqKouZi8UiVCmPTv69fUten0qg6po']).finally(mess=>{
+						console.log(mess)
+						goOrderDetails(data.result, type, isPreSale)
+					}) */
+					/* uni.showModal({
 						title: '温馨提示',
 						content: '为更好的促进您与买家的交流，成交时向您发送消息',
 						confirmText: "同意",
@@ -202,7 +243,7 @@ export function handleOrderPayResults(data, type, payType, isPreSale) {
 								});
 							}
 						}
-					});
+					}); */
 					// #endif
 				}).catch(res => {
 					resolve()
@@ -219,47 +260,49 @@ export function handleOrderPayResults(data, type, payType, isPreSale) {
 		}
 	})
 }
+export const Subscribe = (tmplIds = []) => {
+    return new Promise((resolve, reject) => {
+        // 判断是否为微信小程序，不是的不做订阅进行跳过
+        let isWx = false;
+        // #ifdef MP-WEIXIN
+        isWx = true;
+        // #endif
+        if (!isWx) resolve(1);
+        // 判断基本库是否在2.8.3，低于的暂时不做订阅进行跳过
+        const versionCan = compareVersion("2.8.3");
+        if (versionCan === -1) resolve(1);
+        // 主流程
+        subscribeMessage(tmplIds, resolve, reject)
+    })
 
-export function subscribeMessage() {
-	return new Promise((resolve, reject) => {
-		// 判断是否为微信小程序，不是的不做订阅进行跳过
-		let isWx = false;
-		// #ifdef MP-WEIXIN
-		isWx = true;
-		// #endif
-		if (!isWx) resolve(1);
-		// 判断基本库是否在2.8.3，低于的暂时不做订阅进行跳过
-		const versionCan = compareVersion("2.8.3");
-		if (versionCan === -1) resolve(1);
-		// 主流程
-		let tmplIds = ['G0TXSlQpzkEgnfjlwKap5iUmDpN5vF0eYAoE8E9m3FQ',
-			'yKNOPC0o_5Nq_G21CMgk6PSo9mxL-EkfqgoxLIsubBk',
-			'o8ZksnkELUt6wLuqKouZi8UiVCmPTv69fUten0qg6po'
-		];
-		uni.requestSubscribeMessage({
-			tmplIds: tmplIds,
-			success: async res => {
-				// 检查订阅数量
-				let checkSubscribeBool = await checkSubscribeAll(tmplIds, res);
-				if (checkSubscribeBool) {
-					// 用户完成订阅
-					console.log("[用户完成订阅]")
-					resolve(1);
-				} else {
-					// 跳去检查永久关闭订阅还是普通关闭订阅
-					guidSubscribeMessageAuthAfter(tmplIds, resolve, reject);
+}
+export function subscribeMessage(tmplIds, resolve, reject) {
+	 //判断是否已经订阅
+	   
+	uni.requestSubscribeMessage({
+	        tmplIds,
+	        success: async res => {
+	            // 检查订阅数量
+	            let checkSubscribeBool = await checkSubscribeAll(tmplIds, res);
+	            if (checkSubscribeBool) {
+	                // 用户完成订阅
+	                console.log("[用户完成订阅]")
+	                resolve(1);
+	            } else {
+	                // 跳去检查永久关闭订阅还是普通关闭订阅
+	                guidSubscribeMessageAuthAfter(tmplIds, resolve, reject);
+	            }
+	        },
+	        fail: res => {
+	            console.log(res, "订阅，失败");
+	            if (res.errCode == 20004) {
+	                // console.log(res, 'fail:用户关闭了主开关，无法进行订阅,引导开启---');
+	                guideOpenSubscribeMessage(tmplIds, resolve, reject);
+	            }else{
+					 reject(3)
 				}
-			},
-			fail: res => {
-				console.log(res, "订阅，失败");
-				if (res.errCode == 20004) {
-					// console.log(res, 'fail:用户关闭了主开关，无法进行订阅,引导开启---');
-					guideOpenSubscribeMessage(tmplIds, resolve, reject);
-				}
-				return
-			}
-		})
-	})
+	        }
+	    })
 
 	// 调用订阅
 	/* uni.requestSubscribeMessage({
@@ -312,7 +355,7 @@ export function guidSubscribeMessageAuthAfter(tmplIds, resolve, reject) {
 					success: res => {
 						if (res.confirm) {
 							// 重新调起授权订阅
-							requestSubscribe(tmplIds, resolve, reject);
+							subscribeMessage(tmplIds, resolve, reject);
 						} else if (res.cancel) {
 							//没成功订阅，返回reject
 							reject(2);
@@ -346,7 +389,6 @@ export function guideOpenSubscribeMessage(tmplIds, resolve, reject) {
 		title: "温馨提示",
 		content: "检测到您没有开启全部订阅消息的权限，是否去设置？",
 		success: res => {
-
 			if (res.confirm) {
 				uni.openSetting({
 					success: res => {

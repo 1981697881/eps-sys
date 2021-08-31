@@ -137,10 +137,12 @@
 				this.loadList();
 			}
 		},
-		onLoad() {
+		onLoad(option) {
 			let vm = this;
+			let jump = option ? (option.jump ? option.jump : '') : '';
 			vm.member = vm.$store.getters.getMember;
 			if (!vm.member) {
+				vm.login(jump)
 				uni.navigateBack();
 			} else {
 				vm.loadList();
@@ -148,7 +150,45 @@
 			vm.setMyCourierButtonTopMargin();
 		},
 		methods: {
-			
+			login(jump) {
+				let vm = this;
+				uni.showLoading({
+					title: '登录中...'
+				});
+				uni.login({
+					success: res => {
+						uni.request({
+							url: vm.$api.wxMaAuth.login,
+							data: {
+								code: res.code
+							},
+							header: {},
+							success: res => {
+								vm.$store.dispatch('addUserInfo', res.data.data.userInfo);
+								uni.hideLoading();
+								if (res.data.data.member === null) {
+									vm.isLogin = false;
+								} else {
+									// 自动登录
+									vm.member = res.data.data.member;
+									vm.$store.dispatch('addMember', vm.member);
+									vm.isLogin = true;
+									vm.loadList();
+									// 自动登陆完后判断是否有跳转请求
+									if (jump) {
+										uni.navigateTo({
+											url: '/pages/delivery/' + jump + '/' + jump + '?pageFlag=index'
+										});
+									}
+								}
+							}
+						});
+					},
+					fail: () => {
+						console.log('未授权');
+					}
+				});
+			},
 			phoneCall(item) {
 				uni.makePhoneCall({
 				    phoneNumber: item.deliverymanMobileNumber

@@ -176,7 +176,7 @@
                   duration: 2000,
                 });
                 // #ifdef MP-WEIXIN
-                subscribeMessage()
+                /* subscribeMessage() */
                 // #endif
                 this.$yrouter.back();
               })

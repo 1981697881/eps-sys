@@ -611,7 +611,6 @@
 					success: (res) => {
 						uni.hideLoading();
 						if (res.data.status === 200) {
-							
 							uni.showModal({
 							    title: '温馨提示',
 								confirmColor: '#DE1111',
